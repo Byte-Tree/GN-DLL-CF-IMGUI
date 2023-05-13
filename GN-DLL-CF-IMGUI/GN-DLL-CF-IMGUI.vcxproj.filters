@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="CheatEngine">
+      <UniqueIdentifier>{367fad16-6601-4556-a897-a46b1d54b6ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DllMain">
+      <UniqueIdentifier>{54fe5445-39ff-4aff-a682-58b8fa8f826a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Driver">
+      <UniqueIdentifier>{cf17a071-3815-42f8-9871-29c65afeb23e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Exception">
+      <UniqueIdentifier>{01ba4bd1-62f8-4f39-8ad4-5fbe15b47089}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{6df34c82-5f7f-4bc6-9086-7a2cb4ba8770}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReflectiveLoader-User">
+      <UniqueIdentifier>{1d1498b5-50c0-472c-95ed-747de90451c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VMProtectSDK">
+      <UniqueIdentifier>{96da8975-2db9-4533-8561-29bfec08f72b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CheatEngine\CallBacks">
+      <UniqueIdentifier>{46cd76fe-523e-4ca8-bbb1-878a07d39978}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CheatEngine\CheatEngineApi">
+      <UniqueIdentifier>{f2266c8b-3c81-4bd9-8da4-a6a751bec119}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CheatEngine\Draw">
+      <UniqueIdentifier>{78a26b65-7694-4e40-bc67-d85eea89e272}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CheatEngine\Game">
+      <UniqueIdentifier>{69bd6624-648e-41c0-9b63-6bd685dbcfbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CheatEngine\MemoryTools">
+      <UniqueIdentifier>{7c580057-7e35-4832-a47d-4c467da590ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CheatEngine\Tools">
+      <UniqueIdentifier>{d8144544-c9fa-470d-9c78-215b2105bacc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CheatEngine\Game\Update">
+      <UniqueIdentifier>{18a1851c-c76f-4a71-984f-57a0ccc280ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK">
+      <UniqueIdentifier>{558a1887-7db9-4dd1-b9f4-e351b224a55c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CheatEngine\Hook">
+      <UniqueIdentifier>{e89c3ed6-08df-469b-8e6c-6dc1cccb16d3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatEngine\CheatEngine.h">
+      <Filter>CheatEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="DllMain\DllMain.h">
+      <Filter>DllMain</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatEngine\CheatEngineApi\CheatEngineApi.h">
+      <Filter>CheatEngine\CheatEngineApi</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatEngine\Draw\Draw.h">
+      <Filter>CheatEngine\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatEngine\Game\Update\Update.h">
+      <Filter>CheatEngine\Game\Update</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatEngine\Game\DataStruct.h">
+      <Filter>CheatEngine\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatEngine\Game\Game.h">
+      <Filter>CheatEngine\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatEngine\MemoryTools\MemoryTools.h">
+      <Filter>CheatEngine\MemoryTools</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatEngine\Tools\Tools.h">
+      <Filter>CheatEngine\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatEngine\Tools\xorstr.h">
+      <Filter>CheatEngine\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="lmGui\imconfig.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lmGui\imgui.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lmGui\imgui_impl_dx9.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lmGui\imgui_impl_win32.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lmGui\imgui_internal.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lmGui\imstb_rectpack.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lmGui\imstb_textedit.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lmGui\imstb_truetype.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GN-EXCEPTION\Exception.h">
+      <Filter>Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="Driver\Driver.h">
+      <Filter>Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="Driver\GN-ManualMap.h">
+      <Filter>Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="Driver\GN-ReflectiveLoader.h">
+      <Filter>Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="ReflectiveLoader-User\GN-ReflectiveLoader-User.h">
+      <Filter>ReflectiveLoader-User</Filter>
+    </ClInclude>
+    <ClInclude Include="VMProtectSDK\VMProtectSDK.h">
+      <Filter>VMProtectSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\sdk.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatEngine\Hook\HOOK.h">
+      <Filter>CheatEngine\Hook</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CheatEngine\CheatEngine.cpp">
+      <Filter>CheatEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="DllMain\DllMain.cpp">
+      <Filter>DllMain</Filter>
+    </ClCompile>
+    <ClCompile Include="CheatEngine\CheatEngineApi\CheatEngineApi.cpp">
+      <Filter>CheatEngine\CheatEngineApi</Filter>
+    </ClCompile>
+    <ClCompile Include="CheatEngine\CallBacks\CallBacks.cpp">
+      <Filter>CheatEngine\CallBacks</Filter>
+    </ClCompile>
+    <ClCompile Include="CheatEngine\Draw\Draw.cpp">
+      <Filter>CheatEngine\Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="CheatEngine\Game\Game.cpp">
+      <Filter>CheatEngine\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="CheatEngine\MemoryTools\MemoryTools.cpp">
+      <Filter>CheatEngine\MemoryTools</Filter>
+    </ClCompile>
+    <ClCompile Include="CheatEngine\Tools\Tools.cpp">
+      <Filter>CheatEngine\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="lmGui\imgui.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="lmGui\imgui_draw.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="lmGui\imgui_impl_dx9.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="lmGui\imgui_impl_win32.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="lmGui\imgui_tables.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="lmGui\imgui_widgets.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectiveLoader-User\GN-ReflectiveLoader-User.cpp">
+      <Filter>ReflectiveLoader-User</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
