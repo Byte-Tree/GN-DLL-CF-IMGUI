@@ -469,7 +469,7 @@ void Draw::MenuDraw()
 		}
 		static systime start_time = this->Tools::GetSystemtime();
 		ImGui::Text(u8"辅助启动时间：%4d-%02d-%02d %02d:%02d:%02d", start_time.year, start_time.month, start_time.day, start_time.hour, start_time.min, start_time.sec);
-		ImGui::SameLine(260);
+		ImGui::SameLine(200);
 		static systime runtime = { NULL };
 		runtime = this->Tools::GetSystemtime();
 		ImGui::Text(u8"当前时间：%4d-%02d-%02d %02d:%02d:%02d", runtime.year, runtime.month, runtime.day, runtime.hour, runtime.min, runtime.sec); ImGui::Separator();

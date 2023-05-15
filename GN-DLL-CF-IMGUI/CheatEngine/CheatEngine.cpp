@@ -33,8 +33,8 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 	int ret = gn_exception->GN_Exception::SetHardWareBreakPoint(L"crossfire.exe", 0x455,
 		/*0*/this->Game::GameBase.ACE_BASE64 + GlobalBaseFuncOffset,
 		/*0*/Hitchaddress,
-		/*0*/RedNameTrackAddress,
-		0/*SilentTrackAddress*/);//视角追踪需要更新，不能用
+		0/*RedNameTrackAddress*/,
+		/*0*/SilentTrackAddress);//视角追踪需要更新，不能用
 
 	//////Clear Modulehandle Header
 	////ce->CheatEngine::MemoryTools::WriteBytes((DWORD64)hinstance, temp_data, sizeof(temp_data));
@@ -81,9 +81,9 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 void CheatEngine::InitHook()
 {
 	__int64* direct3ddevice9_table = (__int64*)*(__int64*)this->CheatEngine::Draw::GetD3D9Device();
-	//this->CheatEngine::Draw::setviewport_hook = new inline_hook(direct3ddevice9_table[47], (__int64)&self_SetViewport, FALSE);
-	//this->CheatEngine::Draw::setviewport_hook->motify_address();
-	////this->CheatEngine::Draw::reset_hook = new inline_hook(direct3ddevice9_table[16], (__int64)&self_Reset, FALSE);
-	////this->CheatEngine::Draw::reset_hook->motify_address();
+	this->CheatEngine::Draw::setviewport_hook = new inline_hook(direct3ddevice9_table[47], (__int64)&Draw::Self_SetViewport, FALSE);
+	this->CheatEngine::Draw::setviewport_hook->motify_address();
+	this->CheatEngine::Draw::reset_hook = new inline_hook(direct3ddevice9_table[16], (__int64)&Draw::Self_Reset, FALSE);
+	this->CheatEngine::Draw::reset_hook->motify_address();
 
 }

@@ -73,6 +73,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>E:\UsuallApp\Microsoft DirectX SDK %28February 2010%29\Include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\UsuallApp\Microsoft DirectX SDK %28February 2010%29\Lib\x64;$(LibraryPath)</LibraryPath>
+    <OutDir>E:\WeGameApps\穿越火线+HD高清竞技大区\穿越火线\x64\</OutDir>
+    <TargetName>d3dref9</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -124,7 +126,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;GNDLLCFIMGUI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
