@@ -33,7 +33,7 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 	int ret = gn_exception->GN_Exception::SetHardWareBreakPoint(L"crossfire.exe", 0x455,
 		/*0*/this->Game::GameBase.ACE_BASE64 + GlobalBaseFuncOffset,
 		/*0*/Hitchaddress,
-		0/*RedNameTrackAddress*/,
+		/*0*/RedNameTrackAddress,
 		/*0*/SilentTrackAddress);//视角追踪需要更新，不能用
 
 	//////Clear Modulehandle Header
