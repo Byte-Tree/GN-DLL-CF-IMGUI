@@ -121,14 +121,13 @@ HRESULT CALLBACK Draw::Self_SetViewport(IDirect3DDevice9* direct3ddevice9, CONST
 	HRESULT result = direct3ddevice9->SetViewport(pViewport);
 
 	//GetWindowRect(, &g_WindRect);   //获取游戏窗口矩形
-	RECT client_rect = { NULL };
-	client_rect.left = (int)pViewport->X;
-	client_rect.right = (int)pViewport->Width;
-	client_rect.top = (int)pViewport->Y;
-	client_rect.bottom = (int)pViewport->Height;
+	ce->Draw::clientrect.left = (int)pViewport->X;
+	ce->Draw::clientrect.right = (int)pViewport->Width;
+	ce->Draw::clientrect.top = (int)pViewport->Y;
+	ce->Draw::clientrect.bottom = (int)pViewport->Height;
 
-	ce->Draw::gameheight = client_rect.bottom;
-	ce->Draw::gamewidth = client_rect.right;
+	ce->Draw::gameheight = ce->Draw::clientrect.bottom;
+	ce->Draw::gamewidth = ce->Draw::clientrect.right;
 	ce->Draw::gamecent_x = (int)pViewport->Width / 2;
 	ce->Draw::gamecent_y = (int)pViewport->Height / 2;
 
@@ -442,8 +441,8 @@ LONG WINAPI CheatEngine::NewExceptionHandler(PEXCEPTION_RECORD ExceptionRecord, 
 				//ACE-Base64.dll + 815844 - 48 89 47 08 -	mov[rdi + 08], rax
 				//ACE-Base64.dll + 815848 - FF 53 20 -		call qword ptr[rbx + 20]	//跳过执行
 				//ACE-Base64.dll + 81584B - 48 8B 1B -		mov rbx, [rbx]
-				//
-				//OutputDebugStringA("[GN]:Pass Base...");
+				
+				OutputDebugStringA("[GN]:Pass Base...");
 				return EXCEPTION_CONTINUE_EXECUTION;
 			}
 			else

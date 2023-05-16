@@ -577,26 +577,26 @@ void Draw::MainFuncDraw()
 											const ImVec2 text_pos = ImVec2(DrawCoordinates[i].X, DrawCoordinates[i].Y - 20);
 											ImGui::GetBackgroundDrawList()->AddText(text_pos, this->Draw::draw_color, ce->Tools::string_to_utf8(NicknameText).c_str());
 										}
-										if (ce->show_userQQnumber)
-										{
-											sprintf_s(UserQQNumberText, u8"QQ£º%d", ce->Game::GetUserQQNumber(i));
-											this->Draw::FillRectangle(DrawCoordinates[i].X, DrawCoordinates[i].Y - 37, 96, 17, 100, 100, 100, 100); //±³¾°¿ò
-											const ImVec2 text_pos = ImVec2(DrawCoordinates[i].X, DrawCoordinates[i].Y - 37);
-											ImGui::GetBackgroundDrawList()->AddText((text_pos), this->Draw::draw_color, UserQQNumberText);
-										}
 										if (this->Draw::show_health)
 										{
 											sprintf_s(BloodVolumeText, u8"ÑªÁ¿£º%d", ce->Game::GetCharacterBlood(i));
-											const ImVec2 text_pos = ImVec2(DrawCoordinates[i].X, DrawCoordinates[i].Y - 51);
+											const ImVec2 text_pos = ImVec2(DrawCoordinates[i].X, DrawCoordinates[i].Y - 37);
 											ImGui::GetBackgroundDrawList()->AddText(text_pos, this->Draw::draw_color, BloodVolumeText);
 										}
 										if (ce->show_c4)
 										{
 											if (ce->Game::IsC4(i) == TRUE)
 											{
-												const ImVec2 text_pos = ImVec2(DrawCoordinates[i].X, DrawCoordinates[i].Y - 65);
+												const ImVec2 text_pos = ImVec2(DrawCoordinates[i].X, DrawCoordinates[i].Y - 51);
 												ImGui::GetBackgroundDrawList()->AddText((text_pos), this->Draw::draw_color, u8"!!!C4!!!");
 											}
+										}
+										if (ce->show_userQQnumber)
+										{
+											sprintf_s(UserQQNumberText, u8"QQ£º%d", ce->Game::GetUserQQNumber(i));
+											this->Draw::FillRectangle(DrawCoordinates[i].X, DrawCoordinates[i].Y - 37, 96, 17, 100, 100, 100, 100); //±³¾°¿ò
+											const ImVec2 text_pos = ImVec2(DrawCoordinates[i].X, DrawCoordinates[i].Y - 65);
+											ImGui::GetBackgroundDrawList()->AddText((text_pos), this->Draw::draw_color, UserQQNumberText);
 										}
 										if (this->Draw::show_bone)
 											ce->Game::DrawBone(i, this->Draw::draw_color, 1);
