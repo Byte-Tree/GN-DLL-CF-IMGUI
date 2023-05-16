@@ -62,12 +62,14 @@ public:
 
 	static LRESULT CALLBACK OverlayWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	static HRESULT CALLBACK Self_Present(IDirect3DDevice9* direct3ddevice9, RECT* pSourceRect, RECT* pDestRect, HWND hDestWindowOverride, RGNDATA* pDirtyRegion);
+	static HRESULT CALLBACK Self_DrawIndexedPrimitive(IDirect3DDevice9* direct3ddevice9, D3DPRIMITIVETYPE Type, INT BaseVertexIndex, UINT MinVertexIndex, UINT NumVertices, UINT startIndex, UINT primCount);
 	static HRESULT CALLBACK Self_SetViewport(IDirect3DDevice9* direct3ddevice9, CONST D3DVIEWPORT9* pViewport);
 	static HRESULT CALLBACK Self_Reset(IDirect3DDevice9* direct3ddevice9, D3DPRESENT_PARAMETERS* pPresentationParameters);
 
 public:
 	inline_hook* setviewport_hook = nullptr;
 	inline_hook* reset_hook = nullptr;
+	inline_hook* drawindexedprimitive_hook = nullptr;
 
 	ImU32 draw_color = D3DCOLOR_RGBA(0, 255, 0, 255);		//绘制颜色
 	RECT windowrect, clientrect;
@@ -75,7 +77,7 @@ public:
 
 	bool is_present_draw = true;
 	bool show_menu = true;						//绘制菜单
-	bool show_characterindex = false;			//人物渲染
+	bool show_characterindex = true;			//人物渲染
 	bool show_rectbox = false;					//显示方框
 	bool show_health = false;					//显示血量
 	bool show_c4 = false;						//显示雷包

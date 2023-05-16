@@ -134,44 +134,10 @@ int GN_Exception::SetHardWareBreakPoint(const wchar_t* main_modulename, DWORD64 
 }
 
 
-LONG WINAPI ReturnExceptionHandler(PEXCEPTION_POINTERS ExceptionInfo)
-{
-	////OutputDebugStringA("[GN]:ReturnExceptionHandler() doing...");
-	////hardware breakpoint
-	//if (ExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_SINGLE_STEP)
-	//{
-	//	if (ExceptionInfo->ExceptionRecord->ExceptionAddress == (PVOID64)gn_exception->mdr1)
-	//		return EXCEPTION_CONTINUE_EXECUTION;
-	//	else if (ExceptionInfo->ExceptionRecord->ExceptionAddress == (PVOID64)gn_exception->mdr2)
-	//		return EXCEPTION_CONTINUE_EXECUTION;
-	//	else if (ExceptionInfo->ExceptionRecord->ExceptionAddress == (PVOID64)gn_exception->mdr3)
-	//		return EXCEPTION_CONTINUE_EXECUTION;
-	//	else if (ExceptionInfo->ExceptionRecord->ExceptionAddress == (PVOID64)gn_exception->mdr4)
-	//		return EXCEPTION_CONTINUE_EXECUTION;
-	//	else
-	//	{
-	//		ExceptionInfo->ContextRecord->Dr0 = gn_exception->mdr1;
-	//		ExceptionInfo->ContextRecord->Dr1 = gn_exception->mdr2;
-	//		ExceptionInfo->ContextRecord->Dr2 = gn_exception->mdr3;
-	//		ExceptionInfo->ContextRecord->Dr3 = gn_exception->mdr4;
-	//		return EXCEPTION_CONTINUE_SEARCH;
-	//	}
-	//}
-	//else
-	//	return EXCEPTION_CONTINUE_SEARCH;
-
-	OutputDebugStringA("[GN]:后处理返回值");
-	return EXCEPTION_CONTINUE_EXECUTION;
-}
-
 bool GN_Exception::InstallException(ExceptionHandlerApi exception_handler_api)
 {
 	//保存函数指针
 	this->pExceptionHandlerApi = exception_handler_api;
-
-	//////创建一个异常函数用来专门处理返回值
-	//this->SetUnhandledExceptionFilter(ReturnExceptionHandler);
-	////this->SetVectoredExceptionHandler(true, ReturnExceptionHandler);//不能添加一个空白异常处理函数到veh链表，否则添加时会卡住
 
 	//获取hook的返回地址
 	sysret_address = (__int64)::GetProcAddress(::LoadLibraryA("ntdll.dll"), "KiUserExceptionDispatcher");
@@ -224,6 +190,7 @@ __int64 GN_Exception::GetOffset(DWORD64 start_address, SIZE_T end_offset, SIZE_T
 	__int64 ret_address = 0;
 	BYTE temp_address[5] = { NULL };
 	BYTE judgment[5] = { 0x48,0x8B,0xCC,0x33,0xD2 };
+	//特征：
 	// mov	rcx, rsp
 	// xor	edx, edx
 	// call	RtlRestoreContext

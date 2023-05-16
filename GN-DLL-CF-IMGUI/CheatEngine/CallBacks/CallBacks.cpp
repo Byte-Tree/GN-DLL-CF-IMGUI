@@ -40,21 +40,24 @@ LRESULT CALLBACK CheatEngine::SelfGameWindowProc(HWND hWnd, UINT msg, WPARAM wPa
 {
 	switch (msg)
 	{
-	//case WM_ACTIVATE:
-	//{
-	//	ce->Draw::MoveOverlayWindow(ce->CheatEngine::Draw::GetGameWindowHandle(), ce->Draw::GetOverlayWindowHandle());
-	//	break;
-	//}
-	//case WM_SIZE:
-	//{
-	//	ce->Draw::MoveOverlayWindow(ce->CheatEngine::Draw::GetGameWindowHandle(), ce->Draw::GetOverlayWindowHandle());
-	//	break;
-	//}
-	//case WM_MOVE:
-	//{
-	//	ce->Draw::MoveOverlayWindow(ce->CheatEngine::Draw::GetGameWindowHandle(), ce->Draw::GetOverlayWindowHandle());
-	//	break;
-	//}
+	case WM_ACTIVATE:
+	{
+		//ce->Draw::MoveOverlayWindow(ce->CheatEngine::Draw::GetGameWindowHandle(), ce->Draw::GetOverlayWindowHandle());
+		ce->Draw::GetGameWindowRect();
+		break;
+	}
+	case WM_SIZE:
+	{
+		//ce->Draw::MoveOverlayWindow(ce->CheatEngine::Draw::GetGameWindowHandle(), ce->Draw::GetOverlayWindowHandle());
+		ce->Draw::GetGameWindowRect();
+		break;
+	}
+	case WM_MOVE:
+	{
+		//ce->Draw::MoveOverlayWindow(ce->CheatEngine::Draw::GetGameWindowHandle(), ce->Draw::GetOverlayWindowHandle());
+		ce->Draw::GetGameWindowRect();
+		break;
+	}
 	//case WM_MOUSEMOVE:
 	//{
 	//	ce->Draw::GetGameWindowRect();
@@ -101,8 +104,8 @@ HRESULT CALLBACK Draw::Self_Present(IDirect3DDevice9* direct3ddevice9, RECT* pSo
 	{
 		first_call = true;
 		ce->CheatEngine::Draw::SetDevice9(direct3ddevice9);
-		ce->CheatEngine::InitHook();
 		ce->CheatEngine::Draw::InitImGuiDx9(direct3ddevice9);
+		ce->CheatEngine::InitHook();
 		ce->CheatEngine::original_proc = (WNDPROC)SetWindowLongPtr(ce->CheatEngine::GetGameWindowHandle(), GWLP_WNDPROC, (LONG_PTR)CheatEngine::SelfGameWindowProc);
 	}
 
@@ -114,6 +117,33 @@ HRESULT CALLBACK Draw::Self_Present(IDirect3DDevice9* direct3ddevice9, RECT* pSo
 	return S_OK;
 }
 
+//Self DrawIndexedPrimitive api
+HRESULT CALLBACK Draw::Self_DrawIndexedPrimitive(IDirect3DDevice9* direct3ddevice9, D3DPRIMITIVETYPE Type, INT BaseVertexIndex, UINT MinVertexIndex, UINT NumVertices, UINT startIndex, UINT primCount)
+{
+	ce->Draw::drawindexedprimitive_hook->restore_address();
+
+	if (ce->Draw::show_characterindex)
+	{
+		IDirect3DVertexBuffer9* pStreamData = NULL;
+		UINT iOffsetInBytes, iStride;
+		if (direct3ddevice9->GetStreamSource(0, &pStreamData, &iOffsetInBytes, &iStride) == D3D_OK)
+		{
+			pStreamData->Release();
+			DWORD Value = 0;
+			if (iStride == 40 || iStride == 44 || iStride == 48 || iStride == 68 || iStride == 72)
+			{
+				direct3ddevice9->GetRenderState(D3DRS_ZENABLE, &Value);
+				direct3ddevice9->SetRenderState((D3DRENDERSTATETYPE)7, 0);
+			}
+		}
+	}
+
+	HRESULT result = direct3ddevice9->DrawIndexedPrimitive(Type, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+	ce->Draw::drawindexedprimitive_hook->motify_address();
+	return result;
+}
+
+//Self SetViewport api
 HRESULT CALLBACK Draw::Self_SetViewport(IDirect3DDevice9* direct3ddevice9, CONST D3DVIEWPORT9* pViewport)
 {
 	ce->CheatEngine::Draw::setviewport_hook->restore_address();
@@ -135,6 +165,7 @@ HRESULT CALLBACK Draw::Self_SetViewport(IDirect3DDevice9* direct3ddevice9, CONST
 	return result;
 }
 
+//Self Reset api
 HRESULT CALLBACK Draw::Self_Reset(IDirect3DDevice9* direct3ddevice9, D3DPRESENT_PARAMETERS* pPresentationParameters)
 {
 	ce->CheatEngine::reset_hook->restore_address();
@@ -442,7 +473,7 @@ LONG WINAPI CheatEngine::NewExceptionHandler(PEXCEPTION_RECORD ExceptionRecord, 
 				//ACE-Base64.dll + 815848 - FF 53 20 -		call qword ptr[rbx + 20]	//Ìø¹ýÖ´ÐÐ
 				//ACE-Base64.dll + 81584B - 48 8B 1B -		mov rbx, [rbx]
 				
-				OutputDebugStringA("[GN]:Pass Base...");
+				//OutputDebugStringA("[GN]:Pass Base...");
 				return EXCEPTION_CONTINUE_EXECUTION;
 			}
 			else

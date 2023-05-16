@@ -81,9 +81,11 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 void CheatEngine::InitHook()
 {
 	__int64* direct3ddevice9_table = (__int64*)*(__int64*)this->CheatEngine::Draw::GetD3D9Device();
-	this->CheatEngine::Draw::setviewport_hook = new inline_hook(direct3ddevice9_table[47], (__int64)&Draw::Self_SetViewport, FALSE);
-	this->CheatEngine::Draw::setviewport_hook->motify_address();
-	this->CheatEngine::Draw::reset_hook = new inline_hook(direct3ddevice9_table[16], (__int64)&Draw::Self_Reset, FALSE);
-	this->CheatEngine::Draw::reset_hook->motify_address();
+	//this->CheatEngine::Draw::setviewport_hook = new inline_hook(direct3ddevice9_table[47], (__int64)&Draw::Self_SetViewport, FALSE);
+	//this->CheatEngine::Draw::setviewport_hook->motify_address();
+	//this->CheatEngine::Draw::reset_hook = new inline_hook(direct3ddevice9_table[16], (__int64)&Draw::Self_Reset, FALSE);
+	//this->CheatEngine::Draw::reset_hook->motify_address();
+	//this->CheatEngine::Draw::drawindexedprimitive_hook = new inline_hook(direct3ddevice9_table[82], (__int64)&Draw::Self_DrawIndexedPrimitive, FALSE);
+	//this->CheatEngine::Draw::drawindexedprimitive_hook->motify_address();
 
 }
