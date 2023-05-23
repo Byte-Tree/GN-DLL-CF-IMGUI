@@ -88,7 +88,8 @@ int GN_Exception::SetHardWareBreakPoint(const wchar_t* main_modulename, DWORD64 
 					//如果线程父进程ID为当前进程ID
 					if (thread_entry32.th32OwnerProcessID == GetCurrentProcessId())
 					{
-						h_hook_thread = OpenThread(THREAD_SET_CONTEXT | THREAD_GET_CONTEXT | THREAD_QUERY_INFORMATION, FALSE, thread_entry32.th32ThreadID);
+						//h_hook_thread = OpenThread(THREAD_SET_CONTEXT | THREAD_GET_CONTEXT | THREAD_QUERY_INFORMATION, FALSE, thread_entry32.th32ThreadID);
+						h_hook_thread = OpenThread(THREAD_SET_CONTEXT | THREAD_GET_CONTEXT | THREAD_QUERY_INFORMATION | THREAD_SUSPEND_RESUME, FALSE, thread_entry32.th32ThreadID);
 						// 获取线程入口地址
 						PVOID startaddr;//用来接收线程入口地址
 						ZwQueryInformationThread(h_hook_thread, (THREADINFOCLASS)ThreadQuerySetWin32StartAddress, &startaddr, sizeof(startaddr), NULL);

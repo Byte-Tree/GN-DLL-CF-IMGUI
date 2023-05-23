@@ -44,10 +44,10 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 	//	OutputDebugStringA("[GN]:HideMemoryByVAD() error!");
 	//	exit(0);
 	//}
-	//BYTE temp_data[1024] = { NULL };
-	//for (int i = 0; i < 1024; i++)
-	//	temp_data[i] = 0x05;
-	//ce->CheatEngine::driver->WriteBytesByMDL((PVOID)hinstance, temp_data, sizeof(temp_data));
+	////BYTE temp_data[1024] = { NULL };
+	////for (int i = 0; i < 1024; i++)
+	////	temp_data[i] = 0x05;
+	////ce->CheatEngine::driver->WriteBytesByMDL((PVOID)hinstance, temp_data, sizeof(temp_data));
 
 }
 
@@ -67,14 +67,16 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 	if ((caller_address > ce->Game::GameBase.D3D9) && (caller_address < ce->Game::GameBase.D3D9End))
 		return true;
 
-	//#if _REDBULLBRELEASE || _REDBULLBDEBUG
-	//	////功能检测
-	//	//DWORD64 callto_address = ce->MemoryTools::ReadLong(context->Rbx + 0x20);
-	//	//if (caller_address == ce->CheatEngine::Game::GameBase.Cshell + 0x12C6890)
-	//	//	return false;
-	//	if ((caller_address > ce->Game::GameBase.Cross) && (caller_address < ce->Game::GameBase.CrossEndAddress))
-	//		return true;
-	//#endif
+	//////功能检测
+	////DWORD64 callto_address = ce->MemoryTools::ReadLong(context->Rbx + 0x20);
+	////if (caller_address == ce->CheatEngine::Game::GameBase.Cshell + 0x12C6890)
+	////	return false;
+	if ((caller_address > ce->Game::GameBase.Cshell) && (caller_address < ce->Game::GameBase.CshellEndAddress))
+	{
+		if (caller_address != ce->CheatEngine::Game::GameBase.Cshell + 0x13004E0)
+			return true;
+	}
+
 	return false;
 }
 

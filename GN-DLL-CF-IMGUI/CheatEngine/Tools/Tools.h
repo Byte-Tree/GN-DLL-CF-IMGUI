@@ -1,5 +1,6 @@
 #pragma once
 #include "../../pch.h"
+#include <winternl.h>
 #include <DbgHelp.h>
 #pragma comment(lib, "dbghelp.lib")
 
@@ -22,6 +23,9 @@ struct CALL_STACK_INFO {
 	STACK_FRAME_INFO* pFrameList;
 };
 
+extern "C" LONG(__stdcall * ZwQueryInformationThread)(IN HANDLE ThreadHandle, IN THREADINFOCLASS ThreadInformationClass, OUT PVOID ThreadInformation, IN ULONG ThreadInformationLength, OUT PULONG ReturnLength OPTIONAL) = NULL;
+
+
 class Tools
 {
 private:
@@ -36,6 +40,7 @@ public:
 	PVOID GetReturnAddress();
 	void GetCallStackInfo(CALL_STACK_INFO& callStack, DWORD dwMaxFrame);
 	void GetStack(void);
-
+	bool SuspendThreadByTag(DWORD pid, const char* judgment_tag);
+	bool ResumeThreadByTag(DWORD pid, const char* judgment_tag);
 };
 
