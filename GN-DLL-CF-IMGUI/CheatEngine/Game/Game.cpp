@@ -226,11 +226,22 @@ void Game::ACE_PBC()
 	//	Sleep(5);
 	//}
 
-	//ACE-Base64.dll线程中倒数第二个线程
+	//ACE-Base64.dll线程中倒数第三个线程
 	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "9e00"))
 	{
 		OutputDebugStringA("[GN]:SuspendThreadByTag() error\n");
 	}
+	//ACE-Base64.dll线程中倒数第二个线程(疑似效验线程)
+	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "9a00"))
+	{
+		OutputDebugStringA("[GN]:SuspendThreadByTag() error\n");
+	}
+	//体验服
+	////ACE-Base64.dll线程中倒数第二个线程
+	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "9e00"))
+	//{
+	//	OutputDebugStringA("[GN]:SuspendThreadByTag() error\n");
+	//}
 
 }
 

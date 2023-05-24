@@ -87,7 +87,7 @@
 #define SelfAddressOffset 0x289									//本人地址偏移 本人ID
 #define CharacterDataOffset 0x290								//OBJECT | 人物数据
 #define IsInGameOffset 0x8										//是否游戏
-#define PersonalPerspectiveOffset 0x50							//人物基址-50
+#define PersonalPerspectiveOffset 0x50							//人称视角：人物基址 - 50
 #define SelfPositionOffset 0x2C4B0B0							//自己位置
 #define CLTClientOffset 0x3C8430								//CLTClient
 #define CommonLTOffset 0x3CBBA8									//CommonLT
