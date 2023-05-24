@@ -140,8 +140,8 @@ void Game::BaseAddressInit()
 	//this->GameBase.SilentTrackBaseAddress[0] = this->GameBase.Cshell + SilentTrackNewMapAddress;	//新图静默追踪
 	//this->GameBase.SilentTrackBaseAddress[1] = this->GameBase.Cshell + SilentTrackOldMapAddress;	//旧图静默追踪
 
-	//////处理ACE
-	////this->Game::ByPassACE();
+	//处理ACE
+	this->Game::ByPassACE();
 //#if _REDBULLBRELEASE || _REDBULLBDEBUG
 //	//处理错误代码
 //	this->Game::PassErrorCode();
@@ -150,9 +150,10 @@ void Game::BaseAddressInit()
 
 void Game::ByPassACE()
 {
-	this->Game::ACE_Base();
+	//this->Game::ACE_Base();
 	//this->Game::ACE_ATS();
-	this->Game::ACE_CSI();
+	//this->Game::ACE_CSI();
+	this->Game::ACE_PBC();
 }
 
 void Game::ACE_Base()
@@ -202,6 +203,35 @@ void Game::ACE_ATS()
 		else
 			this->Game::GameBase.ACE_ATS64 = (__int64)GetModuleHandleA("ace-ats64.dll");
 	}
+}
+
+void Game::ACE_PBC()
+{
+	////Pass Kill Enemy
+	//DWORD64 kill_enemy_function_address = this->Game::GameBase.Cshell + PassKillEnemyOffset;
+	//DWORD64 original_kill_enemy_function_address = this->Game::GameBase.Cshell + OriginalKillEnemyFunctionOffset;
+
+	////DWORD64 rax = ReadLong(kill_enemy_function_address);		//mov rax,[cshell_x64.dll+2A873C8]
+	////DWORD64 rcx = ReadLong(rax + 0x260);						// - mov rcx,[rax+00000260]
+	////rcx = ReadLong(rcx + 0x588);								//mov rcx,[rcx+00000588]
+	////rax = ReadLong(rcx);										//mov rax,[rcx]
+	////DWORD64 caller_address = rax + 0x48;						//call qword ptr [rax+48]
+	//DWORD64 caller_address = this->MemoryTools::ReadLong(this->MemoryTools::ReadLong(this->MemoryTools::ReadLong(this->MemoryTools::ReadLong(kill_enemy_function_address) + 0x260) + 0x588) + 0x0) + 0x48;
+	//OutputDebugStringA_2Param("[GN]:caller_address：%p,value:%p\n", caller_address, this->MemoryTools::ReadLong(caller_address));
+	//while (true)
+	//{
+	//	this->MemoryTools::WriteLong(caller_address, original_kill_enemy_function_address);
+	//	if (this->MemoryTools::ReadLong(caller_address) == original_kill_enemy_function_address)
+	//		break;
+	//	Sleep(5);
+	//}
+
+	//ACE-Base64.dll线程中倒数第二个线程
+	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "9e00"))
+	{
+		OutputDebugStringA("[GN]:SuspendThreadByTag() error\n");
+	}
+
 }
 
 void Game::ACE_CSI()

@@ -23,8 +23,6 @@ struct CALL_STACK_INFO {
 	STACK_FRAME_INFO* pFrameList;
 };
 
-extern "C" LONG(__stdcall * ZwQueryInformationThread)(IN HANDLE ThreadHandle, IN THREADINFOCLASS ThreadInformationClass, OUT PVOID ThreadInformation, IN ULONG ThreadInformationLength, OUT PULONG ReturnLength OPTIONAL) = NULL;
-
 
 class Tools
 {

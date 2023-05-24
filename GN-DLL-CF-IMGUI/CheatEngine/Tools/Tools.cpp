@@ -1,5 +1,7 @@
 #include "Tools.h"
 
+LONG(__stdcall* pZwQueryInformationThread)(IN HANDLE ThreadHandle, IN THREADINFOCLASS ThreadInformationClass, OUT PVOID ThreadInformation, IN ULONG ThreadInformationLength, OUT PULONG ReturnLength OPTIONAL) = NULL;
+
 
 systime Tools::GetSystemtime()
 {
@@ -223,7 +225,7 @@ void Tools::GetStack(void)
 
 bool Tools::SuspendThreadByTag(DWORD pid, const char* judgment_tag)
 {
-	(FARPROC&)ZwQueryInformationThread = ::GetProcAddress(GetModuleHandle(L"ntdll"), "ZwQueryInformationThread");
+	(FARPROC&)pZwQueryInformationThread = ::GetProcAddress(GetModuleHandle(L"ntdll"), "ZwQueryInformationThread");
 
 	HANDLE hThreadSnap = INVALID_HANDLE_VALUE;
 	THREADENTRY32 te32 = { NULL };
@@ -261,7 +263,7 @@ bool Tools::SuspendThreadByTag(DWORD pid, const char* judgment_tag)
 			{
 				//获取线程起始地址
 				PVOID thread_start_address = 0;
-				ZwQueryInformationThread(thread_handle, (THREADINFOCLASS)0x09, &thread_start_address, sizeof(thread_start_address), NULL);
+				pZwQueryInformationThread(thread_handle, (THREADINFOCLASS)0x09, &thread_start_address, sizeof(thread_start_address), NULL);
 
 				//转换为字符串
 				char judgment[16] = { NULL };
@@ -291,7 +293,7 @@ bool Tools::SuspendThreadByTag(DWORD pid, const char* judgment_tag)
 
 bool Tools::ResumeThreadByTag(DWORD pid, const char* judgment_tag)
 {
-	(FARPROC&)ZwQueryInformationThread = ::GetProcAddress(GetModuleHandle(L"ntdll"), "ZwQueryInformationThread");
+	(FARPROC&)pZwQueryInformationThread = ::GetProcAddress(GetModuleHandle(L"ntdll"), "ZwQueryInformationThread");
 
 	HANDLE hThreadSnap = INVALID_HANDLE_VALUE;
 	THREADENTRY32 te32 = { NULL };
@@ -329,7 +331,7 @@ bool Tools::ResumeThreadByTag(DWORD pid, const char* judgment_tag)
 			{
 				//获取线程起始地址
 				PVOID thread_start_address = 0;
-				ZwQueryInformationThread(thread_handle, (THREADINFOCLASS)0x09, &thread_start_address, sizeof(thread_start_address), NULL);
+				pZwQueryInformationThread(thread_handle, (THREADINFOCLASS)0x09, &thread_start_address, sizeof(thread_start_address), NULL);
 
 				//转换为字符串
 				char judgment[16] = { NULL };

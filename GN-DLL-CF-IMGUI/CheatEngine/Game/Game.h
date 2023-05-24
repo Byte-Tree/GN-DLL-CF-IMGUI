@@ -79,6 +79,7 @@ public:
 	void ByPassACE();													//¥¶¿ÌACE
 	void ACE_Base();
 	void ACE_ATS();
+	void ACE_PBC();
 	void ACE_CSI();
 	void PassErrorCode();
 	BOOL WorldToScreen2(m_D3DCoordinate view_, D3DXVECTOR2* RetCoordinates);

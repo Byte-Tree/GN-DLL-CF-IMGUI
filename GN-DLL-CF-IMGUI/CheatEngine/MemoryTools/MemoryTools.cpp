@@ -103,7 +103,7 @@ bool MemoryTools::WriteLong(__int64 Address, __int64 Data)
 		VirtualProtect((PVOID)Address, sizeof(__int64), OldProtect, &OldProtect);
 		return FALSE;
 	}
-	*(ULONG64*)Address = Data;
+	*(__int64*)Address = Data;
 	VirtualProtect((PVOID)Address, sizeof(__int64), OldProtect, &OldProtect);
 	return TRUE;
 }

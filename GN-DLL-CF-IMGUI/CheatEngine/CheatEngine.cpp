@@ -20,7 +20,7 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 	this->CheatEngineApi::GetWindowThreadProcessId(this->CheatEngine::GetGameWindowHandle(), &game_pid);
 	this->CheatEngine::SetGameProcessId(game_pid);
 
-	////Set my driver class
+	//Set my driver class
 	this->CheatEngine::driver = new Driver;
 	this->CheatEngine::driver->SetProcessID(this->CheatEngineApi::GetCurrentProcessId());
 
@@ -34,7 +34,7 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 		/*0*/this->Game::GameBase.ACE_BASE64 + GlobalBaseFuncOffset,
 		/*0*/Hitchaddress,
 		/*0*/RedNameTrackAddress,
-		/*0*/SilentTrackAddress);//视角追踪需要更新，不能用
+		/*0*/SilentTrackAddress);
 
 	//////Clear Modulehandle Header
 	////ce->CheatEngine::MemoryTools::WriteBytes((DWORD64)hinstance, temp_data, sizeof(temp_data));
@@ -73,8 +73,10 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 	////	return false;
 	if ((caller_address > ce->Game::GameBase.Cshell) && (caller_address < ce->Game::GameBase.CshellEndAddress))
 	{
-		if (caller_address != ce->CheatEngine::Game::GameBase.Cshell + 0x13004E0)
-			return true;
+		////判断是否击杀函数
+		//if (caller_address != ce->CheatEngine::Game::GameBase.Cshell + 0x13004E0)
+		//	return true;
+		return true;
 	}
 
 	return false;

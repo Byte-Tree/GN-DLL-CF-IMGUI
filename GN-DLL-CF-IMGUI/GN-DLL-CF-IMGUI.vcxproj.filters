@@ -74,9 +74,6 @@
     <ClInclude Include="CheatEngine\Draw\Draw.h">
       <Filter>CheatEngine\Draw</Filter>
     </ClInclude>
-    <ClInclude Include="CheatEngine\Game\Update\Update.h">
-      <Filter>CheatEngine\Game\Update</Filter>
-    </ClInclude>
     <ClInclude Include="CheatEngine\Game\DataStruct.h">
       <Filter>CheatEngine\Game</Filter>
     </ClInclude>
@@ -139,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="CheatEngine\Hook\HOOK.h">
       <Filter>CheatEngine\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatEngine\Game\Update\Update.h">
+      <Filter>CheatEngine\Game\Update</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

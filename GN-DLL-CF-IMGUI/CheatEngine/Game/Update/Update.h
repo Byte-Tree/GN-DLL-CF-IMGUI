@@ -45,6 +45,15 @@
 #define PBCCreateThreadOffset 0x9E048							//PBC模块调用CreateThread
 #define PBCSleepOffset 0x97040									//PBC模块调用Sleep
 
+//cshell_x64.dll+154D795 - mov rax,[cshell_x64.dll+2A873C8]
+//cshell_x64.dll + 154D79C - mov rcx, [rax + 00000260]
+//cshell_x64.dll + 154D7A3 - mov rcx, [rcx + 00000588]
+//cshell_x64.dll + 154D7AA - mov rax, [rcx]
+//cshell_x64.dll + 154D7AD - call qword ptr[rax + 48]
+#define PassKillEnemyOffset 0x2A873C8							//特征码：48 8B 05 ?? ?? ?? ?? 48 8B 88 ?? ?? ?? ?? 48 8B 89 ?? ?? ?? ?? 48 8B 01 FF 50 ?? 48 8B 0D ?? ?? ?? 
+#define OriginalKillEnemyFunctionOffset 0x12F34C0				//PBC call后调用回cshell的地址
+
+
 //crossfireBase
 #define PassCrossFireBaseCheckOffset 0xBBD10					//检测驱动加载				特征码：48 8B C4 55 41 54 41 55 41 56 41 57 48 8D 68 A1 48 81 EC A0 00 00 00 48 C7 45 27 FE FF FF FF 48 89 58 10 48 89 70 18 48 89 78 20 48 8B D9
 #define PasscrossBaseFindFirstFileAOffset 0x334408				//crossfireBase模块调用FindFirstFileA
@@ -54,22 +63,23 @@
 //无限喷漆没喷搜256 喷了搜257
 //换弹搜5，没换搜2
 //主武器0，副武器1，近战2，雷3
-#define InjectHookOffset 0x1BC244								//dll注入点					特征码：45 33 C9 C7 44 24 ?? 01 00 00 00 45 33 C0 48 ?? ?? ?? 33 D2 FF 15 ?? ?? ?? ?? 85 C0 75 ?? E8 ?? ?? ?? ?? 85 C0
-#define Mtrix 0x1405255E0										//矩阵						特征码：F3 0F 10 83 ?? ?? ?? ?? F3 0F 10 8B ?? ?? ?? ?? 48 8B 4B ?? 48 85 C9 0F 84 ?? ?? ?? ?? 44 8B 81 ?? ?? ?? ??  [rbx + 0x2D00] - 0x10  |  矩阵地址 = ((rbx的值 + 0x2D00(offset)) - 0x10)  |  注：0x2D00是个偏移，可能存在更新
+#define InjectHookOffset 0x1BC604								//dll注入点					特征码：45 33 C9 C7 44 24 ?? 01 00 00 00 45 33 C0 48 ?? ?? ?? 33 D2 FF 15 ?? ?? ?? ?? 85 C0 75 ?? E8 ?? ?? ?? ?? 85 C0
+#define Mtrix 0x140525630										//矩阵						特征码：48 8B 0D ?? ?? ?? ?? 48 8D ?? ?? 41 B8 ?? ?? ?? ?? 48 8B 01 FF 90 ?? ?? ?? ??    cshell_x64.dll模块上：mov rcx,[cshell_x64.dll+0xXXXXXXX] '矩阵地址 = (cshell_x64.dll+0xXXXXXXX)的值 + 0x2D00 - 0x10
+//#define Mtrix 0x140525630										//矩阵						特征码：F3 0F 10 83 ?? ?? ?? ?? F3 0F 10 8B ?? ?? ?? ?? 48 8B 4B ?? 48 85 C9 0F 84 ?? ?? ?? ?? 44 8B 81 ?? ?? ?? ??  [rbx + 0x2D00] - 0x10  |  矩阵地址 = ((rbx的值 + 0x2D00(offset)) - 0x10)  |  注：0x2D00是个偏移，可能存在更新
 #define ArraySizeOffset 0x1048									//数组大小
-#define PlayerArrayBaseAddress 0x2A993E8						//玩家数组
-#define ModelOffset 0x2A99418									//判断模式
-#define ModelOffset2 0x2A9935E									//模式基址
+#define PlayerArrayBaseAddress 0x2A873C8						//玩家数组
+#define ModelOffset 0x2A87430									//判断模式
+#define ModelOffset2 0x2A8733F									//模式基址
 #define ChallengeHitchaddress 0x14008EFAD						//挑战挂接点				特征码：8B D9 75 ?? 83 3D ?? ?? ?? ?? 00 74 ?? FF 15 ?? ?? ?? ?? 83 3D ?? ?? ?? ?? 01 7C ?? 4C 8D 0D ?? ?? ?? ?? 4C 8D 05 ?? ?? ?? ?? 48 8D 15 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? B8 49 00 00 00 48 83 C4 20 5B C3 FF 15 ?? ?? ?? ?? 84 C0 74 ?? 90
-#define Hitchaddress 0x1403B52B4								//绘制挂接地址				特征码：45 33 C9 45 33 C0 33 D2 E9 ?? ?? ?? ?? FF 15 ?? ?? ?? ?? 8B D8 
+#define Hitchaddress 0x1403B5894								//绘制挂接地址				特征码：45 33 C9 45 33 C0 33 D2 E9 ?? ?? ?? ?? FF 15 ?? ?? ?? ?? 8B D8 
 #define DrawIndexedPrimitiveaddress 0x140254CD7					//渲染挂接地址				特征码：44 89 64 24 20 FF 90 ?? ?? 00 00 83 3D ?? ?? ?? ?? 02 7C ?? 8B 84 24 ?? ?? ?? ?? 按顺序数第十个地址
-#define SilentTrackAddress 0x140234D50 + 0x10					//静默追踪构造				特征码：48 83 EC 28 0F 28 C2 4C 8B CA F3 0F 10 54 24 ?? 
-#define RedNameTrackAddress 0x140242418							//红名追踪地址				特征码：4C 89 44 24 ?? 48 89 54 24 ?? 48 89 4C 24 ?? 48 81 EC 98 00 00 00 48 C7 44 24 48 FE FF FF FF
+#define SilentTrackAddress 0x140235330 + 0x10					//静默追踪构造				特征码：48 83 EC 28 0F 28 C2 4C 8B CA F3 0F 10 54 24 ??
+#define RedNameTrackAddress 0x1402429F8							//红名追踪地址				特征码：49 8B C0 4C 8B CA 4C 8D 41 ?? 48 8B D0 49 8B C9 E9 ?? ?? ?? ?? CC CC	jmp 跳转的函数既红名追踪地址
 #define RangeTrackAddressOne 0x17352D							//范围追踪1					特征码：F3 0F 11 52 ?? F3 0F 11 4A?? F3 0F 11 42 ?? F3 0F 10 92 ?? ?? ?? ?? F3 0F 10 8A ?? ?? ?? ?? F3 0F 10 82 ?? ?? ?? ?? F3 0F 58 92 ?? ?? ?? ?? F3 0F 58 8A ?? ?? ?? ?? F3 0F 58 82 ?? ?? ?? ?? F3 0F 11 52 ?? F3 0F 11 4A ?? F3 0F 11 42 ?? 0F B6 82 ?? ?? ?? ?? 
 #define RangeTrackAddressTwo RangeTrackAddressOne + 0x27		//范围追踪2
 #define RangeTrackAddressThree 0x23DC21							//范围追踪3					特征码：F3 0F 11 44 24 ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? F3 0F 10 4C 24 ?? 0F 2F C8 76 ?? 
-#define BarrierOffset 0x14004FBE0								//障碍判断基址				特征码：4C 8B C9 4C 8B C2 48 8B ?? ?? ?? ?? ?? 49 8B D1 48 8B 01 48 FF ?? 18
-#define KnifeDistanceBaseAddress 0x2C3CD10						//刀距基址 | 武器基址
+#define BarrierOffset 0x140050060								//障碍判断基址				特征码：4C 8B C9 4C 8B C2 48 8B ?? ?? ?? ?? ?? 49 8B D1 48 8B 01 48 FF ?? 18
+#define KnifeDistanceBaseAddress 0x2C2ACF0						//刀距基址 | 武器基址
 #define WeaponNumberBaseAddressOne 0x2B3AAC0					//刀距武器序列一 | 武器序列 可以不用更新了
 #define WeaponNumberBaseAddressTwo 0x94							//刀距武器序列二
 #define WeaponNumberArray 0x8									//刀距武器数组
@@ -77,7 +87,7 @@
 #define SelfAddressOffset 0x289									//本人地址偏移 本人ID
 #define CharacterDataOffset 0x290								//OBJECT | 人物数据
 #define IsInGameOffset 0x8										//是否游戏
-#define PersonalPerspectiveOffset 0x50							//人物基址 - 0x50
+#define PersonalPerspectiveOffset 0x50							//人物基址-50
 #define SelfPositionOffset 0x2C4B0B0							//自己位置
 #define CLTClientOffset 0x3C8430								//CLTClient
 #define CommonLTOffset 0x3CBBA8									//CommonLT
