@@ -35,6 +35,7 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 		/*0*/Hitchaddress,
 		/*0*/RedNameTrackAddress,
 		/*0*/SilentTrackAddress);
+	this->CheatEngine::SetSoftWareBreakPoint();
 
 	//////Clear Modulehandle Header
 	////ce->CheatEngine::MemoryTools::WriteBytes((DWORD64)hinstance, temp_data, sizeof(temp_data));
@@ -67,17 +68,21 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 	if ((caller_address > ce->Game::GameBase.D3D9) && (caller_address < ce->Game::GameBase.D3D9End))
 		return true;
 
-	//////¹¦ÄÜ¼ì²â
-	////DWORD64 callto_address = ce->MemoryTools::ReadLong(context->Rbx + 0x20);
-	////if (caller_address == ce->CheatEngine::Game::GameBase.Cshell + 0x12C6890)
-	////	return false;
-	if ((caller_address > ce->Game::GameBase.Cshell) && (caller_address < ce->Game::GameBase.CshellEndAddress))
-	{
-		////ÅÐ¶ÏÊÇ·ñ»÷É±º¯Êý
-		//if (caller_address != ce->CheatEngine::Game::GameBase.Cshell + 0x13004E0)
-		//	return true;
-		return true;
-	}
+	//////////¹¦ÄÜ¼ì²â
+	////////DWORD64 callto_address = ce->MemoryTools::ReadLong(context->Rbx + 0x20);
+	////////if (caller_address == ce->CheatEngine::Game::GameBase.Cshell + 0x12C6890)
+	////////	return false;
+	//////if ((caller_address > ce->Game::GameBase.Cshell) && (caller_address < ce->Game::GameBase.CshellEndAddress))
+	//////{
+	//////	////ÅÐ¶ÏÊÇ·ñ»÷É±º¯Êý
+	//////	//if (caller_address != ce->CheatEngine::Game::GameBase.Cshell + 0x13004E0)
+	//////	//	return true;
+	//////	return true;
+	//////}
+	////if ((caller_address > ce->Game::GameBase.Cross) && (caller_address < ce->Game::GameBase.CrossEndAddress))
+	////	return true;
+	//if (caller_address == ce->Game::GameBase.Cshell + 0x12F34C0)
+	//	return true;
 
 	return false;
 }
@@ -92,4 +97,20 @@ void CheatEngine::InitHook()
 	//this->CheatEngine::Draw::drawindexedprimitive_hook = new inline_hook(direct3ddevice9_table[82], (__int64)&Draw::Self_DrawIndexedPrimitive, FALSE);
 	//this->CheatEngine::Draw::drawindexedprimitive_hook->motify_address();
 
+	if (this->CheatEngine::Draw::CreateDeviceD3D11(this->GetGameWindowHandle()))
+	{
+		__int64* SwapChainTable = (__int64*)*(__int64*)this->CheatEngine::Draw::GetD3D11SwapChain();
+		OutputDebugStringA_1Param("[GN]:GetBufferµØÖ·£º%p", SwapChainTable[1]);
+		this->CheatEngine::Draw::m_OriginalGetBufferPoint = (OriginalGetBufferStruct)SwapChainTable[1];
+		this->CheatEngine::Draw::getbuffer_hook = new inline_hook(SwapChainTable[1], (__int64)&Draw::Self_GetBuffer, FALSE);
+		this->CheatEngine::Draw::getbuffer_hook->motify_address();
+	}
+
 }
+
+void CheatEngine::SetSoftWareBreakPoint()
+{
+	gn_exception->software_breakpoint1 = this->CheatEngine::Game::GameBase.Cshell + BulletWithoutBackSeatHookOffset;
+
+}
+

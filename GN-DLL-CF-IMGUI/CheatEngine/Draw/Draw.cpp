@@ -169,7 +169,7 @@ bool Draw::CreateDeviceD3D11(HWND hwnd)
 		OutputDebugStringA_2Param("[GN]:%s-> D3D11CreateDeviceAndSwapChain():%p", __FUNCTION__, result);
 		return false;
 	}
-	this->CreateRenderTarget();
+	//this->CreateRenderTarget();
 	return true;
 }
 
@@ -335,17 +335,28 @@ void Draw::MenuDraw()
 				ce->Game::track = false; ce->Game::redname_track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
 			}
 			ImGui::SameLine();
-			if (ImGui::Checkbox(u8"ºìÃû×·×Ù", &ce->Game::redname_track))
-			{
-				ce->Game::aimbot = false; ce->Game::track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
-			}
-			ImGui::SameLine();
+			//if (ImGui::Checkbox(u8"ºìÃû×·×Ù", &ce->Game::redname_track))
+			//{
+			//	ce->Game::aimbot = false; ce->Game::track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
+			//}
+			//ImGui::SameLine();
 			if (ImGui::Checkbox(u8"ÊÓ½Ç×·×Ù", &ce->Game::silence_track))
 			{
 				ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false;/*this->Game::range_track = false;*/
 			}
 			ImGui::SameLine();
-			ImGui::Checkbox(u8"ÅÐ¶ÏÕÏ°­", &ce->Game::judgementbarrier);											ImGui::Separator();
+			ImGui::Checkbox(u8"ÅÐ¶ÏÕÏ°­", &ce->Game::judgementbarrier);											ImGui::SameLine();
+			char text_buffer[30] = { NULL };
+			sprintf_s(text_buffer, u8"×Óµ¯ÎÞºó£º%s", ce->Game::no_backseat ? u8"¿ªÆô" : u8"¹Ø±Õ");
+			if (ImGui::Button(text_buffer))
+			{
+				ce->Game::no_backseat = !ce->Game::no_backseat;
+				if (ce->Game::no_backseat)
+					ce->CheatEngine::driver->WriteBytesByMDL((PVOID)gn_exception->software_breakpoint1, new BYTE{ 0xCC }, 1);
+				else
+					ce->CheatEngine::driver->WriteBytesByMDL((PVOID)gn_exception->software_breakpoint1, new BYTE{ 0xF3 }, 1);
+			}																									ImGui::Separator();
+
 			ImGui::SetNextItemWidth(60);
 			ImGui::Combo(u8"Ãé×¼ÈÈ¼ü", &ce->Game::aim_hotkey, u8"×ó¼ü\0ÓÒ¼ü\0Alt¼ü\0");							ImGui::SameLine();
 			ImGui::SetNextItemWidth(60);
@@ -547,24 +558,29 @@ void Draw::MainFuncDraw()
 										DrawCoordinates[i].Y = Head.y;
 										if (ce->Game::track || ce->Game::aimbot || ce->Game::silence_track)
 										{
-											if ((bool)ce->Game::aim_position)
-											{
-												ce->Game::GetBoneCoordinate(i, &DepositCoordinates, 6);
-												ce->Game::WorldToScreen(DepositCoordinates, &TrackCoordinates);
-												ce->Game::CalculateDistance(TrackCoordinates, i, 6, this->Draw::gamecent_x, this->Draw::gamecent_y);
-												ce->Game::GetBoneCoordinate(i, &DepositCoordinates, 5);
-												ce->Game::WorldToScreen(DepositCoordinates, &TrackCoordinates);
-												ce->Game::CalculateDistance(TrackCoordinates, i, 5, this->Draw::gamecent_x, this->Draw::gamecent_y);
-											}
-											else
-											{
-												ce->Game::GetBoneCoordinate(i, &DepositCoordinates, 3);
-												ce->Game::WorldToScreen(DepositCoordinates, &TrackCoordinates);
-												ce->Game::CalculateDistance(TrackCoordinates, i, 3, this->Draw::gamecent_x, this->Draw::gamecent_y);
-												ce->Game::GetBoneCoordinate(i, &DepositCoordinates, 4);
-												ce->Game::WorldToScreen(DepositCoordinates, &TrackCoordinates);
-												ce->Game::CalculateDistance(TrackCoordinates, i, 4, this->Draw::gamecent_x, this->Draw::gamecent_y);
-											}
+											//if (((ce->Game::aim_hotkey == AIM_HOTKEY_MOUSE_LEFT) && (GetAsyncKeyState(VK_LBUTTON) != 0)) || ((ce->Game::aim_hotkey == AIM_HOTKEY_MOUSE_RIGHT) && (GetAsyncKeyState(VK_RBUTTON) != 0)) || ((ce->Game::aim_hotkey == AIM_HOTKEY_KEYBOARD_ALT) && (GetAsyncKeyState(18) != 0)))
+											//{
+												if ((bool)ce->Game::aim_position)
+												{
+													ce->Game::GetBoneCoordinate(i, &DepositCoordinates, 6);
+													ce->Game::WorldToScreen(DepositCoordinates, &TrackCoordinates);
+													ce->Game::CalculateDistance(TrackCoordinates, i, 6, this->Draw::gamecent_x, this->Draw::gamecent_y);
+													ce->Game::GetBoneCoordinate(i, &DepositCoordinates, 5);
+													ce->Game::WorldToScreen(DepositCoordinates, &TrackCoordinates);
+													ce->Game::CalculateDistance(TrackCoordinates, i, 5, this->Draw::gamecent_x, this->Draw::gamecent_y);
+												}
+												else
+												{
+													ce->Game::GetBoneCoordinate(i, &DepositCoordinates, 3);
+													ce->Game::WorldToScreen(DepositCoordinates, &TrackCoordinates);
+													ce->Game::CalculateDistance(TrackCoordinates, i, 3, this->Draw::gamecent_x, this->Draw::gamecent_y);
+													ce->Game::GetBoneCoordinate(i, &DepositCoordinates, 4);
+													ce->Game::WorldToScreen(DepositCoordinates, &TrackCoordinates);
+													ce->Game::CalculateDistance(TrackCoordinates, i, 4, this->Draw::gamecent_x, this->Draw::gamecent_y);
+												}
+											//}
+											//else
+											//	ce->Game::m_locking_pawn = 0;
 										}
 										if (ce->Game::redname_track)
 											ce->Game::TrackingRange(Head, i, this->Draw::gamewidth, this->Draw::gameheight);
@@ -635,6 +651,8 @@ void Draw::MainFuncDraw()
 					}
 				}
 			}
+			else
+				ce->Game::m_locking_pawn = 0;
 		}
 		if (ce->Game::track && ce->Game::m_recentdistance <= ce->Game::track_range)
 		{
@@ -679,7 +697,9 @@ void Draw::MainFuncDraw()
 		if (ce->Game::silence_track && ce->Game::m_recentdistance <= ce->Game::track_range)
 		{
 			if (ce->Game::aim_hotkey == AIM_HOTKEY_MOUSE_LEFT && GetAsyncKeyState(VK_LBUTTON) != 0 || ce->Game::aim_hotkey == AIM_HOTKEY_MOUSE_RIGHT && GetAsyncKeyState(VK_RBUTTON) != 0 || ce->Game::aim_hotkey == AIM_HOTKEY_KEYBOARD_ALT && GetAsyncKeyState(18) != 0)
+			//if (((ce->Game::aim_hotkey == AIM_HOTKEY_MOUSE_LEFT) && (GetAsyncKeyState(VK_LBUTTON) != 0)) || ((ce->Game::aim_hotkey == AIM_HOTKEY_MOUSE_RIGHT) && (GetAsyncKeyState(VK_RBUTTON) != 0)) || ((ce->Game::aim_hotkey == AIM_HOTKEY_KEYBOARD_ALT) && (GetAsyncKeyState(18) != 0)))
 			{
+				//OutputDebugStringA("[GN]:ÈÈ¼ü");
 				if (ce->Game::m_locking_pawn != 0)
 				{
 					if (ce->Game::GetEnemyLive(ce->Game::m_locking_pawn))

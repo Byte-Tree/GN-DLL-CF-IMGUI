@@ -15,7 +15,7 @@ LRESULT CALLBACK Draw::OverlayWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPA
 		if (ce->Draw::GetD3D11Device() != NULL && wParam != SIZE_MINIMIZED)
 		{
 			ce->Draw::CleanupRenderTarget();
-			ce->Draw::GetSwapChain()->ResizeBuffers(0, (UINT)LOWORD(lParam), (UINT)HIWORD(lParam), DXGI_FORMAT_UNKNOWN, 0);
+			ce->Draw::GetD3D11SwapChain()->ResizeBuffers(0, (UINT)LOWORD(lParam), (UINT)HIWORD(lParam), DXGI_FORMAT_UNKNOWN, 0);
 			ce->Draw::CreateRenderTarget();
 		}
 		break;
@@ -179,6 +179,19 @@ HRESULT CALLBACK Draw::Self_Reset(IDirect3DDevice9* direct3ddevice9, D3DPRESENT_
 	ImGui_ImplDX9_CreateDeviceObjects();
 
 	ce->CheatEngine::reset_hook->motify_address();
+	return result;
+}
+
+//Self GetBuffer api
+HRESULT CALLBACK Draw::Self_GetBuffer(IDXGISwapChain* pSwapChain, UINT Buffer, REFIID riid, void** ppSurface)
+{
+	ce->CheatEngine::Draw::getbuffer_hook->restore_address();
+
+	HRESULT result = ce->CheatEngine::Draw::m_OriginalGetBufferPoint(pSwapChain, Buffer, riid, ppSurface);
+
+	OutputDebugStringA("[GN]:游戏调用GetBuffer...\n");
+
+	ce->CheatEngine::Draw::getbuffer_hook->motify_address();
 	return result;
 }
 
@@ -515,14 +528,24 @@ LONG WINAPI CheatEngine::NewExceptionHandler(PEXCEPTION_RECORD ExceptionRecord, 
 			{
 				if (ce->CheatEngine::Game::silence_track_switch)
 				{
-					//crossfire.exe + 235330 - 48 83 EC 28 -		sub rsp, 28
-					//crossfire.exe + 235334 - 0F28 C2 -			movaps xmm0, xmm2			//写y坐标
-					//crossfire.exe + 235337 - 4C 8B CA -			mov r9, rdx
-					//crossfire.exe + 23533A - F3 0F10 54 24 50 -	movss xmm2, [rsp + 50]
-					//crossfire.exe + 235340 - 0F28 CB -			movaps xmm1, xmm3			//Hook点 | 写x坐标
-					//crossfire.exe + 235343 - E8 D817FEFF -		call TracFuncion()
-					RtlCopyMemory(&context->Xmm0, &ce->CheatEngine::Game::m_silence_track_coordinates.y, sizeof(float));
-					RtlCopyMemory(&context->Xmm1, &ce->CheatEngine::Game::m_silence_track_coordinates.x, sizeof(float));
+					if (ce->Game::m_locking_pawn != 0)
+					{
+						if (ce->CheatEngine::Game::silence_track_switch)
+						{
+							//crossfire.exe + 235330 - 48 83 EC 28 -		sub rsp, 28
+							//crossfire.exe + 235334 - 0F28 C2 -			movaps xmm0, xmm2			//写y坐标
+							//crossfire.exe + 235337 - 4C 8B CA -			mov r9, rdx
+							//crossfire.exe + 23533A - F3 0F10 54 24 50 -	movss xmm2, [rsp + 50]
+							//crossfire.exe + 235340 - 0F28 CB -			movaps xmm1, xmm3			//Hook点 | 写x坐标
+							//crossfire.exe + 235343 - E8 D817FEFF -		call TracFuncion()
+							RtlCopyMemory(&context->Xmm0, &ce->CheatEngine::Game::m_silence_track_coordinates.y, sizeof(float));
+							RtlCopyMemory(&context->Xmm1, &ce->CheatEngine::Game::m_silence_track_coordinates.x, sizeof(float));
+						}
+						else
+							context->Xmm1 = context->Xmm3;
+					}
+					else
+						context->Xmm1 = context->Xmm3;
 				}
 				else
 					context->Xmm1 = context->Xmm3;
@@ -539,6 +562,28 @@ LONG WINAPI CheatEngine::NewExceptionHandler(PEXCEPTION_RECORD ExceptionRecord, 
 			context->Dr2 = gn_exception->mdr3;
 			context->Dr3 = gn_exception->mdr4;
 			return EXCEPTION_CONTINUE_SEARCH;
+		}
+	}
+	//software breakpoint
+	else if (ExceptionRecord->ExceptionCode == EXCEPTION_BREAKPOINT)
+	{
+		if (ExceptionRecord->ExceptionAddress == (PVOID64)gn_exception->software_breakpoint1)
+		{
+			if (ce->CheatEngine::Game::no_backseat)
+			{
+				float func_value = 0.0f;
+
+				RtlCopyMemory(&context->Xmm8, &func_value, sizeof(float));
+			}
+			else
+			{
+				float old_value = -1.0f;
+
+				RtlCopyMemory(&context->Xmm8, &old_value, sizeof(float));
+			}
+
+			context->Rip = gn_exception->software_breakpoint1 + 0x09;
+			return EXCEPTION_CONTINUE_EXECUTION;
 		}
 	}
 	return EXCEPTION_CONTINUE_SEARCH;

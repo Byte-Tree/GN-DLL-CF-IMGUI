@@ -154,6 +154,8 @@ void Game::ByPassACE()
 	//this->Game::ACE_ATS();
 	//this->Game::ACE_CSI();
 	this->Game::ACE_PBC();
+
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassThread, NULL, NULL, NULL);
 }
 
 void Game::ACE_Base()
@@ -226,23 +228,6 @@ void Game::ACE_PBC()
 	//	Sleep(5);
 	//}
 
-	//ACE-Base64.dll线程中倒数第三个线程
-	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "9e00"))
-	{
-		OutputDebugStringA("[GN]:SuspendThreadByTag() error\n");
-	}
-	//ACE-Base64.dll线程中倒数第二个线程(疑似效验线程)
-	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "9a00"))
-	{
-		OutputDebugStringA("[GN]:SuspendThreadByTag() error\n");
-	}
-	//体验服
-	////ACE-Base64.dll线程中倒数第二个线程
-	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "9e00"))
-	//{
-	//	OutputDebugStringA("[GN]:SuspendThreadByTag() error\n");
-	//}
-
 }
 
 void Game::ACE_CSI()
@@ -266,6 +251,48 @@ void Game::ACE_CSI()
 	//	}
 	//	else
 	//		this->Game::GameBase.ACE_CSI64 = (__int64)GetModuleHandleA("ACE-CSI64.dll");
+	//}
+}
+
+void Game::PassThread()
+{
+	//while (true)
+	//{
+	//	////动态
+	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "237d"))
+	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() 237d error\n");
+	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "2681"))
+	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() 2681 error\n");
+	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "512a"))
+	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() 512a error\n");
+	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "38e7"))
+	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() 38e7 error\n");
+	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "914c"))
+	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() 914c error\n");
+	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "a4ef"))
+	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() a4ef error\n");
+	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "5832"))
+	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() 5832 error\n");
+	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "5c27"))
+	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() 5c27 error\n");
+	//	////ACE-Base64.dll线程中倒数第三个线程
+	//	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "b00c"))
+	//		OutputDebugStringA("[GN]:SuspendThreadByTag() 9e00 error\n");
+	//	//PBC-Game
+	//	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "a560"))
+	//		OutputDebugStringA("[GN]:SuspendThreadByTag() a560 error\n");
+	//	//PBC-Game断链后的线程
+	//	ce->CheatEngine::Tools::SuspendThreadByNoModulehandle(GetCurrentProcessId());
+	//	
+	//	//Pass Kill Enemy
+	//	DWORD64 kill_enemy_function_address = ce->Game::GameBase.Cshell + PassKillEnemyOffset;
+	//	DWORD64 original_kill_enemy_function_address = ce->Game::GameBase.Cshell + OriginalKillEnemyFunctionOffset;
+	//	DWORD64 caller_address = ce->MemoryTools::ReadLong(ce->MemoryTools::ReadLong(ce->MemoryTools::ReadLong(ce->MemoryTools::ReadLong(kill_enemy_function_address) + 0x260) + 0x588) + 0x0) + 0x48;
+	//	if (ce->MemoryTools::ReadLong(caller_address) != original_kill_enemy_function_address)
+	//		//ce->MemoryTools::WriteLong(caller_address, original_kill_enemy_function_address);
+	//		ce->CheatEngine::driver->WriteLongByMDL((PVOID)caller_address, original_kill_enemy_function_address);
+	//
+	//	Sleep(2000);
 	//}
 }
 
@@ -803,7 +830,7 @@ bool Game::GetBoneCoordinate(__int64 ID, m_D3DCoordinate* Deposit, __int64 Posit
 		Coordinate = this->MemoryTools::ReadLong((EnemyBaseAddress + BoneOffset));
 		if (Coordinate != 0)
 		{
-			Coordinate = (Coordinate + (12 + (64 * Position)));
+			Coordinate = (Coordinate + (0x0C + (0x40 * Position)));
 			Deposit->x = this->MemoryTools::ReadFloat(Coordinate);
 			Deposit->z = this->MemoryTools::ReadFloat((Coordinate + 0x10));
 			Deposit->y = this->MemoryTools::ReadFloat((Coordinate + 0x20));

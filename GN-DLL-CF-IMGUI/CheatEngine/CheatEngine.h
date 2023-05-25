@@ -27,6 +27,7 @@ public:
 public:
 	bool ByPassCheck(PCONTEXT context);
 	void InitHook();
+	void SetSoftWareBreakPoint();
 
 public:
 	CheatEngine(HINSTANCE hinstance);

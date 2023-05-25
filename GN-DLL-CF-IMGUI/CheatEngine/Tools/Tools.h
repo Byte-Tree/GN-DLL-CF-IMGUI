@@ -38,6 +38,7 @@ public:
 	PVOID GetReturnAddress();
 	void GetCallStackInfo(CALL_STACK_INFO& callStack, DWORD dwMaxFrame);
 	void GetStack(void);
+	bool SuspendThreadByNoModulehandle(DWORD pid);
 	bool SuspendThreadByTag(DWORD pid, const char* judgment_tag);
 	bool ResumeThreadByTag(DWORD pid, const char* judgment_tag);
 };

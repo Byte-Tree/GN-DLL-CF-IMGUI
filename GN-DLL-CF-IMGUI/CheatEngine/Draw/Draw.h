@@ -39,6 +39,8 @@ struct _Direct11
 	ID3D11RenderTargetView* mainrendertargetview = nullptr;
 };
 
+typedef HRESULT(WINAPI* OriginalGetBufferStruct)(IDXGISwapChain* pSwapChain, UINT Buffer, REFIID riid, void** ppSurface);
+
 
 class Draw :public Tools
 {
@@ -58,7 +60,12 @@ public:
 	HWND GetOverlayWindowHandle() { return overlay_window_handle; }
 	IDirect3DDevice9* GetD3D9Device() { return direct9.device; }
 	ID3D11Device* GetD3D11Device() { return direct11.pd3d11device; }
-	IDXGISwapChain* GetSwapChain() { return direct11.pswapchain; }
+	IDXGISwapChain* GetD3D11SwapChain() { return direct11.pswapchain; }
+
+	inline_hook* setviewport_hook = nullptr;
+	inline_hook* reset_hook = nullptr;
+	inline_hook* drawindexedprimitive_hook = nullptr;
+	inline_hook* getbuffer_hook = nullptr;
 
 	static LRESULT CALLBACK OverlayWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	static HRESULT CALLBACK Self_Present(IDirect3DDevice9* direct3ddevice9, RECT* pSourceRect, RECT* pDestRect, HWND hDestWindowOverride, RGNDATA* pDirtyRegion);
@@ -66,11 +73,10 @@ public:
 	static HRESULT CALLBACK Self_SetViewport(IDirect3DDevice9* direct3ddevice9, CONST D3DVIEWPORT9* pViewport);
 	static HRESULT CALLBACK Self_Reset(IDirect3DDevice9* direct3ddevice9, D3DPRESENT_PARAMETERS* pPresentationParameters);
 
-public:
-	inline_hook* setviewport_hook = nullptr;
-	inline_hook* reset_hook = nullptr;
-	inline_hook* drawindexedprimitive_hook = nullptr;
+	OriginalGetBufferStruct m_OriginalGetBufferPoint = NULL;
+	static HRESULT CALLBACK Self_GetBuffer(IDXGISwapChain* pSwapChain, UINT Buffer, REFIID riid, void** ppSurface);
 
+public:
 	ImU32 draw_color = D3DCOLOR_RGBA(0, 255, 0, 255);		//»æÖÆÑÕÉ«
 	RECT windowrect, clientrect;
 	int window_x = 0, window_y = 0, gamecent_x = 0, gamecent_y = 0, gameheight = 0, gamewidth = 0, gametop = 0, gameleft = 0;
