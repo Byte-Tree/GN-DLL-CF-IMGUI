@@ -29,7 +29,7 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 
 	//Set Exception Handler
 	if (!gn_exception->InstallException(CheatEngine::NewExceptionHandler))
-		exit(0);
+		exit(-1);
 	int ret = gn_exception->GN_Exception::SetHardWareBreakPoint(L"crossfire.exe", 0x455,
 		/*0*/this->Game::GameBase.ACE_BASE64 + GlobalBaseFuncOffset,
 		/*0*/Hitchaddress,

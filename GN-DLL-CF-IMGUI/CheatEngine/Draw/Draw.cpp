@@ -345,17 +345,17 @@ void Draw::MenuDraw()
 				ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false;/*this->Game::range_track = false;*/
 			}
 			ImGui::SameLine();
-			ImGui::Checkbox(u8"判断障碍", &ce->Game::judgementbarrier);											ImGui::SameLine();
-			char text_buffer[30] = { NULL };
-			sprintf_s(text_buffer, u8"子弹无后：%s", ce->Game::no_backseat ? u8"开启" : u8"关闭");
-			if (ImGui::Button(text_buffer))
-			{
-				ce->Game::no_backseat = !ce->Game::no_backseat;
-				if (ce->Game::no_backseat)
-					ce->CheatEngine::driver->WriteBytesByMDL((PVOID)gn_exception->software_breakpoint1, new BYTE{ 0xCC }, 1);
-				else
-					ce->CheatEngine::driver->WriteBytesByMDL((PVOID)gn_exception->software_breakpoint1, new BYTE{ 0xF3 }, 1);
-			}																									ImGui::Separator();
+			ImGui::Checkbox(u8"判断障碍", &ce->Game::judgementbarrier);											ImGui::Separator();
+			//char text_buffer[30] = { NULL };
+			//sprintf_s(text_buffer, u8"子弹无后：%s", ce->Game::no_backseat ? u8"开启" : u8"关闭");
+			//if (ImGui::Button(text_buffer))
+			//{
+			//	ce->Game::no_backseat = !ce->Game::no_backseat;
+			//	if (ce->Game::no_backseat)
+			//		ce->CheatEngine::driver->WriteBytesByMDL((PVOID)gn_exception->software_breakpoint1, new BYTE{ 0xCC }, 1);
+			//	else
+			//		ce->CheatEngine::driver->WriteBytesByMDL((PVOID)gn_exception->software_breakpoint1, new BYTE{ 0xF3 }, 1);
+			//}																									ImGui::Separator();
 
 			ImGui::SetNextItemWidth(60);
 			ImGui::Combo(u8"瞄准热键", &ce->Game::aim_hotkey, u8"左键\0右键\0Alt键\0");							ImGui::SameLine();
