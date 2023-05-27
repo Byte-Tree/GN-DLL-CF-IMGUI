@@ -1,5 +1,6 @@
 #include "CheatEngine.h"
 #include "../DllMain/DllMain.h"
+#include "../NetVerification/Õ¯¬Á—È÷§.h"
 
 
 CheatEngine::CheatEngine(HINSTANCE hinstance)
@@ -28,7 +29,7 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 	this->Game::BaseAddressInit();
 
 	//Set Exception Handler
-	if (!gn_exception->InstallException(CheatEngine::NewExceptionHandler))
+	if (!gn_exception->InstallException("TKD604E537253H51289E138A1BE4588D", CheatEngine::NewExceptionHandler))
 		exit(-1);
 	int ret = gn_exception->GN_Exception::SetHardWareBreakPoint(L"crossfire.exe", 0x455,
 		/*0*/this->Game::GameBase.ACE_BASE64 + GlobalBaseFuncOffset,
@@ -59,29 +60,59 @@ CheatEngine::~CheatEngine()
 
 bool CheatEngine::ByPassCheck(PCONTEXT context)
 {
-	DWORD64 caller_address = ce->MemoryTools::ReadLong(context->Rsi);
+	DWORD64 caller_address = this->MemoryTools::ReadLong(context->Rsi);
 	////ªÊ÷∆ºÏ≤‚
-	if ((caller_address > ce->Game::GameBase.Win32U) && (caller_address < ce->Game::GameBase.Win32UEnd))
+	if ((caller_address > this->Game::GameBase.Win32U) && (caller_address < this->Game::GameBase.Win32UEnd))
 		return true;
-	if ((caller_address > ce->Game::GameBase.Gdi32) && (caller_address < ce->Game::GameBase.Gdi32End))
+	if ((caller_address > this->Game::GameBase.Gdi32) && (caller_address < this->Game::GameBase.Gdi32End))
 		return true;
-	if ((caller_address > ce->Game::GameBase.D3D9) && (caller_address < ce->Game::GameBase.D3D9End))
+	if ((caller_address > this->Game::GameBase.D3D9) && (caller_address < this->Game::GameBase.D3D9End))
 		return true;
 
 	//////////π¶ƒ‹ºÏ≤‚
 	////////DWORD64 callto_address = ce->MemoryTools::ReadLong(context->Rbx + 0x20);
 	////////if (caller_address == ce->CheatEngine::Game::GameBase.Cshell + 0x12C6890)
 	////////	return false;
-	//////if ((caller_address > ce->Game::GameBase.Cshell) && (caller_address < ce->Game::GameBase.CshellEndAddress))
-	//////{
-	//////	////≈–∂œ «∑Òª˜…±∫Ø ˝
-	//////	//if (caller_address != ce->CheatEngine::Game::GameBase.Cshell + 0x13004E0)
-	//////	//	return true;
+	////////if ((caller_address > ce->Game::GameBase.Cshell) && (caller_address < ce->Game::GameBase.CshellEndAddress))
+	////////{
+	////////	////≈–∂œ «∑Òª˜…±∫Ø ˝
+	////////	//if (caller_address != ce->CheatEngine::Game::GameBase.Cshell + 0x13004E0)
+	////////	//	return true;
+	////////	return true;
+	////////}
+	//////if ((caller_address > ce->Game::GameBase.Cross) && (caller_address < ce->Game::GameBase.CrossEndAddress))
 	//////	return true;
-	//////}
-	////if ((caller_address > ce->Game::GameBase.Cross) && (caller_address < ce->Game::GameBase.CrossEndAddress))
-	////	return true;
-	//if (caller_address == ce->Game::GameBase.Cshell + 0x12F34C0)
+	//if (caller_address == this->Game::GameBase.Cshell + 0x12F34C0)
+	//{
+	//	DWORD64 callto_address = this->MemoryTools::ReadLong(context->Rbx + 0x20);
+	//	if (callto_address == this->GameBase.ACE_PBC_GAME64 + 0x4DFE0)
+	//	{
+	//		OutputDebugStringA_1Param("[GN]:µÿ÷∑:%p", callto_address);
+	//		return true;
+	//	}
+	//	if (callto_address == this->GameBase.ACE_PBC_GAME64 + 0x52820)
+	//	{
+	//		OutputDebugStringA_1Param("[GN]:µÿ÷∑:%p", callto_address);
+	//		return true;
+	//	}
+	//	if (callto_address < 0x700000000000)
+	//	{
+	//		OutputDebugStringA_1Param("[GN]:µÿ÷∑:%p", callto_address);
+	//		return true;
+	//	}
+	//	return false;
+	//}
+	//if (caller_address == this->Game::GameBase.Cshell + 0xACA640)
+	//	return true;
+
+	//if (caller_address == this->Game::GameBase.Cshell + 0x12F34C0)
+	//	return false;
+	//DWORD64 callto_address = this->MemoryTools::ReadLong(context->Rbx + 0x20);
+	//if ((callto_address > this->GameBase.ACE_GDP64) && (callto_address < this->GameBase.ACE_GDP64End))
+	//	return false;
+	//else if ((callto_address > this->GameBase.ACE_PBC_GAME64) && (callto_address < this->GameBase.ACE_PBC_GAME64End))
+	//	return false;
+	//else
 	//	return true;
 
 	return false;

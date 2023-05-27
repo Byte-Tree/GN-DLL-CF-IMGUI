@@ -52,7 +52,7 @@ public:
 	int aim_speed = 18;													//自瞄速度
 	int aim_hotkey = AIM_HOTKEY_MOUSE_RIGHT;							//瞄准热键
 	int aim_position = AIM_POSITION_BODY;								//打击位置
-	int track_range = 30;												//追踪范围
+	int track_range = 180;												//追踪范围
 	float range_track_value = 80.0f;									//范围追踪范围
 	int range_track_position = RANGE_TRACK_POSITION_CLAVICLE;			//范围追踪部位
 	float static_acceleration_value = 1;								//静步加速值

@@ -57,6 +57,9 @@
     <Filter Include="CheatEngine\Hook">
       <UniqueIdentifier>{e89c3ed6-08df-469b-8e6c-6dc1cccb16d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CheatEngine\NetVerification">
+      <UniqueIdentifier>{4b6cae61-b21e-4ff8-bb93-fedf14ae52a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -140,6 +143,9 @@
     <ClInclude Include="CheatEngine\Game\Update\Update.h">
       <Filter>CheatEngine\Game\Update</Filter>
     </ClInclude>
+    <ClInclude Include="NetVerification\网络验证.h">
+      <Filter>CheatEngine\NetVerification</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CheatEngine\CheatEngine.cpp">
@@ -186,6 +192,9 @@
     </ClCompile>
     <ClCompile Include="ReflectiveLoader-User\GN-ReflectiveLoader-User.cpp">
       <Filter>ReflectiveLoader-User</Filter>
+    </ClCompile>
+    <ClCompile Include="NetVerification\网络验证.cpp">
+      <Filter>CheatEngine\NetVerification</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

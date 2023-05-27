@@ -258,39 +258,38 @@ void Game::PassThread()
 {
 	//while (true)
 	//{
-	//	////动态
-	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "237d"))
-	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() 237d error\n");
+	//	//动态
+	//	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "a4ef"))
+	//		OutputDebugStringA("[GN]:SuspendThreadByTag() a4ef error\n");
+	//	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "914c"))
+	//		OutputDebugStringA("[GN]:SuspendThreadByTag() 914c error\n");
+	//	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "38e7"))
+	//		OutputDebugStringA("[GN]:SuspendThreadByTag() 38e7 error\n");
+	//	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "512a"))
+	//		OutputDebugStringA("[GN]:SuspendThreadByTag() 512a error\n");
+	//	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "2c82"))
+	//		OutputDebugStringA("[GN]:SuspendThreadByTag() 2c82 error\n");
+	//	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "48cf"))
+	//		OutputDebugStringA("[GN]:SuspendThreadByTag() 48cf error\n");
 	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "2681"))
 	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() 2681 error\n");
-	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "512a"))
-	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() 512a error\n");
-	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "38e7"))
-	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() 38e7 error\n");
-	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "914c"))
-	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() 914c error\n");
-	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "a4ef"))
-	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() a4ef error\n");
-	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "5832"))
-	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() 5832 error\n");
-	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "5c27"))
-	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() 5c27 error\n");
-	//	////ACE-Base64.dll线程中倒数第三个线程
-	//	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "b00c"))
-	//		OutputDebugStringA("[GN]:SuspendThreadByTag() 9e00 error\n");
-	//	//PBC-Game
-	//	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "a560"))
-	//		OutputDebugStringA("[GN]:SuspendThreadByTag() a560 error\n");
-	//	//PBC-Game断链后的线程
-	//	ce->CheatEngine::Tools::SuspendThreadByNoModulehandle(GetCurrentProcessId());
+	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "237d"))
+	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() 237d error\n");
+	//	////ACE-ATS64.dll线程中倒数第三个线程
+	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "aab0"))
+	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() aab0 error\n");
+	//	//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "8830"))
+	//	//	OutputDebugStringA("[GN]:SuspendThreadByTag() 8830 error\n");
+	//	//////PBC-Game断链后的线程
+	//	////ce->CheatEngine::Tools::SuspendThreadByNoModulehandle(GetCurrentProcessId());
 	//	
-	//	//Pass Kill Enemy
-	//	DWORD64 kill_enemy_function_address = ce->Game::GameBase.Cshell + PassKillEnemyOffset;
-	//	DWORD64 original_kill_enemy_function_address = ce->Game::GameBase.Cshell + OriginalKillEnemyFunctionOffset;
-	//	DWORD64 caller_address = ce->MemoryTools::ReadLong(ce->MemoryTools::ReadLong(ce->MemoryTools::ReadLong(ce->MemoryTools::ReadLong(kill_enemy_function_address) + 0x260) + 0x588) + 0x0) + 0x48;
-	//	if (ce->MemoryTools::ReadLong(caller_address) != original_kill_enemy_function_address)
-	//		//ce->MemoryTools::WriteLong(caller_address, original_kill_enemy_function_address);
-	//		ce->CheatEngine::driver->WriteLongByMDL((PVOID)caller_address, original_kill_enemy_function_address);
+	//	////Pass Kill Enemy
+	//	//DWORD64 kill_enemy_function_address = ce->Game::GameBase.Cshell + PassKillEnemyOffset;
+	//	//DWORD64 original_kill_enemy_function_address = ce->Game::GameBase.Cshell + OriginalKillEnemyFunctionOffset;
+	//	//DWORD64 caller_address = ce->MemoryTools::ReadLong(ce->MemoryTools::ReadLong(ce->MemoryTools::ReadLong(ce->MemoryTools::ReadLong(kill_enemy_function_address) + 0x260) + 0x588) + 0x0) + 0x48;
+	//	//if (ce->MemoryTools::ReadLong(caller_address) != original_kill_enemy_function_address)
+	//	//	//ce->MemoryTools::WriteLong(caller_address, original_kill_enemy_function_address);
+	//	//	ce->CheatEngine::driver->WriteLongByMDL((PVOID)caller_address, original_kill_enemy_function_address);
 	//
 	//	Sleep(2000);
 	//}
@@ -972,17 +971,17 @@ bool Game::ChangeKnifeDistance(float KnifeWieldingDistance, float TapSpeed, floa
 			this->GameBase.HitSpeedValue = this->MemoryTools::ReadFloat(Offset + HitSpeedOffset);						//重击速度
 			this->GameBase.HitRangeValue = this->MemoryTools::ReadFloat(Offset + HitRangeOffset);						//重击范围
 			this->GameBase.KnifeMarkDistanceValue = this->MemoryTools::ReadFloat(Offset + KnifeMarkDistanceOffset);		//刀痕距离
-			sprintf_s(this->GameBase.LastWeaponNameValue, "%s", this->MemoryTools::ReadChar(Offset + WeaponNameOffset));	//上一个武器名字
+			sprintf_s(this->GameBase.LastWeaponNameValue, "%s", this->MemoryTools::ReadChar(Offset + WeaponNameOffset));//上一个武器名字
 			printf("当前近战武器名称：%s\n", this->GameBase.WeaponNameValue);
 
-			this->MemoryTools::WriteFloat(Offset + TapWieldingDistanceOffsetOne, KnifeWieldingDistance);					//轻击挥刀距离一
-			this->MemoryTools::WriteFloat(Offset + TapWieldingDistanceOffsetTwo, KnifeWieldingDistance);					//轻击挥刀距离二
+			this->MemoryTools::WriteFloat(Offset + TapWieldingDistanceOffsetOne, KnifeWieldingDistance);				//轻击挥刀距离一
+			this->MemoryTools::WriteFloat(Offset + TapWieldingDistanceOffsetTwo, KnifeWieldingDistance);				//轻击挥刀距离二
 			this->MemoryTools::WriteFloat(Offset + HitDistanceOffset, KnifeWieldingDistance);							//重击挥刀距离
 			this->MemoryTools::WriteFloat(Offset + KnifeMarkDistanceOffset, KnifeWieldingDistance);						//刀痕距离
-			this->MemoryTools::WriteFloat(Offset + TapSpeedOffsetOne, TapSpeed);											//轻击速度一
-			this->MemoryTools::WriteFloat(Offset + TapSpeedOffsetTwo, TapSpeed);											//轻击速度二
-			this->MemoryTools::WriteFloat(Offset + TapRangeOffsetOne, TapRange);											//轻击范围一
-			this->MemoryTools::WriteFloat(Offset + TapRangeOffsetTwo, TapRange);											//轻击范围二
+			this->MemoryTools::WriteFloat(Offset + TapSpeedOffsetOne, TapSpeed);										//轻击速度一
+			this->MemoryTools::WriteFloat(Offset + TapSpeedOffsetTwo, TapSpeed);										//轻击速度二
+			this->MemoryTools::WriteFloat(Offset + TapRangeOffsetOne, TapRange);										//轻击范围一
+			this->MemoryTools::WriteFloat(Offset + TapRangeOffsetTwo, TapRange);										//轻击范围二
 			this->MemoryTools::WriteFloat(Offset + HitSpeedOffset, HitSpeed);											//重击速度
 			this->MemoryTools::WriteFloat(Offset + HitRangeOffset, HitRange);											//重击范围
 			this->GameBase.KnifeIsChanged = TRUE;																		//确认修改刀距

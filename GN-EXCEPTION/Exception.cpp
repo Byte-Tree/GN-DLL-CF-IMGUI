@@ -1,4 +1,8 @@
 #include "Exception.h"
+#include "../GN-DLL-CF-IMGUI/NetVerification/网络验证.h"
+
+#define ServerHost "36.170.51.236"
+#define ServerPort 1882
 
 GN_Exception* gn_exception = new GN_Exception();
 
@@ -125,7 +129,7 @@ int GN_Exception::SetHardWareBreakPoint(const wchar_t* main_modulename, DWORD64 
 				} while (Thread32Next(hTool32, &thread_entry32));
 			}
 			CloseHandle(hTool32);
-			OutputDebugStringA("[GN]:veh->it's over!");
+			//OutputDebugStringA("[GN]:veh->it's over!");
 			return true;
 		}
 		else
@@ -135,8 +139,21 @@ int GN_Exception::SetHardWareBreakPoint(const wchar_t* main_modulename, DWORD64 
 }
 
 
-bool GN_Exception::InstallException(ExceptionHandlerApi exception_handler_api)
+bool GN_Exception::InstallException(const char* key, ExceptionHandlerApi exception_handler_api)
 {
+	//NetVerification
+	if (!全_验证通讯::验证_初始化(ServerHost, ServerPort))
+	{
+		OutputDebugStringA("[GN]:验证_初始化() error");
+		exit(-1);
+	}
+	string a(key);
+	if (!全_验证通讯::验证_卡登录(a))
+	{
+		OutputDebugStringA("[GN]:验证_卡登录() error");
+		exit(-1);
+	}
+
 	//保存函数指针
 	this->pExceptionHandlerApi = exception_handler_api;
 
@@ -161,7 +178,7 @@ bool GN_Exception::InstallException(ExceptionHandlerApi exception_handler_api)
 	ULONG status = NtSetInformationProcess(GetCurrentProcess(), 0x28, &info, sizeof(info));
 	if (status)
 	{
-		OutputDebugStringA_1Param("[GN]:NtSetInformationProcess（） errorcode:%p", status);
+		OutputDebugStringA_1Param("[GN]:xxxxxxxProcess（） errorcode:%p", status);
 		return false;
 	}
 
@@ -204,7 +221,7 @@ __int64 GN_Exception::GetOffset(DWORD64 start_address, SIZE_T end_offset, SIZE_T
 		memcpy((PVOID)temp_address, (PVOID)start_address, sizeof(judgment));
 		if (_memicmp(temp_address, judgment, sizeof(judgment)) == 0)
 		{
-			OutputDebugStringA_1Param("[GN]:找到特征，地址：%p", start_address);
+			//OutputDebugStringA_1Param("[GN]:找到特征，地址：%p", start_address);
 			ret_address = start_address;
 			return ret_address;
 		}

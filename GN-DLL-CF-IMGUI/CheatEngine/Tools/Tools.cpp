@@ -338,8 +338,10 @@ bool Tools::SuspendThreadByTag(DWORD pid, const char* judgment_tag)
 				//转换为字符串
 				char judgment[16] = { NULL };
 				ltoa((long)thread_start_address, judgment, 16);
-				strcpy(judgment, &judgment[4]);
-				//printf("转换后的数据：%s\n", judgment);
+				if (strlen(judgment) == 8)	strcpy(judgment, &judgment[4]);
+				else
+					strcpy(judgment, &judgment[3]);
+				//OutputDebugStringA_1Param("[GN]:转换后的数据：%s\n", judgment);
 
 				if (_stricmp(judgment, judgment_tag) == 0)
 				{
@@ -409,7 +411,9 @@ bool Tools::ResumeThreadByTag(DWORD pid, const char* judgment_tag)
 				//转换为字符串
 				char judgment[16] = { NULL };
 				ltoa((long)thread_start_address, judgment, 16);
-				strcpy(judgment, &judgment[4]);
+				if (strlen(judgment) == 8)	strcpy(judgment, &judgment[4]);
+				else
+					strcpy(judgment, &judgment[3]);
 				//printf("转换后的数据：%s\n", judgment);
 
 				if (_stricmp(judgment, judgment_tag) == 0)

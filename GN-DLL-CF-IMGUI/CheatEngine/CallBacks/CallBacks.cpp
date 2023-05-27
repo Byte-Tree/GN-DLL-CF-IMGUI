@@ -521,25 +521,30 @@ LONG WINAPI CheatEngine::NewExceptionHandler(PEXCEPTION_RECORD ExceptionRecord, 
 			context->Rip = gn_exception->mdr3 + 0x05;
 			return EXCEPTION_CONTINUE_EXECUTION;
 		}
-		//ÊÓ½Ç×·×Ù
+		//¾²Ä¬×·×Ù
 		else if (ExceptionRecord->ExceptionAddress == (PVOID64)gn_exception->mdr4)
 		{
 			if (ce->CheatEngine::Game::silence_track)
 			{
-				if (ce->CheatEngine::Game::silence_track_switch)
+				if (ce->CheatEngine::MemoryTools::ReadLong(context->Rsp + 0x40) == ce->CheatEngine::MemoryTools::ReadLong(ce->CheatEngine::Game::GameBase.CharacterBase))
 				{
-					if (ce->Game::m_locking_pawn != 0)
+					if (ce->CheatEngine::Game::silence_track_switch)
 					{
-						if (ce->CheatEngine::Game::silence_track_switch)
+						if (ce->Game::m_locking_pawn != 0)
 						{
-							//crossfire.exe + 235330 - 48 83 EC 28 -		sub rsp, 28
-							//crossfire.exe + 235334 - 0F28 C2 -			movaps xmm0, xmm2			//Ð´y×ø±ê
-							//crossfire.exe + 235337 - 4C 8B CA -			mov r9, rdx
-							//crossfire.exe + 23533A - F3 0F10 54 24 50 -	movss xmm2, [rsp + 50]
-							//crossfire.exe + 235340 - 0F28 CB -			movaps xmm1, xmm3			//Hookµã | Ð´x×ø±ê
-							//crossfire.exe + 235343 - E8 D817FEFF -		call TracFuncion()
-							RtlCopyMemory(&context->Xmm0, &ce->CheatEngine::Game::m_silence_track_coordinates.y, sizeof(float));
-							RtlCopyMemory(&context->Xmm1, &ce->CheatEngine::Game::m_silence_track_coordinates.x, sizeof(float));
+							if (ce->CheatEngine::Game::silence_track_switch)
+							{
+								//crossfire.exe + 235330 - 48 83 EC 28 -		sub rsp, 28
+								//crossfire.exe + 235334 - 0F28 C2 -			movaps xmm0, xmm2			//Ð´y×ø±ê
+								//crossfire.exe + 235337 - 4C 8B CA -			mov r9, rdx
+								//crossfire.exe + 23533A - F3 0F10 54 24 50 -	movss xmm2, [rsp + 50]
+								//crossfire.exe + 235340 - 0F28 CB -			movaps xmm1, xmm3			//Hookµã | Ð´x×ø±ê
+								//crossfire.exe + 235343 - E8 D817FEFF -		call TracFuncion()
+								RtlCopyMemory(&context->Xmm0, &ce->CheatEngine::Game::m_silence_track_coordinates.y, sizeof(float));
+								RtlCopyMemory(&context->Xmm1, &ce->CheatEngine::Game::m_silence_track_coordinates.x, sizeof(float));
+							}
+							else
+								context->Xmm1 = context->Xmm3;
 						}
 						else
 							context->Xmm1 = context->Xmm3;

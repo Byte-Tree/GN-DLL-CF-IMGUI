@@ -330,17 +330,17 @@ void Draw::MenuDraw()
 		}
 		if (ImGui::CollapsingHeader(u8"打击专区"))
 		{
-			if (ImGui::Checkbox(u8"鼠标自瞄", &ce->Game::aimbot))
-			{
-				ce->Game::track = false; ce->Game::redname_track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
-			}
-			ImGui::SameLine();
+			////if (ImGui::Checkbox(u8"鼠标自瞄", &ce->Game::aimbot))
+			////{
+			////	ce->Game::track = false; ce->Game::redname_track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
+			////}
+			//ImGui::SameLine();
 			//if (ImGui::Checkbox(u8"红名追踪", &ce->Game::redname_track))
 			//{
 			//	ce->Game::aimbot = false; ce->Game::track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
 			//}
 			//ImGui::SameLine();
-			if (ImGui::Checkbox(u8"视角追踪", &ce->Game::silence_track))
+			if (ImGui::Checkbox(u8"子弹追踪", &ce->Game::silence_track))
 			{
 				ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false;/*this->Game::range_track = false;*/
 			}
@@ -364,32 +364,32 @@ void Draw::MenuDraw()
 			ImGui::DragInt(u8"自瞄速度(越小越好)", &ce->Game::aim_speed, 0.3f, 1, 80, "%d");					ImGui::Separator();
 			ImGui::DragInt(u8"打击范围(越大越好)", &ce->Game::track_range, 0.6f, 30, 1200, "%d");				ImGui::Separator();
 		}
-		//if (ImGui::CollapsingHeader(u8"范围专区"))
-		//{
-		//	if (ImGui::Checkbox(u8"范围开关", &this->Game::range_track))
-		//	{
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->Game::GameBase.Cross + RangeTrackAddressOne);
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->Game::GameBase.Cross + RangeTrackAddressTwo);
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->Game::GameBase.Cross + RangeTrackAddressThree);
-		//		//this->Game::aimbot = false; this->Game::track = false; this->Game::redname_track = false; this->Game::silence_track = false;
-		//	}	ImGui::SameLine();
-		//	static int range_trace_position_select = 3; ImGui::SetNextItemWidth(75);
-		//	if (ImGui::Combo(u8"设置部位", &range_trace_position_select, u8"黄金爆头\0银色爆头\0颈部\0锁骨\0手\0脚\0"))
-		//	{
-		//		switch (range_trace_position_select)
-		//		{
-		//		case 0: {	this->Game::range_track_position = RANGE_TRACK_POSITION_GOLDEN_HEAD; break;	}
-		//		case 1: {	this->Game::range_track_position = RANGE_TRACK_POSITION_SILVER_HEAD; break; }
-		//		case 2: {	this->Game::range_track_position = RANGE_TRACK_POSITION_NECK; break; }
-		//		case 3: {	this->Game::range_track_position = RANGE_TRACK_POSITION_CLAVICLE; break; }
-		//		case 4: {	this->Game::range_track_position = RANGE_TRACK_POSITION_HAND; break; }
-		//		case 5: {	this->Game::range_track_position = RANGE_TRACK_POSITION_FOOT; break; }
-		//		default:	break;
-		//		}
-		//	}
-		//	ImGui::Separator();
-		//	ImGui::DragFloat(u8"设置范围大小", &this->Game::range_track_value, 1.0f, 1, 200, "%.0f");			ImGui::Separator();
-		//}
+		////if (ImGui::CollapsingHeader(u8"范围专区"))
+		////{
+		////	if (ImGui::Checkbox(u8"范围开关", &this->Game::range_track))
+		////	{
+		////		this->CheatEngine::CheckSoftWareBreakPoint(this->Game::GameBase.Cross + RangeTrackAddressOne);
+		////		this->CheatEngine::CheckSoftWareBreakPoint(this->Game::GameBase.Cross + RangeTrackAddressTwo);
+		////		this->CheatEngine::CheckSoftWareBreakPoint(this->Game::GameBase.Cross + RangeTrackAddressThree);
+		////		//this->Game::aimbot = false; this->Game::track = false; this->Game::redname_track = false; this->Game::silence_track = false;
+		////	}	ImGui::SameLine();
+		////	static int range_trace_position_select = 3; ImGui::SetNextItemWidth(75);
+		////	if (ImGui::Combo(u8"设置部位", &range_trace_position_select, u8"黄金爆头\0银色爆头\0颈部\0锁骨\0手\0脚\0"))
+		////	{
+		////		switch (range_trace_position_select)
+		////		{
+		////		case 0: {	this->Game::range_track_position = RANGE_TRACK_POSITION_GOLDEN_HEAD; break;	}
+		////		case 1: {	this->Game::range_track_position = RANGE_TRACK_POSITION_SILVER_HEAD; break; }
+		////		case 2: {	this->Game::range_track_position = RANGE_TRACK_POSITION_NECK; break; }
+		////		case 3: {	this->Game::range_track_position = RANGE_TRACK_POSITION_CLAVICLE; break; }
+		////		case 4: {	this->Game::range_track_position = RANGE_TRACK_POSITION_HAND; break; }
+		////		case 5: {	this->Game::range_track_position = RANGE_TRACK_POSITION_FOOT; break; }
+		////		default:	break;
+		////		}
+		////	}
+		////	ImGui::Separator();
+		////	ImGui::DragFloat(u8"设置范围大小", &this->Game::range_track_value, 1.0f, 1, 200, "%.0f");			ImGui::Separator();
+		////}
 		//if (ImGui::CollapsingHeader(u8"功能专区"))
 		//{
 		//	if (ImGui::Checkbox(u8"无后座力", &this->Game::no_backseat))
@@ -419,46 +419,46 @@ void Draw::MenuDraw()
 		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cross + SquatAccelerationHookOffset);
 		//	ImGui::Separator();
 		//}
-		if (ImGui::CollapsingHeader(u8"刀距专区"))
-		{
-			static bool ChangeStatu = FALSE;
-			ImGui::Text(u8"请在持刀状态下修改刀距！还原刀距时需要手持武器先还原");			ImGui::Separator();
-			ImGui::Text(u8"当前近战武器：");												ImGui::SameLine();
-			ImGui::Text(this->Tools::string_to_utf8(ce->Game::GameBase.WeaponNameValue).c_str());		ImGui::Separator();
-			static float KnifeWieldingDistance = 540.0;//挥刀距离
-			ImGui::InputFloat(u8"挥刀距离", &KnifeWieldingDistance, 1.0f, 1.0f, "%.0f");	ImGui::Separator();
-			static float TapSpeed = 1.2;//轻击速度
-			ImGui::InputFloat(u8"轻击速度", &TapSpeed, 0.1f, 1.0f, "%.1f");					ImGui::Separator();
-			static float HitSpeed = 1.3;//重击速度
-			ImGui::InputFloat(u8"重击速度", &HitSpeed, 0.1f, 1.0f, "%.1f");					ImGui::Separator();
-			static float TapRange = 2.0;//轻击范围
-			ImGui::InputFloat(u8"轻击范围", &TapRange, 1.0f, 1.0f, "%.0f");					ImGui::Separator();
-			static float HitRange = 2.0;//重击范围
-			ImGui::InputFloat(u8"重击范围", &HitRange, 1.0f, 1.0f, "%.0f");					ImGui::Separator();
-			if (!ChangeStatu)
-			{
-				if (ImGui::Button(u8"修改刀距"))
-				{
-					//修改刀距
-					if (ce->Game::ChangeKnifeDistance(KnifeWieldingDistance, TapSpeed, HitSpeed, TapRange, HitRange))
-						ChangeStatu = TRUE;
-					else
-						ChangeStatu = FALSE;
-				}
-			}
-			else
-			{
-				if (ImGui::Button(u8"还原刀距"))
-				{
-					//还原刀距
-					if (ce->Game::ReductionKnifeDistance())
-						ChangeStatu = FALSE;
-					else
-						ChangeStatu = TRUE;
-				}
-			}
-			ImGui::Separator();
-		}
+		//if (ImGui::CollapsingHeader(u8"刀距专区"))
+		//{
+		//	static bool ChangeStatu = FALSE;
+		//	ImGui::Text(u8"请在持刀状态下修改刀距！还原刀距时需要手持武器先还原");			ImGui::Separator();
+		//	ImGui::Text(u8"当前近战武器：");												ImGui::SameLine();
+		//	ImGui::Text(this->Tools::string_to_utf8(ce->Game::GameBase.WeaponNameValue).c_str());		ImGui::Separator();
+		//	static float KnifeWieldingDistance = 540.0;//挥刀距离
+		//	ImGui::InputFloat(u8"挥刀距离", &KnifeWieldingDistance, 1.0f, 1.0f, "%.0f");	ImGui::Separator();
+		//	static float TapSpeed = 1.2;//轻击速度
+		//	ImGui::InputFloat(u8"轻击速度", &TapSpeed, 0.1f, 1.0f, "%.1f");					ImGui::Separator();
+		//	static float HitSpeed = 1.3;//重击速度
+		//	ImGui::InputFloat(u8"重击速度", &HitSpeed, 0.1f, 1.0f, "%.1f");					ImGui::Separator();
+		//	static float TapRange = 2.0;//轻击范围
+		//	ImGui::InputFloat(u8"轻击范围", &TapRange, 1.0f, 1.0f, "%.0f");					ImGui::Separator();
+		//	static float HitRange = 2.0;//重击范围
+		//	ImGui::InputFloat(u8"重击范围", &HitRange, 1.0f, 1.0f, "%.0f");					ImGui::Separator();
+		//	if (!ChangeStatu)
+		//	{
+		//		if (ImGui::Button(u8"修改刀距"))
+		//		{
+		//			//修改刀距
+		//			if (ce->Game::ChangeKnifeDistance(KnifeWieldingDistance, TapSpeed, HitSpeed, TapRange, HitRange))
+		//				ChangeStatu = TRUE;
+		//			else
+		//				ChangeStatu = FALSE;
+		//		}
+		//	}
+		//	else
+		//	{
+		//		if (ImGui::Button(u8"还原刀距"))
+		//		{
+		//			//还原刀距
+		//			if (ce->Game::ReductionKnifeDistance())
+		//				ChangeStatu = FALSE;
+		//			else
+		//				ChangeStatu = TRUE;
+		//		}
+		//	}
+		//	ImGui::Separator();
+		//}
 		if (ImGui::CollapsingHeader(u8"菜单专区"))
 		{
 			static int MenuStyleSwitch = 0;
@@ -558,8 +558,8 @@ void Draw::MainFuncDraw()
 										DrawCoordinates[i].Y = Head.y;
 										if (ce->Game::track || ce->Game::aimbot || ce->Game::silence_track)
 										{
-											//if (((ce->Game::aim_hotkey == AIM_HOTKEY_MOUSE_LEFT) && (GetAsyncKeyState(VK_LBUTTON) != 0)) || ((ce->Game::aim_hotkey == AIM_HOTKEY_MOUSE_RIGHT) && (GetAsyncKeyState(VK_RBUTTON) != 0)) || ((ce->Game::aim_hotkey == AIM_HOTKEY_KEYBOARD_ALT) && (GetAsyncKeyState(18) != 0)))
-											//{
+											if (ce->Game::aim_hotkey == AIM_HOTKEY_MOUSE_LEFT && GetAsyncKeyState(VK_LBUTTON) != 0 || ce->Game::aim_hotkey == AIM_HOTKEY_MOUSE_RIGHT && GetAsyncKeyState(VK_RBUTTON) != 0 || ce->Game::aim_hotkey == AIM_HOTKEY_KEYBOARD_ALT && GetAsyncKeyState(18) != 0)
+											{
 												if ((bool)ce->Game::aim_position)
 												{
 													ce->Game::GetBoneCoordinate(i, &DepositCoordinates, 6);
@@ -578,9 +578,9 @@ void Draw::MainFuncDraw()
 													ce->Game::WorldToScreen(DepositCoordinates, &TrackCoordinates);
 													ce->Game::CalculateDistance(TrackCoordinates, i, 4, this->Draw::gamecent_x, this->Draw::gamecent_y);
 												}
-											//}
-											//else
-											//	ce->Game::m_locking_pawn = 0;
+											}
+											else
+												ce->Game::m_locking_pawn = 0;
 										}
 										if (ce->Game::redname_track)
 											ce->Game::TrackingRange(Head, i, this->Draw::gamewidth, this->Draw::gameheight);

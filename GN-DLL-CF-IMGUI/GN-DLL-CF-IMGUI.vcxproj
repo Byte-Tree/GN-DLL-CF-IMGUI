@@ -160,6 +160,7 @@
     <ClInclude Include="lmGui\imstb_rectpack.h" />
     <ClInclude Include="lmGui\imstb_textedit.h" />
     <ClInclude Include="lmGui\imstb_truetype.h" />
+    <ClInclude Include="NetVerification\网络验证.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ReflectiveLoader-User\GN-ReflectiveLoader-User.h" />
     <ClInclude Include="sdk\sdk.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="lmGui\imgui_impl_win32.cpp" />
     <ClCompile Include="lmGui\imgui_tables.cpp" />
     <ClCompile Include="lmGui\imgui_widgets.cpp" />
+    <ClCompile Include="NetVerification\网络验证.cpp" />
     <ClCompile Include="ReflectiveLoader-User\GN-ReflectiveLoader-User.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
