@@ -131,6 +131,7 @@ struct BaseAddress
 	__int64 Cshell;
 	__int64 CshellEndAddress;
 	__int64 ACE_BASE64;
+	__int64 ACE_BASE64End;
 	__int64 ACE_PBC_GAME64;
 	__int64 ACE_PBC_GAME64End;
 	__int64 ACE_ATS64;

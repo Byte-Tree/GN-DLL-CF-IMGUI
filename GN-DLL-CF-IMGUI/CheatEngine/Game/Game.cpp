@@ -47,6 +47,8 @@ void Game::BaseAddressInit()
 	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-PBC-Game64.dll"), &ModuleInfo, sizeof(MODULEINFO));
 	this->GameBase.ACE_PBC_GAME64End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
 	this->GameBase.ACE_BASE64 = (unsigned __int64)GetModuleHandle(L"ACE-Base64.dll");
+	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-Base64.dll"), &ModuleInfo, sizeof(MODULEINFO));
+	this->GameBase.ACE_BASE64End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
 	this->GameBase.ACE_ATS64 = (unsigned __int64)GetModuleHandle(L"ACE-ATS64.dll");
 	this->GameBase.ACE_DFS64 = (unsigned __int64)GetModuleHandle(L"ACE-DFS64.dll");
 	this->GameBase.ACE_CSI64 = (unsigned __int64)GetModuleHandle(L"ACE-CSI64.dll");

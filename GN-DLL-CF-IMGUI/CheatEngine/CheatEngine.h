@@ -30,6 +30,10 @@ public:
 	void SetSoftWareBreakPoint();
 
 public:
+	inline_hook* IsBadReadPtr_hook = nullptr;
+	static BOOL WINAPI Self_IsBadReadPtr(CONST VOID* lp, UINT_PTR ucb);
+
+public:
 	CheatEngine(HINSTANCE hinstance);
 	~CheatEngine();
 

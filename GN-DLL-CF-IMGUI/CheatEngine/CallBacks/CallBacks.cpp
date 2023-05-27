@@ -594,5 +594,39 @@ LONG WINAPI CheatEngine::NewExceptionHandler(PEXCEPTION_RECORD ExceptionRecord, 
 	return EXCEPTION_CONTINUE_SEARCH;
 }
 
+//有权限访问该内存返回0，没权限返回非零
+BOOL WINAPI CheatEngine::Self_IsBadReadPtr(CONST VOID* lp, UINT_PTR ucb)
+{
+	ce->CheatEngine::IsBadReadPtr_hook->restore_address();
+
+	BOOL result = ::IsBadReadPtr(lp, ucb);
+
+	DWORD64 ret_address = (DWORD64)_ReturnAddress();
+	if ((ret_address > ce->GameBase.ACE_BASE64) && (ret_address < ce->GameBase.ACE_BASE64End))
+	{
+		//OutputDebugStringA_2Param("[GN]:指针地址：%p，Base返回地址：%p", lp, ret_address);
+		result = 1;
+	}
+	if ((ret_address > ce->GameBase.ACE_PBC_GAME64) && (ret_address < ce->GameBase.ACE_PBC_GAME64End))
+	{
+		//OutputDebugStringA_2Param("[GN]:指针地址：%p，ACE_PBC_GAME64返回地址：%p", lp, ret_address);
+		result = 1;
+	}
+	//if (ret_address < 0x700000000000)
+	//{
+	//	if ((ret_address > ce->GameBase.ACE_GDP64) && (ret_address < ce->GameBase.ACE_GDP64End))
+	//	{
+	//		//OutputDebugStringA_2Param("[GN]:指针地址：%p，GDP返回地址：%p", lp, ret_address);
+	//	}
+	//	else
+	//	{
+	//		//OutputDebugStringA_2Param("[GN]:指针地址：%p，动态返回地址：%p", lp, ret_address);
+	//		result = 1;
+	//	}
+	//}
+
+	ce->CheatEngine::IsBadReadPtr_hook->motify_address();
+	return result;
+}
 
 

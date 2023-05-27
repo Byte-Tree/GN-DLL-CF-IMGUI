@@ -419,46 +419,46 @@ void Draw::MenuDraw()
 		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cross + SquatAccelerationHookOffset);
 		//	ImGui::Separator();
 		//}
-		//if (ImGui::CollapsingHeader(u8"刀距专区"))
-		//{
-		//	static bool ChangeStatu = FALSE;
-		//	ImGui::Text(u8"请在持刀状态下修改刀距！还原刀距时需要手持武器先还原");			ImGui::Separator();
-		//	ImGui::Text(u8"当前近战武器：");												ImGui::SameLine();
-		//	ImGui::Text(this->Tools::string_to_utf8(ce->Game::GameBase.WeaponNameValue).c_str());		ImGui::Separator();
-		//	static float KnifeWieldingDistance = 540.0;//挥刀距离
-		//	ImGui::InputFloat(u8"挥刀距离", &KnifeWieldingDistance, 1.0f, 1.0f, "%.0f");	ImGui::Separator();
-		//	static float TapSpeed = 1.2;//轻击速度
-		//	ImGui::InputFloat(u8"轻击速度", &TapSpeed, 0.1f, 1.0f, "%.1f");					ImGui::Separator();
-		//	static float HitSpeed = 1.3;//重击速度
-		//	ImGui::InputFloat(u8"重击速度", &HitSpeed, 0.1f, 1.0f, "%.1f");					ImGui::Separator();
-		//	static float TapRange = 2.0;//轻击范围
-		//	ImGui::InputFloat(u8"轻击范围", &TapRange, 1.0f, 1.0f, "%.0f");					ImGui::Separator();
-		//	static float HitRange = 2.0;//重击范围
-		//	ImGui::InputFloat(u8"重击范围", &HitRange, 1.0f, 1.0f, "%.0f");					ImGui::Separator();
-		//	if (!ChangeStatu)
-		//	{
-		//		if (ImGui::Button(u8"修改刀距"))
-		//		{
-		//			//修改刀距
-		//			if (ce->Game::ChangeKnifeDistance(KnifeWieldingDistance, TapSpeed, HitSpeed, TapRange, HitRange))
-		//				ChangeStatu = TRUE;
-		//			else
-		//				ChangeStatu = FALSE;
-		//		}
-		//	}
-		//	else
-		//	{
-		//		if (ImGui::Button(u8"还原刀距"))
-		//		{
-		//			//还原刀距
-		//			if (ce->Game::ReductionKnifeDistance())
-		//				ChangeStatu = FALSE;
-		//			else
-		//				ChangeStatu = TRUE;
-		//		}
-		//	}
-		//	ImGui::Separator();
-		//}
+		if (ImGui::CollapsingHeader(u8"刀距专区"))
+		{
+			static bool ChangeStatu = FALSE;
+			ImGui::Text(u8"请在持刀状态下修改刀距！还原刀距时需要手持武器先还原");			ImGui::Separator();
+			ImGui::Text(u8"当前近战武器：");												ImGui::SameLine();
+			ImGui::Text(this->Tools::string_to_utf8(ce->Game::GameBase.WeaponNameValue).c_str());		ImGui::Separator();
+			static float KnifeWieldingDistance = 540.0;//挥刀距离
+			ImGui::InputFloat(u8"挥刀距离", &KnifeWieldingDistance, 1.0f, 1.0f, "%.0f");	ImGui::Separator();
+			static float TapSpeed = 1.2;//轻击速度
+			ImGui::InputFloat(u8"轻击速度", &TapSpeed, 0.1f, 1.0f, "%.1f");					ImGui::Separator();
+			static float HitSpeed = 1.3;//重击速度
+			ImGui::InputFloat(u8"重击速度", &HitSpeed, 0.1f, 1.0f, "%.1f");					ImGui::Separator();
+			static float TapRange = 2.0;//轻击范围
+			ImGui::InputFloat(u8"轻击范围", &TapRange, 1.0f, 1.0f, "%.0f");					ImGui::Separator();
+			static float HitRange = 2.0;//重击范围
+			ImGui::InputFloat(u8"重击范围", &HitRange, 1.0f, 1.0f, "%.0f");					ImGui::Separator();
+			if (!ChangeStatu)
+			{
+				if (ImGui::Button(u8"修改刀距"))
+				{
+					//修改刀距
+					if (ce->Game::ChangeKnifeDistance(KnifeWieldingDistance, TapSpeed, HitSpeed, TapRange, HitRange))
+						ChangeStatu = TRUE;
+					else
+						ChangeStatu = FALSE;
+				}
+			}
+			else
+			{
+				if (ImGui::Button(u8"还原刀距"))
+				{
+					//还原刀距
+					if (ce->Game::ReductionKnifeDistance())
+						ChangeStatu = FALSE;
+					else
+						ChangeStatu = TRUE;
+				}
+			}
+			ImGui::Separator();
+		}
 		if (ImGui::CollapsingHeader(u8"菜单专区"))
 		{
 			static int MenuStyleSwitch = 0;

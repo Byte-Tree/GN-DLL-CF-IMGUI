@@ -61,13 +61,15 @@ CheatEngine::~CheatEngine()
 bool CheatEngine::ByPassCheck(PCONTEXT context)
 {
 	DWORD64 caller_address = this->MemoryTools::ReadLong(context->Rsi);
+	DWORD64 callto_address = this->MemoryTools::ReadLong(context->Rbx + 0x20);
+
 	////绘制检测
-	if ((caller_address > this->Game::GameBase.Win32U) && (caller_address < this->Game::GameBase.Win32UEnd))
-		return true;
-	if ((caller_address > this->Game::GameBase.Gdi32) && (caller_address < this->Game::GameBase.Gdi32End))
-		return true;
-	if ((caller_address > this->Game::GameBase.D3D9) && (caller_address < this->Game::GameBase.D3D9End))
-		return true;
+	//if ((caller_address > this->Game::GameBase.Win32U) && (caller_address < this->Game::GameBase.Win32UEnd))
+	//	return true;
+	//if ((caller_address > this->Game::GameBase.Gdi32) && (caller_address < this->Game::GameBase.Gdi32End))
+	//	return true;
+	//if ((caller_address > this->Game::GameBase.D3D9) && (caller_address < this->Game::GameBase.D3D9End))
+	//	return true;
 
 	//////////功能检测
 	////////DWORD64 callto_address = ce->MemoryTools::ReadLong(context->Rbx + 0x20);
@@ -104,16 +106,16 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 	//}
 	//if (caller_address == this->Game::GameBase.Cshell + 0xACA640)
 	//	return true;
-
-	//if (caller_address == this->Game::GameBase.Cshell + 0x12F34C0)
-	//	return false;
-	//DWORD64 callto_address = this->MemoryTools::ReadLong(context->Rbx + 0x20);
-	//if ((callto_address > this->GameBase.ACE_GDP64) && (callto_address < this->GameBase.ACE_GDP64End))
-	//	return false;
-	//else if ((callto_address > this->GameBase.ACE_PBC_GAME64) && (callto_address < this->GameBase.ACE_PBC_GAME64End))
-	//	return false;
-	//else
-	//	return true;
+	
+	//处理后无异常
+	if (caller_address == this->Game::GameBase.Cshell + 0x12F34C0)
+		return false;
+	if ((callto_address > this->GameBase.ACE_GDP64) && (callto_address < this->GameBase.ACE_GDP64End))
+		return false;
+	else if ((callto_address > this->GameBase.ACE_PBC_GAME64) && (callto_address < this->GameBase.ACE_PBC_GAME64End))
+		return false;
+	else
+		return true;
 
 	return false;
 }
@@ -136,6 +138,9 @@ void CheatEngine::InitHook()
 		this->CheatEngine::Draw::getbuffer_hook = new inline_hook(SwapChainTable[1], (__int64)&Draw::Self_GetBuffer, FALSE);
 		this->CheatEngine::Draw::getbuffer_hook->motify_address();
 	}
+
+	//this->CheatEngine::IsBadReadPtr_hook = new inline_hook((long long)&IsBadReadPtr, (__int64)&CheatEngine::Self_IsBadReadPtr, FALSE);
+	//this->CheatEngine::IsBadReadPtr_hook->motify_address();
 
 }
 
