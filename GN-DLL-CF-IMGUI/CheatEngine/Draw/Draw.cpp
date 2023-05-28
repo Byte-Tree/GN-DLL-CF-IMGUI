@@ -312,18 +312,19 @@ void Draw::MenuDraw()
 {
 	if (this->show_menu)
 	{
-		ImGui::Begin(u8"Blue Whale | （Home隐藏显示）");
+		ImGui::Begin(u8"蓝鲸 | （Home隐藏显示）");
 		if (ImGui::CollapsingHeader(u8"显示专区"))
 		{
-			ImGui::Checkbox(u8"显示方框", &this->show_rectbox);													ImGui::SameLine();
-			ImGui::Checkbox(u8"显示骨骼", &this->show_bone);													ImGui::SameLine();
+			//ImGui::Checkbox(u8"显示方框", &this->show_rectbox);													ImGui::SameLine();
+			//ImGui::Checkbox(u8"显示骨骼", &this->show_bone);													ImGui::SameLine();
 			ImGui::Checkbox(u8"显示昵称", &this->show_name);													ImGui::SameLine();
-			ImGui::Checkbox(u8"显示雷包", &this->show_c4);														ImGui::Separator();
+			ImGui::Checkbox(u8"显示雷包", &this->show_c4);														ImGui::SameLine();
+			ImGui::Checkbox(u8"显示血量", &this->show_health);													ImGui::Separator();
 
-			ImGui::Checkbox(u8"显示血量", &this->show_health);													ImGui::SameLine();
 			ImGui::Checkbox(u8"显示准心", &this->show_crosshair);												ImGui::SameLine();
 			ImGui::Checkbox(u8"预瞄射线", &this->show_previewray);												ImGui::SameLine();
 			ImGui::Checkbox(u8"追踪范围", &this->show_trackrange);												ImGui::Separator();
+
 			////ImGui::Checkbox(u8"显示天线", &this->show_antenna);													ImGui::SameLine();
 			//ImGui::Checkbox(u8"显示扣扣", &this->show_userQQnumber);											ImGui::SameLine();
 			//ImGui::Checkbox(u8"显示队友", &this->show_teamate);													ImGui::SameLine();
@@ -340,7 +341,7 @@ void Draw::MenuDraw()
 			//	ce->Game::aimbot = false; ce->Game::track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
 			//}
 			//ImGui::SameLine();
-			if (ImGui::Checkbox(u8"子弹追踪", &ce->Game::silence_track))
+			if (ImGui::Checkbox(u8"视觉追踪", &ce->Game::silence_track))
 			{
 				ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false;/*this->Game::range_track = false;*/
 			}
@@ -364,101 +365,101 @@ void Draw::MenuDraw()
 			ImGui::DragInt(u8"自瞄速度(越小越好)", &ce->Game::aim_speed, 0.3f, 1, 80, "%d");					ImGui::Separator();
 			ImGui::DragInt(u8"打击范围(越大越好)", &ce->Game::track_range, 0.6f, 30, 1200, "%d");				ImGui::Separator();
 		}
-		////if (ImGui::CollapsingHeader(u8"范围专区"))
+		//////if (ImGui::CollapsingHeader(u8"范围专区"))
+		//////{
+		//////	if (ImGui::Checkbox(u8"范围开关", &this->Game::range_track))
+		//////	{
+		//////		this->CheatEngine::CheckSoftWareBreakPoint(this->Game::GameBase.Cross + RangeTrackAddressOne);
+		//////		this->CheatEngine::CheckSoftWareBreakPoint(this->Game::GameBase.Cross + RangeTrackAddressTwo);
+		//////		this->CheatEngine::CheckSoftWareBreakPoint(this->Game::GameBase.Cross + RangeTrackAddressThree);
+		//////		//this->Game::aimbot = false; this->Game::track = false; this->Game::redname_track = false; this->Game::silence_track = false;
+		//////	}	ImGui::SameLine();
+		//////	static int range_trace_position_select = 3; ImGui::SetNextItemWidth(75);
+		//////	if (ImGui::Combo(u8"设置部位", &range_trace_position_select, u8"黄金爆头\0银色爆头\0颈部\0锁骨\0手\0脚\0"))
+		//////	{
+		//////		switch (range_trace_position_select)
+		//////		{
+		//////		case 0: {	this->Game::range_track_position = RANGE_TRACK_POSITION_GOLDEN_HEAD; break;	}
+		//////		case 1: {	this->Game::range_track_position = RANGE_TRACK_POSITION_SILVER_HEAD; break; }
+		//////		case 2: {	this->Game::range_track_position = RANGE_TRACK_POSITION_NECK; break; }
+		//////		case 3: {	this->Game::range_track_position = RANGE_TRACK_POSITION_CLAVICLE; break; }
+		//////		case 4: {	this->Game::range_track_position = RANGE_TRACK_POSITION_HAND; break; }
+		//////		case 5: {	this->Game::range_track_position = RANGE_TRACK_POSITION_FOOT; break; }
+		//////		default:	break;
+		//////		}
+		//////	}
+		//////	ImGui::Separator();
+		//////	ImGui::DragFloat(u8"设置范围大小", &this->Game::range_track_value, 1.0f, 1, 200, "%.0f");			ImGui::Separator();
+		//////}
+		////if (ImGui::CollapsingHeader(u8"功能专区"))
 		////{
-		////	if (ImGui::Checkbox(u8"范围开关", &this->Game::range_track))
+		////	if (ImGui::Checkbox(u8"无后座力", &this->Game::no_backseat))
+		////		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + BulletWithoutBackSeatHookOffset);
+		////	ImGui::SameLine();
+		////	if (ImGui::Checkbox(u8"零秒换弹", &this->Game::zero_second_reload))
 		////	{
-		////		this->CheatEngine::CheckSoftWareBreakPoint(this->Game::GameBase.Cross + RangeTrackAddressOne);
-		////		this->CheatEngine::CheckSoftWareBreakPoint(this->Game::GameBase.Cross + RangeTrackAddressTwo);
-		////		this->CheatEngine::CheckSoftWareBreakPoint(this->Game::GameBase.Cross + RangeTrackAddressThree);
-		////		//this->Game::aimbot = false; this->Game::track = false; this->Game::redname_track = false; this->Game::silence_track = false;
+		////		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + ZeroBulletChange_NewMapHookOffset);
+		////		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + ZeroBulletChange_OldMapHookOffset);
 		////	}	ImGui::SameLine();
-		////	static int range_trace_position_select = 3; ImGui::SetNextItemWidth(75);
-		////	if (ImGui::Combo(u8"设置部位", &range_trace_position_select, u8"黄金爆头\0银色爆头\0颈部\0锁骨\0手\0脚\0"))
-		////	{
-		////		switch (range_trace_position_select)
-		////		{
-		////		case 0: {	this->Game::range_track_position = RANGE_TRACK_POSITION_GOLDEN_HEAD; break;	}
-		////		case 1: {	this->Game::range_track_position = RANGE_TRACK_POSITION_SILVER_HEAD; break; }
-		////		case 2: {	this->Game::range_track_position = RANGE_TRACK_POSITION_NECK; break; }
-		////		case 3: {	this->Game::range_track_position = RANGE_TRACK_POSITION_CLAVICLE; break; }
-		////		case 4: {	this->Game::range_track_position = RANGE_TRACK_POSITION_HAND; break; }
-		////		case 5: {	this->Game::range_track_position = RANGE_TRACK_POSITION_FOOT; break; }
-		////		default:	break;
-		////		}
-		////	}
+		////	if (ImGui::Checkbox(u8"卡不掉血", &this->Game::no_blood_loss))
+		////		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + KillSelfFuncOffset);
+		////	ImGui::SameLine();
+		////	if (ImGui::Checkbox(u8"空格飞天", &this->Game::space_fly))
+		////		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cross + FlyOffset);
+		////	ImGui::SameLine();
+		////	if (ImGui::Checkbox(u8"武器连发", &this->Game::weapon_fire))
+		////		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + WeaponFireHookOffset);
 		////	ImGui::Separator();
-		////	ImGui::DragFloat(u8"设置范围大小", &this->Game::range_track_value, 1.0f, 1, 200, "%.0f");			ImGui::Separator();
+		////	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////	ImGui::Checkbox(u8"B键追敌", &this->Game::teleport_track_enemy);	ImGui::Separator();
+		////	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////	if (ImGui::InputFloat(u8"静步加速度", &this->Game::static_acceleration_value, 0.5f, 1.0f, "%0.1f"))
+		////		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cross + StaticAccelerationHookOffset);
+		////	ImGui::Separator();
+		////	if (ImGui::InputFloat(u8"下蹲加速度", &this->Game::squat_acceleration_value, 0.5f, 1.0f, "%0.1f"))
+		////		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cross + SquatAccelerationHookOffset);
+		////	ImGui::Separator();
 		////}
-		//if (ImGui::CollapsingHeader(u8"功能专区"))
+		//if (ImGui::CollapsingHeader(u8"刀距专区"))
 		//{
-		//	if (ImGui::Checkbox(u8"无后座力", &this->Game::no_backseat))
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + BulletWithoutBackSeatHookOffset);
-		//	ImGui::SameLine();
-		//	if (ImGui::Checkbox(u8"零秒换弹", &this->Game::zero_second_reload))
+		//	static bool ChangeStatu = FALSE;
+		//	ImGui::Text(u8"请在持刀状态下修改刀距！还原刀距时需要手持武器先还原");			ImGui::Separator();
+		//	ImGui::Text(u8"当前近战武器：");												ImGui::SameLine();
+		//	ImGui::Text(this->Tools::string_to_utf8(ce->Game::GameBase.WeaponNameValue).c_str());		ImGui::Separator();
+		//	static float KnifeWieldingDistance = 540.0;//挥刀距离
+		//	ImGui::InputFloat(u8"挥刀距离", &KnifeWieldingDistance, 1.0f, 1.0f, "%.0f");	ImGui::Separator();
+		//	static float TapSpeed = 1.2;//轻击速度
+		//	ImGui::InputFloat(u8"轻击速度", &TapSpeed, 0.1f, 1.0f, "%.1f");					ImGui::Separator();
+		//	static float HitSpeed = 1.3;//重击速度
+		//	ImGui::InputFloat(u8"重击速度", &HitSpeed, 0.1f, 1.0f, "%.1f");					ImGui::Separator();
+		//	static float TapRange = 2.0;//轻击范围
+		//	ImGui::InputFloat(u8"轻击范围", &TapRange, 1.0f, 1.0f, "%.0f");					ImGui::Separator();
+		//	static float HitRange = 2.0;//重击范围
+		//	ImGui::InputFloat(u8"重击范围", &HitRange, 1.0f, 1.0f, "%.0f");					ImGui::Separator();
+		//	if (!ChangeStatu)
 		//	{
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + ZeroBulletChange_NewMapHookOffset);
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + ZeroBulletChange_OldMapHookOffset);
-		//	}	ImGui::SameLine();
-		//	if (ImGui::Checkbox(u8"卡不掉血", &this->Game::no_blood_loss))
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + KillSelfFuncOffset);
-		//	ImGui::SameLine();
-		//	if (ImGui::Checkbox(u8"空格飞天", &this->Game::space_fly))
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cross + FlyOffset);
-		//	ImGui::SameLine();
-		//	if (ImGui::Checkbox(u8"武器连发", &this->Game::weapon_fire))
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + WeaponFireHookOffset);
-		//	ImGui::Separator();
-		//	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//	ImGui::Checkbox(u8"B键追敌", &this->Game::teleport_track_enemy);	ImGui::Separator();
-		//	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//	if (ImGui::InputFloat(u8"静步加速度", &this->Game::static_acceleration_value, 0.5f, 1.0f, "%0.1f"))
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cross + StaticAccelerationHookOffset);
-		//	ImGui::Separator();
-		//	if (ImGui::InputFloat(u8"下蹲加速度", &this->Game::squat_acceleration_value, 0.5f, 1.0f, "%0.1f"))
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cross + SquatAccelerationHookOffset);
+		//		if (ImGui::Button(u8"修改刀距"))
+		//		{
+		//			//修改刀距
+		//			if (ce->Game::ChangeKnifeDistance(KnifeWieldingDistance, TapSpeed, HitSpeed, TapRange, HitRange))
+		//				ChangeStatu = TRUE;
+		//			else
+		//				ChangeStatu = FALSE;
+		//		}
+		//	}
+		//	else
+		//	{
+		//		if (ImGui::Button(u8"还原刀距"))
+		//		{
+		//			//还原刀距
+		//			if (ce->Game::ReductionKnifeDistance())
+		//				ChangeStatu = FALSE;
+		//			else
+		//				ChangeStatu = TRUE;
+		//		}
+		//	}
 		//	ImGui::Separator();
 		//}
-		if (ImGui::CollapsingHeader(u8"刀距专区"))
-		{
-			static bool ChangeStatu = FALSE;
-			ImGui::Text(u8"请在持刀状态下修改刀距！还原刀距时需要手持武器先还原");			ImGui::Separator();
-			ImGui::Text(u8"当前近战武器：");												ImGui::SameLine();
-			ImGui::Text(this->Tools::string_to_utf8(ce->Game::GameBase.WeaponNameValue).c_str());		ImGui::Separator();
-			static float KnifeWieldingDistance = 540.0;//挥刀距离
-			ImGui::InputFloat(u8"挥刀距离", &KnifeWieldingDistance, 1.0f, 1.0f, "%.0f");	ImGui::Separator();
-			static float TapSpeed = 1.2;//轻击速度
-			ImGui::InputFloat(u8"轻击速度", &TapSpeed, 0.1f, 1.0f, "%.1f");					ImGui::Separator();
-			static float HitSpeed = 1.3;//重击速度
-			ImGui::InputFloat(u8"重击速度", &HitSpeed, 0.1f, 1.0f, "%.1f");					ImGui::Separator();
-			static float TapRange = 2.0;//轻击范围
-			ImGui::InputFloat(u8"轻击范围", &TapRange, 1.0f, 1.0f, "%.0f");					ImGui::Separator();
-			static float HitRange = 2.0;//重击范围
-			ImGui::InputFloat(u8"重击范围", &HitRange, 1.0f, 1.0f, "%.0f");					ImGui::Separator();
-			if (!ChangeStatu)
-			{
-				if (ImGui::Button(u8"修改刀距"))
-				{
-					//修改刀距
-					if (ce->Game::ChangeKnifeDistance(KnifeWieldingDistance, TapSpeed, HitSpeed, TapRange, HitRange))
-						ChangeStatu = TRUE;
-					else
-						ChangeStatu = FALSE;
-				}
-			}
-			else
-			{
-				if (ImGui::Button(u8"还原刀距"))
-				{
-					//还原刀距
-					if (ce->Game::ReductionKnifeDistance())
-						ChangeStatu = FALSE;
-					else
-						ChangeStatu = TRUE;
-				}
-			}
-			ImGui::Separator();
-		}
 		if (ImGui::CollapsingHeader(u8"菜单专区"))
 		{
 			static int MenuStyleSwitch = 0;

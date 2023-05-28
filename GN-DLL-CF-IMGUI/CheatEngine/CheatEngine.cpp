@@ -38,18 +38,18 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 		/*0*/SilentTrackAddress);
 	this->CheatEngine::SetSoftWareBreakPoint();
 
-	//////Clear Modulehandle Header
-	////ce->CheatEngine::MemoryTools::WriteBytes((DWORD64)hinstance, temp_data, sizeof(temp_data));
-	////Hide Dll Memory
-	//if (!this->CheatEngine::driver->HideMemoryByVAD((ULONG64)this->self_module_handle, 0/*模块大小*/))
-	//{
-	//	OutputDebugStringA("[GN]:HideMemoryByVAD() error!");
-	//	exit(0);
-	//}
-	////BYTE temp_data[1024] = { NULL };
-	////for (int i = 0; i < 1024; i++)
-	////	temp_data[i] = 0x05;
-	////ce->CheatEngine::driver->WriteBytesByMDL((PVOID)hinstance, temp_data, sizeof(temp_data));
+	////Clear Modulehandle Header
+	ZeroMemory(hinstance, 1024);
+	//////Hide Dll Memory
+	////if (!this->CheatEngine::driver->HideMemoryByVAD((ULONG64)this->self_module_handle, 0/*模块大小*/))
+	////{
+	////	OutputDebugStringA("[GN]:HideMemoryByVAD() error!");
+	////	exit(0);
+	////}
+	//////BYTE temp_data[1024] = { NULL };
+	//////for (int i = 0; i < 1024; i++)
+	//////	temp_data[i] = 0x05;
+	//////ce->CheatEngine::driver->WriteBytesByMDL((PVOID)hinstance, temp_data, sizeof(temp_data));
 
 }
 
@@ -63,13 +63,13 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 	DWORD64 caller_address = this->MemoryTools::ReadLong(context->Rsi);
 	DWORD64 callto_address = this->MemoryTools::ReadLong(context->Rbx + 0x20);
 
-	////绘制检测
-	//if ((caller_address > this->Game::GameBase.Win32U) && (caller_address < this->Game::GameBase.Win32UEnd))
-	//	return true;
-	//if ((caller_address > this->Game::GameBase.Gdi32) && (caller_address < this->Game::GameBase.Gdi32End))
-	//	return true;
-	//if ((caller_address > this->Game::GameBase.D3D9) && (caller_address < this->Game::GameBase.D3D9End))
-	//	return true;
+	//绘制检测
+	if ((caller_address > this->Game::GameBase.Win32U) && (caller_address < this->Game::GameBase.Win32UEnd))
+		return true;
+	if ((caller_address > this->Game::GameBase.Gdi32) && (caller_address < this->Game::GameBase.Gdi32End))
+		return true;
+	if ((caller_address > this->Game::GameBase.D3D9) && (caller_address < this->Game::GameBase.D3D9End))
+		return true;
 
 	//////////功能检测
 	////////DWORD64 callto_address = ce->MemoryTools::ReadLong(context->Rbx + 0x20);
@@ -107,15 +107,15 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 	//if (caller_address == this->Game::GameBase.Cshell + 0xACA640)
 	//	return true;
 	
-	//处理后无异常
-	if (caller_address == this->Game::GameBase.Cshell + 0x12F34C0)
-		return false;
-	if ((callto_address > this->GameBase.ACE_GDP64) && (callto_address < this->GameBase.ACE_GDP64End))
-		return false;
-	else if ((callto_address > this->GameBase.ACE_PBC_GAME64) && (callto_address < this->GameBase.ACE_PBC_GAME64End))
-		return false;
-	else
-		return true;
+	////处理后无异常 162
+	//if (caller_address == this->Game::GameBase.Cshell + 0x12F34C0)
+	//	return false;
+	//if ((callto_address > this->GameBase.ACE_GDP64) && (callto_address < this->GameBase.ACE_GDP64End))
+	//	return false;
+	//else if ((callto_address > this->GameBase.ACE_PBC_GAME64) && (callto_address < this->GameBase.ACE_PBC_GAME64End))
+	//	return false;
+	//else
+	//	return true;
 
 	return false;
 }
@@ -130,14 +130,14 @@ void CheatEngine::InitHook()
 	//this->CheatEngine::Draw::drawindexedprimitive_hook = new inline_hook(direct3ddevice9_table[82], (__int64)&Draw::Self_DrawIndexedPrimitive, FALSE);
 	//this->CheatEngine::Draw::drawindexedprimitive_hook->motify_address();
 
-	if (this->CheatEngine::Draw::CreateDeviceD3D11(this->GetGameWindowHandle()))
-	{
-		__int64* SwapChainTable = (__int64*)*(__int64*)this->CheatEngine::Draw::GetD3D11SwapChain();
-		OutputDebugStringA_1Param("[GN]:GetBuffer地址：%p", SwapChainTable[1]);
-		this->CheatEngine::Draw::m_OriginalGetBufferPoint = (OriginalGetBufferStruct)SwapChainTable[1];
-		this->CheatEngine::Draw::getbuffer_hook = new inline_hook(SwapChainTable[1], (__int64)&Draw::Self_GetBuffer, FALSE);
-		this->CheatEngine::Draw::getbuffer_hook->motify_address();
-	}
+	//if (this->CheatEngine::Draw::CreateDeviceD3D11(this->GetGameWindowHandle()))
+	//{
+	//	__int64* SwapChainTable = (__int64*)*(__int64*)this->CheatEngine::Draw::GetD3D11SwapChain();
+	//	OutputDebugStringA_1Param("[GN]:GetBuffer地址：%p", SwapChainTable[1]);
+	//	this->CheatEngine::Draw::m_OriginalGetBufferPoint = (OriginalGetBufferStruct)SwapChainTable[1];
+	//	this->CheatEngine::Draw::getbuffer_hook = new inline_hook(SwapChainTable[1], (__int64)&Draw::Self_GetBuffer, FALSE);
+	//	this->CheatEngine::Draw::getbuffer_hook->motify_address();
+	//}
 
 	//this->CheatEngine::IsBadReadPtr_hook = new inline_hook((long long)&IsBadReadPtr, (__int64)&CheatEngine::Self_IsBadReadPtr, FALSE);
 	//this->CheatEngine::IsBadReadPtr_hook->motify_address();
