@@ -9,8 +9,9 @@
 #define GlobalBaseFuncOffset 0x815844							//处理全局Base偏移
 #define PassBaseCheckOffset 0x1D3460							//在扫描点下面下hook 效验线程
 #define PassBaseAddressOffset 0x232B60							//在jmp上下hook
-#define BASEVirtualAllocOffset 0x2B4358							//Base模块调用VirtualAlloc
+#define BASEVirtualAllocOffset 0x3146C0							//Base模块调用VirtualAlloc
 #define BASEVirtualProtectOffset 0x2B4708						//Base模块调用VirtualProtect
+#define BASELoadLibraryWOffset 0x3142F8							//Base模块调用LoadLibraryW
 #define BASESleepOffset 0x2B4208								//Base模块调用Sleep
 #define BASECreateThreadOffset 0x2B41D0							//Base模块调用CreateThread
 //#define BASEGetModuleHandleWOffset 0x2B41F8					//Base模块调用GetModuleHandleW

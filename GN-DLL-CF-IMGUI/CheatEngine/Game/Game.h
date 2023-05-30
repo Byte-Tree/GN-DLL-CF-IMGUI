@@ -9,6 +9,7 @@
 #include "Update/Update.h"
 #include "DataStruct.h"
 #include "../MemoryTools/MemoryTools.h"
+#include "../CheatEngineApi/HookApi/HookApi.h"
 
 
 class Game :public MemoryTools

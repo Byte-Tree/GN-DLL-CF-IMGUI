@@ -629,4 +629,67 @@ BOOL WINAPI CheatEngine::Self_IsBadReadPtr(CONST VOID* lp, UINT_PTR ucb)
 	return result;
 }
 
+//Self SendTo api
+int WINAPI CheatEngine::Self_SendTo(_In_ SOCKET s, _In_reads_bytes_(len) const char FAR* buf, _In_ int len,
+	_In_ int flags, _In_reads_bytes_opt_(tolen) const struct sockaddr FAR* to, _In_ int tolen)
+{
+	ce->CheatEngine::SendTo_hook->restore_address();
+	WaitForSingleObject(ce->CheatEngine::SendToEvent, INFINITE);
+
+	PBYTE p = (PBYTE)buf;
+
+	//连接语音
+	if ((p[0] == 0x28) && (p[1] == 0x28))
+	{
+		SetEvent(ce->CheatEngine::SendToEvent);
+		ce->CheatEngine::SendTo_hook->motify_address();
+		return SOCKET_ERROR;
+	}
+	//数据包异常
+	//if ((p[140] == 0x00) && (p[141] == 0x00))
+	//{
+	//	OutputDebugStringA("[GN]:拦截0x00");
+	//	SetEvent(ce->CheatEngine::SendToEvent);
+	//	ce->CheatEngine::SendTo_hook->motify_address();
+	//	return SOCKET_ERROR;
+	//}
+
+	//if (ntohs(((sockaddr_in*)to)->sin_port) == 8080 || ntohs(((sockaddr_in*)to)->sin_port) == 8011 || ntohs(((sockaddr_in*)to)->sin_port) == 10002)
+	//{//10001是语音通讯
+	//	//printf("拦截的UPD数据包：ip:%s, 端口:%d\n", inet_ntoa(inaddr->sin_addr), ntohs(inaddr->sin_port));
+	//	SetEvent(ce->CheatEngine::SendToEvent);
+	//	ce->CheatEngine::SendTo_hook->motify_address();
+	//	return len;
+	//}
+
+	FILE* SendToFile = fopen("C:\\SendToLog.txt", "a+");
+	for (int i = 0; i < len; i++)
+		fprintf(SendToFile, "%02X ", p[i]);
+	fprintf(SendToFile, "\n\n");
+	fclose(SendToFile);
+
+	HRESULT result = ::sendto(s, buf, len, flags, to, tolen);
+	SetEvent(ce->CheatEngine::SendToEvent);
+	ce->CheatEngine::SendTo_hook->motify_address();
+	return result;
+}
+
+int WINAPI CheatEngine::Self_Send(_In_ SOCKET s, _In_reads_bytes_(len) const char FAR* buf, _In_ int len, _In_ int flags)
+{
+	ce->CheatEngine::Send_hook->restore_address();
+	WaitForSingleObject(ce->CheatEngine::SendEvent, INFINITE);
+
+	PBYTE p = (PBYTE)buf;
+
+	FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
+	for (int i = 0; i < len; i++)
+		fprintf(SendFile, "%02X ", p[i]);
+	fprintf(SendFile, "\n\n");
+	fclose(SendFile);
+
+	HRESULT result = ::send(s, buf, len, flags);
+	SetEvent(ce->CheatEngine::SendEvent);
+	ce->CheatEngine::Send_hook->motify_address();
+	return result;
+}
 

@@ -224,6 +224,7 @@ struct BaseAddress
 	char WeaponNameValue[MAX_PATH];//武器名称
 	char LastWeaponNameValue[MAX_PATH];//上一个武器名称
 
+	DWORD64 PassReadNameTrack = 0;
 	BYTE* DrawTesting;//绘制检测
 	__int64 FuncTesting;//功能检测
 	__int64 StructureATSAddress;//ATS构造地址

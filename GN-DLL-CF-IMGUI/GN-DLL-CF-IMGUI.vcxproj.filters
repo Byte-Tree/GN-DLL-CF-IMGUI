@@ -60,6 +60,9 @@
     <Filter Include="CheatEngine\NetVerification">
       <UniqueIdentifier>{4b6cae61-b21e-4ff8-bb93-fedf14ae52a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CheatEngine\CheatEngineApi\HookApi">
+      <UniqueIdentifier>{646c0285-7098-45ba-8f63-34c9a75852ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -146,6 +149,9 @@
     <ClInclude Include="NetVerification\网络验证.h">
       <Filter>CheatEngine\NetVerification</Filter>
     </ClInclude>
+    <ClInclude Include="CheatEngine\CheatEngineApi\HookApi\HookApi.h">
+      <Filter>CheatEngine\CheatEngineApi\HookApi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CheatEngine\CheatEngine.cpp">
@@ -195,6 +201,9 @@
     </ClCompile>
     <ClCompile Include="NetVerification\网络验证.cpp">
       <Filter>CheatEngine\NetVerification</Filter>
+    </ClCompile>
+    <ClCompile Include="CheatEngine\CheatEngineApi\HookApi\HookApi.cpp">
+      <Filter>CheatEngine\CheatEngineApi\HookApi</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

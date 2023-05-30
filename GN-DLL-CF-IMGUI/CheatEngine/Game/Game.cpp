@@ -152,9 +152,9 @@ void Game::BaseAddressInit()
 
 void Game::ByPassACE()
 {
-	//this->Game::ACE_Base();
-	//this->Game::ACE_ATS();
-	//this->Game::ACE_CSI();
+	this->Game::ACE_Base();
+	this->Game::ACE_ATS();
+	this->Game::ACE_CSI();
 	this->Game::ACE_PBC();
 
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassThread, NULL, NULL, NULL);
@@ -162,51 +162,71 @@ void Game::ByPassACE()
 
 void Game::ACE_Base()
 {
+	while (true)
+	{
+		this->Game::GameBase.ACE_BASE64 = (__int64)GetModuleHandleA("ACE-Base64.dll");
+		if (this->Game::GameBase.ACE_BASE64)
+		{
+			DWORD64 virtualalloc_address = this->Game::GameBase.ACE_BASE64 + BASEVirtualAllocOffset;
+			DWORD64 loadlibraryw_address = this->Game::GameBase.ACE_BASE64 + BASELoadLibraryWOffset;
+			if ((this->Game::MemoryTools::ReadLong(virtualalloc_address) == (__int64)GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "VirtualProtect")) || ((this->Game::MemoryTools::ReadLong(virtualalloc_address) != (__int64)&HookApi::Self_VirtualAlloc)))
+			{
+				ce->CheatEngine::driver->WriteLongByMDL((PVOID)virtualalloc_address, (__int64)&HookApi::Self_VirtualAlloc);
+				ce->CheatEngine::driver->WriteLongByMDL((PVOID)loadlibraryw_address, (__int64)&HookApi::Self_LoadLibraryW);
 
+				if (this->Game::MemoryTools::ReadLong(virtualalloc_address) == (__int64)&HookApi::Self_VirtualAlloc)
+				{
+					//OutputDebugStringA_1Param("[GN]:跳出，读取的值：%p", this->Game::MemoryTools::ReadLong(virtualalloc_address));
+					break;
+				}
+			}
+		}
+		Sleep(1);
+	}
 }
 
 void Game::ACE_ATS()
 {
+	////while (true)
+	////{
+	////	if (this->Game::GameBase.ACE_ATS64)
+	////	{
+	////		if (this->MemoryTools::ReadLong(this->Game::GameBase.ACE_ATS64 + ATSGetCurrentProcessOffset) == (__int64)&GetCurrentProcess)
+	////		{
+	////			this->Game::driver->WriteLong(this->Game::GameBase.ACE_ATS64 + ATSGetCurrentProcessOffset, (__int64)&Self_GetCurrentProcess);
+	////			if (this->MemoryTools::ReadLong(this->Game::GameBase.ACE_ATS64 + ATSGetCurrentProcessOffset) == (__int64)&Self_GetCurrentProcess)
+	////				break;
+	////		}
+	////		else
+	////		{
+	////			MessageBoxA(NULL, "检测到ATS需要更新，请联系管理员更新后再使用！", "警告", MB_OK);
+	////			exit(-1);
+	////		}
+	////	}
+	////	else
+	////		this->Game::GameBase.ACE_ATS64 = (__int64)GetModuleHandleA("ACE-ATS64.dll");
+	////}
+	//
 	//while (true)
 	//{
 	//	if (this->Game::GameBase.ACE_ATS64)
 	//	{
-	//		if (this->MemoryTools::ReadLong(this->Game::GameBase.ACE_ATS64 + ATSGetCurrentProcessOffset) == (__int64)&GetCurrentProcess)
-	//		{
-	//			this->Game::driver->WriteLong(this->Game::GameBase.ACE_ATS64 + ATSGetCurrentProcessOffset, (__int64)&Self_GetCurrentProcess);
-	//			if (this->MemoryTools::ReadLong(this->Game::GameBase.ACE_ATS64 + ATSGetCurrentProcessOffset) == (__int64)&Self_GetCurrentProcess)
-	//				break;
-	//		}
-	//		else
-	//		{
-	//			MessageBoxA(NULL, "检测到ATS需要更新，请联系管理员更新后再使用！", "警告", MB_OK);
-	//			exit(-1);
-	//		}
+	//		//crc
+	//		//if (this->MemoryTools::ReadLong(this->Game::GameBase.ACE_ATS64 + ATSGetModuleInformationOffset) == (__int64)GetProcAddress(GetModuleHandleA("PSAPI.dll"), "GetModuleInformation"))
+	//		//{
+	//		//	this->Game::driver->WriteLong(this->Game::GameBase.ACE_ATS64 + ATSGetModuleInformationOffset, (__int64)&Self_GetModuleInformation);
+	//		//	this->Game::driver->WriteLong(this->Game::GameBase.ACE_ATS64 + ATSGetModuleHandleAOffset, (__int64)&Self_GetModuleHandleA);
+	//		//	break;
+	//		//}
+	//		//else
+	//		//{
+	//		//	MessageBoxA(NULL, "检测到ATS需要更新，请联系管理员更新后再使用！", "警告", MB_OK);
+	//		//	exit(-1);
+	//		//}
 	//	}
 	//	else
-	//		this->Game::GameBase.ACE_ATS64 = (__int64)GetModuleHandleA("ACE-ATS64.dll");
+	//		this->Game::GameBase.ACE_ATS64 = (__int64)GetModuleHandleA("ace-ats64.dll");
 	//}
-
-	while (true)
-	{
-		if (this->Game::GameBase.ACE_ATS64)
-		{
-			//crc
-			//if (this->MemoryTools::ReadLong(this->Game::GameBase.ACE_ATS64 + ATSGetModuleInformationOffset) == (__int64)GetProcAddress(GetModuleHandleA("PSAPI.dll"), "GetModuleInformation"))
-			//{
-			//	this->Game::driver->WriteLong(this->Game::GameBase.ACE_ATS64 + ATSGetModuleInformationOffset, (__int64)&Self_GetModuleInformation);
-			//	this->Game::driver->WriteLong(this->Game::GameBase.ACE_ATS64 + ATSGetModuleHandleAOffset, (__int64)&Self_GetModuleHandleA);
-			//	break;
-			//}
-			//else
-			//{
-			//	MessageBoxA(NULL, "检测到ATS需要更新，请联系管理员更新后再使用！", "警告", MB_OK);
-			//	exit(-1);
-			//}
-		}
-		else
-			this->Game::GameBase.ACE_ATS64 = (__int64)GetModuleHandleA("ace-ats64.dll");
-	}
 }
 
 void Game::ACE_PBC()
@@ -214,7 +234,6 @@ void Game::ACE_PBC()
 	////Pass Kill Enemy
 	//DWORD64 kill_enemy_function_address = this->Game::GameBase.Cshell + PassKillEnemyOffset;
 	//DWORD64 original_kill_enemy_function_address = this->Game::GameBase.Cshell + OriginalKillEnemyFunctionOffset;
-
 	////DWORD64 rax = ReadLong(kill_enemy_function_address);		//mov rax,[cshell_x64.dll+2A873C8]
 	////DWORD64 rcx = ReadLong(rax + 0x260);						// - mov rcx,[rax+00000260]
 	////rcx = ReadLong(rcx + 0x588);								//mov rcx,[rcx+00000588]
@@ -230,6 +249,23 @@ void Game::ACE_PBC()
 	//	Sleep(5);
 	//}
 
+	//while (true)
+	//{
+	//	this->GameBase.ACE_PBC_GAME64 = (__int64)GetModuleHandleA("ACE-PBC-Game64.dll");
+	//	if (this->MemoryTools::ReadByte(this->GameBase.ACE_PBC_GAME64 + 0x51E18) == 0xE8)
+	//	{
+	//		BYTE data[5] = { 0x90,0x90,0x90,0x90,0x90 };
+	//		ce->driver->WriteBytesByMDL((PVOID)(this->GameBase.ACE_PBC_GAME64 + 0x51E18), data, sizeof(data));
+	//		if (this->MemoryTools::ReadByte(this->GameBase.ACE_PBC_GAME64 + 0x51E18) == 0x90)
+	//		{
+	//			OutputDebugStringA("[GN]:跳出pbc循环");
+	//			break;
+	//		}
+	//	}
+	//	else if (this->MemoryTools::ReadByte(this->GameBase.ACE_PBC_GAME64 + 0x51E18) == 0x90)
+	//		break;
+	//	Sleep(10);
+	//}
 }
 
 void Game::ACE_CSI()

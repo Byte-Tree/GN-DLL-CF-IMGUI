@@ -140,6 +140,7 @@
     <ClInclude Include="..\GN-EXCEPTION\Exception.h" />
     <ClInclude Include="CheatEngine\CheatEngine.h" />
     <ClInclude Include="CheatEngine\CheatEngineApi\CheatEngineApi.h" />
+    <ClInclude Include="CheatEngine\CheatEngineApi\HookApi\HookApi.h" />
     <ClInclude Include="CheatEngine\Draw\Draw.h" />
     <ClInclude Include="CheatEngine\Game\DataStruct.h" />
     <ClInclude Include="CheatEngine\Game\Game.h" />
@@ -170,6 +171,7 @@
     <ClCompile Include="CheatEngine\CallBacks\CallBacks.cpp" />
     <ClCompile Include="CheatEngine\CheatEngine.cpp" />
     <ClCompile Include="CheatEngine\CheatEngineApi\CheatEngineApi.cpp" />
+    <ClCompile Include="CheatEngine\CheatEngineApi\HookApi\HookApi.cpp" />
     <ClCompile Include="CheatEngine\Draw\Draw.cpp" />
     <ClCompile Include="CheatEngine\Game\Game.cpp" />
     <ClCompile Include="CheatEngine\MemoryTools\MemoryTools.cpp" />

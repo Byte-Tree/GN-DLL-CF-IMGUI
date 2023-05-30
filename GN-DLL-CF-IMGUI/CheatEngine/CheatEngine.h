@@ -33,6 +33,15 @@ public:
 	inline_hook* IsBadReadPtr_hook = nullptr;
 	static BOOL WINAPI Self_IsBadReadPtr(CONST VOID* lp, UINT_PTR ucb);
 
+	HANDLE SendToEvent = NULL;
+	inline_hook* SendTo_hook = nullptr;
+	static int WINAPI Self_SendTo(_In_ SOCKET s, _In_reads_bytes_(len) const char FAR* buf, _In_ int len,
+		_In_ int flags, _In_reads_bytes_opt_(tolen) const struct sockaddr FAR* to, _In_ int tolen);
+	HANDLE SendEvent = NULL;
+	inline_hook* Send_hook = nullptr;
+	static int WINAPI Self_Send(_In_ SOCKET s, _In_reads_bytes_(len) const char FAR* buf, _In_ int len, _In_ int flags);
+
+
 public:
 	CheatEngine(HINSTANCE hinstance);
 	~CheatEngine();
