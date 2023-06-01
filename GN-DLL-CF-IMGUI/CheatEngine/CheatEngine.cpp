@@ -112,51 +112,50 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 	//if (caller_address == this->Game::GameBase.Cshell + 0xACA640)
 	//	return true;
 	
-	//处理后无异常 162
-	if (caller_address == this->Game::GameBase.Cshell + 0x12F34C0)
-	{
-		////if ((callto_address > this->GameBase.ACE_PBC_GAME64) && (callto_address < this->GameBase.ACE_PBC_GAME64End))
-		////	return false;
-		////else if ((callto_address > this->GameBase.ACE_GDP64) && (callto_address < this->GameBase.ACE_GDP64End))
-		////	return true;
-		//
-		////第一计数器
-		//if (callto_address == (this->GameBase.PassReadNameTrack + 0x3F18))
-		//{
-		//	DWORD64 count1_address = this->GameBase.PassReadNameTrack + 0x4C7F;
-		//	if (this->CheatEngine::MemoryTools::ReadByte(count1_address) == 0x80)
-		//	{
-		//		DWORD64 p_passaddress = count1_address + this->CheatEngine::MemoryTools::ReadInt(count1_address + 0x02) + 7;
-		//		OutputDebugStringA_2Param("[GN]:计算出count1地址：%p，值：%d", p_passaddress, this->Game::MemoryTools::ReadInt(p_passaddress));
-		//		this->Game::MemoryTools::WriteInt(p_passaddress, 0);
-		//	}
-		//}
-		////第二计数器
-		//else if (callto_address == (this->GameBase.PassReadNameTrack + 0x4BA5))
-		//{
-		//	DWORD64 count2_address = this->GameBase.PassReadNameTrack + 0x4000;
-		//	if (this->CheatEngine::MemoryTools::ReadByte(count2_address) == 0x80)
-		//	{
-		//		DWORD64 p_passaddress = count2_address + this->CheatEngine::MemoryTools::ReadInt(count2_address + 0x02) + 7;
-		//		OutputDebugStringA_2Param("[GN]:计算出count2地址：%p，值：%d", p_passaddress, this->Game::MemoryTools::ReadInt(p_passaddress));
-		//		this->Game::MemoryTools::WriteInt(p_passaddress, 0);
-		//	}
-		//}
-		//else
-		//	return true;
-		return false;
-	}
-	else
-	{
-		//处理其他钩子
-		if ((callto_address > this->GameBase.ACE_GDP64) && (callto_address < this->GameBase.ACE_GDP64End))
-			return false;
-		else if ((callto_address > this->GameBase.ACE_PBC_GAME64) && (callto_address < this->GameBase.ACE_PBC_GAME64End))
-			return false;
-		else
-			return true;
-	}
-
+	////处理后无异常 162
+	//if (caller_address == this->Game::GameBase.Cshell + 0x12F34C0)
+	//{
+	//	////if ((callto_address > this->GameBase.ACE_PBC_GAME64) && (callto_address < this->GameBase.ACE_PBC_GAME64End))
+	//	////	return false;
+	//	////else if ((callto_address > this->GameBase.ACE_GDP64) && (callto_address < this->GameBase.ACE_GDP64End))
+	//	////	return false;
+	//	//
+	//	////第一计数器
+	//	//if (callto_address == (this->GameBase.PassReadNameTrack + 0x3F18))
+	//	//{
+	//	//	DWORD64 count1_address = this->GameBase.PassReadNameTrack + 0x4C7F;
+	//	//	if (this->CheatEngine::MemoryTools::ReadByte(count1_address) == 0x80)
+	//	//	{
+	//	//		DWORD64 p_passaddress = count1_address + this->CheatEngine::MemoryTools::ReadInt(count1_address + 0x02) + 7;
+	//	//		OutputDebugStringA_2Param("[GN]:计算出count1地址：%p，值：%d", p_passaddress, this->Game::MemoryTools::ReadInt(p_passaddress));
+	//	//		this->Game::MemoryTools::WriteInt(p_passaddress, 0);
+	//	//	}
+	//	//}
+	//	////第二计数器
+	//	//else if (callto_address == (this->GameBase.PassReadNameTrack + 0x4BA5))
+	//	//{
+	//	//	DWORD64 count2_address = this->GameBase.PassReadNameTrack + 0x4000;
+	//	//	if (this->CheatEngine::MemoryTools::ReadByte(count2_address) == 0x80)
+	//	//	{
+	//	//		DWORD64 p_passaddress = count2_address + this->CheatEngine::MemoryTools::ReadInt(count2_address + 0x02) + 7;
+	//	//		OutputDebugStringA_2Param("[GN]:计算出count2地址：%p，值：%d", p_passaddress, this->Game::MemoryTools::ReadInt(p_passaddress));
+	//	//		this->Game::MemoryTools::WriteInt(p_passaddress, 0);
+	//	//	}
+	//	//}
+	//	//else
+	//	//	return false;
+	//	return false;
+	//}
+	//else
+	//{
+	//	//处理其他钩子
+	//	if ((callto_address > this->GameBase.ACE_GDP64) && (callto_address < this->GameBase.ACE_GDP64End))
+	//		return false;
+	//	else if ((callto_address > this->GameBase.ACE_PBC_GAME64) && (callto_address < this->GameBase.ACE_PBC_GAME64End))
+	//		return false;
+	//	else
+	//		return true;
+	//}
 
 	return false;
 }

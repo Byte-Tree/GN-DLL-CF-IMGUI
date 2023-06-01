@@ -29,6 +29,7 @@ public:
 
 public:
 	bool aimbot = false;												//Êó±ê×ÔÃé
+	bool memory_aimbot = false;											//ÄÚ´æ×ÔÃé
 	bool track = false;													//×Óµ¯×·×Ù
 	bool redname_track = false;											//ºìÃû×·×Ù
 	bool silence_track = false;											//¾²Ä¬×·×Ù
@@ -111,6 +112,7 @@ public:
 	void ModifyTrajectory();
 	void ReductionTrajectory();
 	void TrackDeployment(m_D3DCoordinate AimCoordinates);
+	void WriteMouse(m_D3DCoordinate enemy);
 	bool GetBoneCoordinate(__int64 ID, m_D3DCoordinate* Deposit, __int64 Position);
 	void DrawBone(int Addr, int color, int LineSize);
 	void WriteSilenceTrack(m_D3DCoordinate aim_coordinates);

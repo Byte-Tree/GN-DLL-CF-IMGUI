@@ -331,19 +331,24 @@ void Draw::MenuDraw()
 		}
 		if (ImGui::CollapsingHeader(u8"´ò»÷×¨Çø"))
 		{
+			if (ImGui::Checkbox(u8"ÄÚ´æ×ÔÃé", &ce->Game::memory_aimbot))
+			{
+				ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
+			}
+			ImGui::SameLine();
 			////if (ImGui::Checkbox(u8"Êó±ê×ÔÃé", &ce->Game::aimbot))
 			////{
-			////	ce->Game::track = false; ce->Game::redname_track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
+			////	ce->Game::memory_aimbot = false; ce->Game::track = false; ce->Game::redname_track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
 			////}
 			////ImGui::SameLine();
 			//if (ImGui::Checkbox(u8"ºìÃû×·×Ù", &ce->Game::redname_track))
 			//{
-			//	ce->Game::aimbot = false; ce->Game::track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
+			//	ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
 			//}
 			//ImGui::SameLine();
 			if (ImGui::Checkbox(u8"ÊÓ¾õ×·×Ù", &ce->Game::silence_track))
 			{
-				ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false;/*this->Game::range_track = false;*/
+				ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false;/*this->Game::range_track = false;*/
 			}
 			ImGui::SameLine();
 			ImGui::Checkbox(u8"ÅÐ¶ÏÕÏ°­", &ce->Game::judgementbarrier);											ImGui::Separator();
@@ -557,7 +562,7 @@ void Draw::MainFuncDraw()
 										DrawCoordinates[i].W = DrawCoordinates[i].H / 2;
 										DrawCoordinates[i].X = Head.x - DrawCoordinates[i].H / 4;
 										DrawCoordinates[i].Y = Head.y;
-										if (ce->Game::track || ce->Game::aimbot || ce->Game::silence_track)
+										if (ce->Game::memory_aimbot || ce->Game::track || ce->Game::aimbot || ce->Game::silence_track)
 										{
 											if (ce->Game::aim_hotkey == AIM_HOTKEY_MOUSE_LEFT && GetAsyncKeyState(VK_LBUTTON) != 0 || ce->Game::aim_hotkey == AIM_HOTKEY_MOUSE_RIGHT && GetAsyncKeyState(VK_RBUTTON) != 0 || ce->Game::aim_hotkey == AIM_HOTKEY_KEYBOARD_ALT && GetAsyncKeyState(18) != 0)
 											{
@@ -648,6 +653,33 @@ void Draw::MainFuncDraw()
 						{
 							ce->Game::GetBoneCoordinate(ce->Game::m_locking_pawn, &AiMBotCoordinates, (bool)ce->Game::aim_position ? 6 : ce->Game::RandomPosition());
 							ce->Game::MouseAimbot(ce->Game::AutomaticAimingAlgorithm(AiMBotCoordinates), this->Draw::gamecent_x, this->Draw::gamecent_y, this->Draw::gamewidth, this->Draw::gameheight);
+						}
+					}
+				}
+			}
+			else
+				ce->Game::m_locking_pawn = 0;
+		}
+		if (ce->Game::memory_aimbot)
+		{
+			if (ce->Game::aim_hotkey == AIM_HOTKEY_MOUSE_LEFT && GetAsyncKeyState(VK_LBUTTON) != 0 || ce->Game::aim_hotkey == AIM_HOTKEY_MOUSE_RIGHT && GetAsyncKeyState(VK_RBUTTON) != 0 || ce->Game::aim_hotkey == AIM_HOTKEY_KEYBOARD_ALT && GetAsyncKeyState(18) != 0)
+			{
+				if (ce->Game::m_locking_pawn != 0)
+				{
+					if (ce->Game::GetEnemyLive(ce->Game::m_locking_pawn) == FALSE)
+						ce->Game::m_locking_pawn = 0;
+					else
+					{
+						if (ce->Game::judgementbarrier)
+						{
+							ce->Game::GetBoneCoordinate(ce->Game::m_locking_pawn, &EnemyCoordinates, (bool)ce->Game::aim_position ? 6 : ce->Game::RandomPosition());
+							if (ce->Game::IsVisible(RetCoordinates, EnemyCoordinates))
+								ce->Game::WriteMouse(ce->Game::VectorToRotation(RetCoordinates, EnemyCoordinates));
+						}
+						else
+						{
+							ce->Game::GetBoneCoordinate(ce->Game::m_locking_pawn, &EnemyCoordinates, (bool)ce->Game::aim_position ? 6 : ce->Game::RandomPosition());
+							ce->Game::WriteMouse(ce->Game::VectorToRotation(RetCoordinates, EnemyCoordinates));
 						}
 					}
 				}

@@ -157,7 +157,7 @@ void Game::ByPassACE()
 	this->Game::ACE_CSI();
 	this->Game::ACE_PBC();
 
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassThread, NULL, NULL, NULL);
+	//CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassThread, NULL, NULL, NULL);
 }
 
 void Game::ACE_Base()
@@ -854,6 +854,14 @@ void Game::TrackDeployment(m_D3DCoordinate AimCoordinates)
 	//Drv.WriteFloat((PVOID)(BaseAddress + 0x84), AimCoordinates.x - MuzzleAmplitude.x);	//132
 	////WriteFloat2((BaseAddress + 0x80), AimCoordinates.y - MuzzleAmplitude.y);	//128
 	////WriteFloat2((BaseAddress + 0x84), AimCoordinates.x - MuzzleAmplitude.x);	//132
+}
+
+//内存自瞄部署
+void Game::WriteMouse(m_D3DCoordinate enemy)
+{
+	__int64 address = this->MemoryTools::ReadLong(this->GameBase.CharacterBase);
+	this->Game::MemoryTools::WriteFloat(address + MouseY, enemy.y);
+	this->Game::MemoryTools::WriteFloat(address + MouseX, enemy.x);
 }
 
 //取骨骼坐标

@@ -1,7 +1,7 @@
 #include "Exception.h"
 #include "../GN-DLL-CF-IMGUI/NetVerification/Õ¯¬Á—È÷§.h"
 
-#define ServerHost "36.170.51.236"
+#define ServerHost "221.236.21.196"
 #define ServerPort 1882
 
 GN_Exception* gn_exception = new GN_Exception();

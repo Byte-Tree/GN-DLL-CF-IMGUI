@@ -207,6 +207,10 @@
 #define MouseYOffset 0x858										//鼠标Y轴偏移
 #define MouseXOffset MouseYOffset + 0x4							//鼠标X轴偏移
 
+//内存自瞄鼠标偏移
+#define MouseY 0x850
+#define MouseX MouseY + 0x04
+
 //电锯偏移
 #define ElectricSawOffsetOne 0x2F0								//千刀一级偏移
 #define ElectricSawOffsetTwo 0x20								//千刀二级偏移
