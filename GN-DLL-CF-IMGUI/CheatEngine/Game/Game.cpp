@@ -162,27 +162,27 @@ void Game::ByPassACE()
 
 void Game::ACE_Base()
 {
-	while (true)
-	{
-		this->Game::GameBase.ACE_BASE64 = (__int64)GetModuleHandleA("ACE-Base64.dll");
-		if (this->Game::GameBase.ACE_BASE64)
-		{
-			DWORD64 virtualalloc_address = this->Game::GameBase.ACE_BASE64 + BASEVirtualAllocOffset;
-			DWORD64 loadlibraryw_address = this->Game::GameBase.ACE_BASE64 + BASELoadLibraryWOffset;
-			if ((this->Game::MemoryTools::ReadLong(virtualalloc_address) == (__int64)GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "VirtualProtect")) || ((this->Game::MemoryTools::ReadLong(virtualalloc_address) != (__int64)&HookApi::Self_VirtualAlloc)))
-			{
-				ce->CheatEngine::driver->WriteLongByMDL((PVOID)virtualalloc_address, (__int64)&HookApi::Self_VirtualAlloc);
-				ce->CheatEngine::driver->WriteLongByMDL((PVOID)loadlibraryw_address, (__int64)&HookApi::Self_LoadLibraryW);
-
-				if (this->Game::MemoryTools::ReadLong(virtualalloc_address) == (__int64)&HookApi::Self_VirtualAlloc)
-				{
-					//OutputDebugStringA_1Param("[GN]:跳出，读取的值：%p", this->Game::MemoryTools::ReadLong(virtualalloc_address));
-					break;
-				}
-			}
-		}
-		Sleep(1);
-	}
+	//while (true)
+	//{
+	//	this->Game::GameBase.ACE_BASE64 = (__int64)GetModuleHandleA("ACE-Base64.dll");
+	//	if (this->Game::GameBase.ACE_BASE64)
+	//	{
+	//		DWORD64 virtualalloc_address = this->Game::GameBase.ACE_BASE64 + BASEVirtualAllocOffset;
+	//		DWORD64 loadlibraryw_address = this->Game::GameBase.ACE_BASE64 + BASELoadLibraryWOffset;
+	//		if ((this->Game::MemoryTools::ReadLong(virtualalloc_address) == (__int64)GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "VirtualProtect")) || ((this->Game::MemoryTools::ReadLong(virtualalloc_address) != (__int64)&HookApi::Self_VirtualAlloc)))
+	//		{
+	//			ce->CheatEngine::driver->WriteLongByMDL((PVOID)virtualalloc_address, (__int64)&HookApi::Self_VirtualAlloc);
+	//			ce->CheatEngine::driver->WriteLongByMDL((PVOID)loadlibraryw_address, (__int64)&HookApi::Self_LoadLibraryW);
+	//
+	//			if (this->Game::MemoryTools::ReadLong(virtualalloc_address) == (__int64)&HookApi::Self_VirtualAlloc)
+	//			{
+	//				//OutputDebugStringA_1Param("[GN]:跳出，读取的值：%p", this->Game::MemoryTools::ReadLong(virtualalloc_address));
+	//				break;
+	//			}
+	//		}
+	//	}
+	//	Sleep(1);
+	//}
 }
 
 void Game::ACE_ATS()

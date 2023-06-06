@@ -186,11 +186,11 @@ void CheatEngine::InitHook()
 	//OutputDebugStringA_1Param("[GN]:SendToµØÖ·£º%p", sendto_address);
 	//this->CheatEngine::SendTo_hook = new inline_hook(sendto_address, (__int64)&CheatEngine::Self_SendTo, FALSE);
 	//this->CheatEngine::SendTo_hook->motify_address();
-	//
-	//DWORD64 send_address = (DWORD64)GetProcAddress(GetModuleHandle(L"ws2_32.dll"), "send");
+	
+	DWORD64 send_address = (DWORD64)GetProcAddress(GetModuleHandle(L"ws2_32.dll"), "send");
 	//OutputDebugStringA_1Param("[GN]:SendµØÖ·£º%p", send_address);
-	//this->CheatEngine::Send_hook = new inline_hook(send_address, (__int64)&CheatEngine::Self_Send, FALSE);
-	//this->CheatEngine::Send_hook->motify_address();
+	this->CheatEngine::Send_hook = new inline_hook(send_address, (__int64)&CheatEngine::Self_Send, FALSE);
+	this->CheatEngine::Send_hook->motify_address();
 
 }
 

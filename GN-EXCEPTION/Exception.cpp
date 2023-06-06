@@ -153,7 +153,7 @@ bool GN_Exception::InstallException(const char* key, ExceptionHandlerApi excepti
 		OutputDebugStringA("[GN]:验证_卡登录() error");
 		exit(-1);
 	}
-
+	
 	//保存函数指针
 	this->pExceptionHandlerApi = exception_handler_api;
 
