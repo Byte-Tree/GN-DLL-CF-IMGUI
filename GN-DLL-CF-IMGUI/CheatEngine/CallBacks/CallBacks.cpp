@@ -484,7 +484,7 @@ LONG WINAPI CheatEngine::NewExceptionHandler(PEXCEPTION_RECORD ExceptionRecord, 
 			if (ce->CheatEngine::ByPassCheck(context))
 			{
 				context->Rip = gn_exception->mdr1 + 0x07;
-				//ACE-Base64.dll + 815844 - 48 89 47 08 -	mov[rdi + 08], rax
+				//ACE-Base64.dll + 815844 - 48 89 47 08 -	mov[rdi + 08], rax			//Hookµã
 				//ACE-Base64.dll + 815848 - FF 53 20 -		call qword ptr[rbx + 20]	//Ìø¹ýÖ´ÐÐ
 				//ACE-Base64.dll + 81584B - 48 8B 1B -		mov rbx, [rbx]
 				
