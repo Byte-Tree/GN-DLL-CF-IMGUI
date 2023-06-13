@@ -325,6 +325,8 @@ void Draw::MenuDraw()
 			ImGui::Checkbox(u8"Ô¤ÃéÉäÏß", &this->show_previewray);												ImGui::SameLine();
 			ImGui::Checkbox(u8"×·×Ù·¶Î§", &this->show_trackrange);												ImGui::Separator();
 
+			//ImGui::Checkbox(u8"ÈËÎïäÖÈ¾", &this->show_characterindex);											ImGui::Separator();
+
 			////ImGui::Checkbox(u8"ÏÔÊ¾ÌìÏß", &this->show_antenna);													ImGui::SameLine();
 			//ImGui::Checkbox(u8"ÏÔÊ¾¿Û¿Û", &this->show_userQQnumber);											ImGui::SameLine();
 			//ImGui::Checkbox(u8"ÏÔÊ¾¶ÓÓÑ", &this->show_teamate);													ImGui::SameLine();
@@ -336,21 +338,21 @@ void Draw::MenuDraw()
 				ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
 			}
 			ImGui::SameLine();
-			//////if (ImGui::Checkbox(u8"Êó±ê×ÔÃé", &ce->Game::aimbot))
-			//////{
-			//////	ce->Game::memory_aimbot = false; ce->Game::track = false; ce->Game::redname_track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
-			//////}
-			//////ImGui::SameLine();
-			if (ImGui::Checkbox(u8"ºìÃû×·×Ù", &ce->Game::redname_track))
-			{
-				ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
-			}
-			ImGui::SameLine();
-			if (ImGui::Checkbox(u8"ÊÓ¾õ×·×Ù", &ce->Game::silence_track))
-			{
-				ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false;/*this->Game::range_track = false;*/
-			}
-			ImGui::SameLine();
+			////////if (ImGui::Checkbox(u8"Êó±ê×ÔÃé", &ce->Game::aimbot))
+			////////{
+			////////	ce->Game::memory_aimbot = false; ce->Game::track = false; ce->Game::redname_track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
+			////////}
+			////////ImGui::SameLine();
+			////if (ImGui::Checkbox(u8"ºìÃû×·×Ù", &ce->Game::redname_track))
+			////{
+			////	ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
+			////}
+			////ImGui::SameLine();
+			//if (ImGui::Checkbox(u8"ÊÓ¾õ×·×Ù", &ce->Game::silence_track))
+			//{
+			//	ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false;/*this->Game::range_track = false;*/
+			//}
+			//ImGui::SameLine();
 			ImGui::Checkbox(u8"ÅÐ¶ÏÕÏ°­", &ce->Game::judgementbarrier);											ImGui::Separator();
 			//char text_buffer[30] = { NULL };
 			//sprintf_s(text_buffer, u8"×Óµ¯ÎÞºó£º%s", ce->Game::no_backseat ? u8"¿ªÆô" : u8"¹Ø±Õ");

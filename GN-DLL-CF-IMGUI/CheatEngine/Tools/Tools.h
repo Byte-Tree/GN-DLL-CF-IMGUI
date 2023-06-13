@@ -39,6 +39,7 @@ public:
 	void GetCallStackInfo(CALL_STACK_INFO& callStack, DWORD dwMaxFrame);
 	void GetStack(void);
 	bool SuspendThreadByNoModulehandle(DWORD pid);
+	bool SuspendThreadByModulehandle(DWORD pid, DWORD64 module_handle, DWORD64 module_handle_end_address);
 	bool SuspendThreadByTag(DWORD pid, const char* judgment_tag);
 	bool ResumeThreadByTag(DWORD pid, const char* judgment_tag);
 };

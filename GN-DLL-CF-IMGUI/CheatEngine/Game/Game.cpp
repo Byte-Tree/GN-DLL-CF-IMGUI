@@ -52,6 +52,8 @@ void Game::BaseAddressInit()
 	this->GameBase.ACE_ATS64 = (unsigned __int64)GetModuleHandle(L"ACE-ATS64.dll");
 	this->GameBase.ACE_DFS64 = (unsigned __int64)GetModuleHandle(L"ACE-DFS64.dll");
 	this->GameBase.ACE_CSI64 = (unsigned __int64)GetModuleHandle(L"ACE-CSI64.dll");
+	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-CSI64.dll"), &ModuleInfo, sizeof(MODULEINFO));
+	this->GameBase.ACE_CSI64End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
 	this->GameBase.ACE_Tips64 = (unsigned __int64)GetModuleHandle(L"ACE-Tips64.dll");
 	this->GameBase.ACE_DRV64 = (unsigned __int64)GetModuleHandle(L"ACE-Drv64.dll");
 	this->GameBase.ACE_GDP64 = (unsigned __int64)GetModuleHandle(L"ACE-GDP64.dll");
@@ -157,7 +159,7 @@ void Game::ByPassACE()
 	this->Game::ACE_CSI();
 	this->Game::ACE_PBC();
 
-	//CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassThread, NULL, NULL, NULL);
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassThread, NULL, NULL, NULL);
 }
 
 void Game::ACE_Base()
@@ -331,6 +333,14 @@ void Game::PassThread()
 	//
 	//	Sleep(2000);
 	//}
+	
+	//处理CSI三方
+	while (true)
+	{
+		if (!ce->CheatEngine::Tools::SuspendThreadByModulehandle(GetCurrentProcessId(), ce->CheatEngine::Game::GameBase.ACE_CSI64, ce->CheatEngine::Game::GameBase.ACE_CSI64End))
+			OutputDebugStringA("[GN]:SuspendThreadByModulehandle() ACE_CSI64 error\n");
+		Sleep(1000);
+	}
 }
 
 void Game::PassErrorCode()
@@ -523,52 +533,52 @@ LPCSTR Game::JudgeMentMap()
 	DWORD64 map_baseaddress = this->Game::MemoryTools::ReadLong(this->Game::MemoryTools::ReadLong(this->Game::MemoryTools::ReadLong(this->Game::MemoryTools::ReadLong(this->Game::GameBase.ModeAddress2) + 0x10) + 0x108) + 2);
 	if (map_baseaddress != 0)
 	{
-		if (map_baseaddress == 3619486395)
-			return "当前地图->机甲迷城";
-		if (map_baseaddress == 3872518331)
-			return "当前地图->火焰山";
-		if (map_baseaddress == 2830870468)
-			return "当前地图->魔花研究所";
-		if (map_baseaddress == 2832527049)
-			return "当前地图->深渊冰龙之巢";
-		if (map_baseaddress == 3586124240)
-			return "当前地图->虚空裂缝";
-		if (map_baseaddress == 3418939070)
-			return "当前地图->巨人城";
-		if (map_baseaddress == 4038850993)
-			return "当前地图->冰火遗迹";
-		if (map_baseaddress == 3737043664)
-			return "当前地图->新巨人城废墟";
-		if (map_baseaddress == 4056542934)
-			return "当前地图->诸神竞技场";
-		if (map_baseaddress == 3082987972)
-			return "当前地图->末路狂飙";
-		if (map_baseaddress == 3418939070)
-			return "当前地图->巨人城";
-		if (map_baseaddress == 2868303808)
-			return "当前地图->雷霆塔";
-		if (map_baseaddress == 4039367099)
-			return "当前地图->毁灭都市";
-		if (map_baseaddress == 3636720073)
-			return "当前地图->神秘营地";
-		if (map_baseaddress == 3586697668)
-			return "当前地图->末日剧场";
-		if (map_baseaddress == 4223066061)
-			return "当前地图->瓦尔基里";
-		if (map_baseaddress == 2933305035)
-			return "当前地图->水之城";
-		if (map_baseaddress == 4240701630)
-			return "当前地图->绝命之谷";
-		if (map_baseaddress == 3083787982)
-			return "当前地图->无畏战舰";
-		if (map_baseaddress == 3922446022)
-			return "当前地图->破碎之都";
-		if (map_baseaddress == 3803836362)
-			return "当前地图->曙光战舰";
-		if (map_baseaddress == 3790790334)
-			return "当前地图->巨蜥峡谷";
-		if (map_baseaddress == 3066156234)
-			return "当前地图->试炼岛：逆袭";
+		//if (map_baseaddress == 3619486395)
+		//	return "当前地图->机甲迷城";
+		//if (map_baseaddress == 3872518331)
+		//	return "当前地图->火焰山";
+		//if (map_baseaddress == 2830870468)
+		//	return "当前地图->魔花研究所";
+		//if (map_baseaddress == 2832527049)
+		//	return "当前地图->深渊冰龙之巢";
+		//if (map_baseaddress == 3586124240)
+		//	return "当前地图->虚空裂缝";
+		//if (map_baseaddress == 3418939070)
+		//	return "当前地图->巨人城";
+		//if (map_baseaddress == 4038850993)
+		//	return "当前地图->冰火遗迹";
+		//if (map_baseaddress == 3737043664)
+		//	return "当前地图->新巨人城废墟";
+		//if (map_baseaddress == 4056542934)
+		//	return "当前地图->诸神竞技场";
+		//if (map_baseaddress == 3082987972)
+		//	return "当前地图->末路狂飙";
+		//if (map_baseaddress == 3418939070)
+		//	return "当前地图->巨人城";
+		//if (map_baseaddress == 2868303808)
+		//	return "当前地图->雷霆塔";
+		//if (map_baseaddress == 4039367099)
+		//	return "当前地图->毁灭都市";
+		//if (map_baseaddress == 3636720073)
+		//	return "当前地图->神秘营地";
+		//if (map_baseaddress == 3586697668)
+		//	return "当前地图->末日剧场";
+		//if (map_baseaddress == 4223066061)
+		//	return "当前地图->瓦尔基里";
+		//if (map_baseaddress == 2933305035)
+		//	return "当前地图->水之城";
+		//if (map_baseaddress == 4240701630)
+		//	return "当前地图->绝命之谷";
+		//if (map_baseaddress == 3083787982)
+		//	return "当前地图->无畏战舰";
+		//if (map_baseaddress == 3922446022)
+		//	return "当前地图->破碎之都";
+		//if (map_baseaddress == 3803836362)
+		//	return "当前地图->曙光战舰";
+		//if (map_baseaddress == 3790790334)
+		//	return "当前地图->巨蜥峡谷";
+		//if (map_baseaddress == 3066156234)
+		//	return "当前地图->试炼岛：逆袭";
 	}
 	else
 		return "当前地图->未知地图";

@@ -5,7 +5,7 @@
 
 CheatEngine::CheatEngine(HINSTANCE hinstance)
 {
-	OutputDebugStringA_1Param("[GN]:%s", __FUNCTION__);
+	OutputDebugStringA_2Param("[GN]:%s-> 模块地址：%p", __FUNCTION__, hinstance);
 
 	////打开控制台
 	//AllocConsole();
@@ -28,18 +28,18 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 	//Set my driver class
 	this->CheatEngine::driver = new Driver;
 	this->CheatEngine::driver->SetProcessID(this->CheatEngineApi::GetCurrentProcessId());
-
+	
 	//Get game baseaddress
 	this->Game::BaseAddressInit();
-
+	
 	//Set Exception Handler
 	if (!gn_exception->InstallException("TKD604E537253H51289E138A1BE4588D", CheatEngine::NewExceptionHandler))
 		exit(-1);
 	int ret = gn_exception->GN_Exception::SetHardWareBreakPoint(L"crossfire.exe", 0x455,
 		/*0*/this->Game::GameBase.ACE_BASE64 + GlobalBaseFuncOffset,
 		/*0*/Hitchaddress,
-		/*0*/RedNameTrackAddress,
-		/*0*/SilentTrackAddress);
+		0/*RedNameTrackAddress*/,
+		0/*SilentTrackAddress*/);
 	this->CheatEngine::SetSoftWareBreakPoint();
 	
 	//Clear Modulehandle Header
@@ -187,10 +187,10 @@ void CheatEngine::InitHook()
 	//this->CheatEngine::SendTo_hook = new inline_hook(sendto_address, (__int64)&CheatEngine::Self_SendTo, FALSE);
 	//this->CheatEngine::SendTo_hook->motify_address();
 	
-	DWORD64 send_address = (DWORD64)GetProcAddress(GetModuleHandle(L"ws2_32.dll"), "send");
-	//OutputDebugStringA_1Param("[GN]:Send地址：%p", send_address);
-	this->CheatEngine::Send_hook = new inline_hook(send_address, (__int64)&CheatEngine::Self_Send, FALSE);
-	this->CheatEngine::Send_hook->motify_address();
+	//DWORD64 send_address = (DWORD64)GetProcAddress(GetModuleHandle(L"ws2_32.dll"), "send");
+	////OutputDebugStringA_1Param("[GN]:Send地址：%p", send_address);
+	//this->CheatEngine::Send_hook = new inline_hook(send_address, (__int64)&CheatEngine::Self_Send, FALSE);
+	//this->CheatEngine::Send_hook->motify_address();
 
 }
 

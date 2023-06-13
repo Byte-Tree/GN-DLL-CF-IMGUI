@@ -121,6 +121,7 @@ HRESULT CALLBACK Draw::Self_Present(IDirect3DDevice9* direct3ddevice9, RECT* pSo
 HRESULT CALLBACK Draw::Self_DrawIndexedPrimitive(IDirect3DDevice9* direct3ddevice9, D3DPRIMITIVETYPE Type, INT BaseVertexIndex, UINT MinVertexIndex, UINT NumVertices, UINT startIndex, UINT primCount)
 {
 	ce->Draw::drawindexedprimitive_hook->restore_address();
+	//WaitForSingleObject(ce->Draw::drawindexe_event, INFINITE);
 
 	if (ce->Draw::show_characterindex)
 	{
@@ -140,6 +141,7 @@ HRESULT CALLBACK Draw::Self_DrawIndexedPrimitive(IDirect3DDevice9* direct3ddevic
 
 	HRESULT result = direct3ddevice9->DrawIndexedPrimitive(Type, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
 	ce->Draw::drawindexedprimitive_hook->motify_address();
+	//SetEvent(ce->Draw::drawindexe_event);
 	return result;
 }
 
@@ -676,354 +678,151 @@ int WINAPI CheatEngine::Self_SendTo(_In_ SOCKET s, _In_reads_bytes_(len) const c
 
 int WINAPI CheatEngine::Self_Send(_In_ SOCKET s, _In_reads_bytes_(len) const char FAR* buf, _In_ int len, _In_ int flags)
 {
-	WaitForSingleObject(ce->CheatEngine::SendEvent, INFINITE);
+	//WaitForSingleObject(ce->CheatEngine::SendEvent, INFINITE);
 	ce->CheatEngine::Send_hook->restore_address();
 
 	PBYTE buffer = (PBYTE)buf;
 
-	//PBYTE p = (PBYTE)buf;
-	//
-	////FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-	////for (int i = 0; i < len; i++)
-	//	fprintf(SendFile, "%02X ", p[i]);
-	////fprintf(SendFile, "\n\n");
-	////fclose(SendFile);
-
-	if ((BYTE)buffer[2] == 0x01 && (BYTE)buffer[3] == 0x01 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[5] == 0x00)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[2] == 0x01 && (BYTE)buffer[3] == 0x01 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[5] == 0x00) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[2] == 0x03 && (BYTE)buffer[3] == 0x01 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[5] == 0x00)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[2] == 0x03 && (BYTE)buffer[3] == 0x01 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[5] == 0x00) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[2] == 0x05 && (BYTE)buffer[3] == 0x01 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[5] == 0x00)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[2] == 0x05 && (BYTE)buffer[3] == 0x01 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[5] == 0x00) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[2] == 0x07 && (BYTE)buffer[3] == 0x01 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[5] == 0x00)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[2] == 0x07 && (BYTE)buffer[3] == 0x01 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[5] == 0x00) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
-		return -1;
-	}//释放0x04崩溃
-	if ((BYTE)buffer[2] == 0x06 && (BYTE)buffer[3] == 0x01 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[5] == 0x00)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
-		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
-		return -1;
-	}//释放0x06崩溃
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x6C && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
-		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x4C && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x6C && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x78 && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x4C && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x96 && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x78 && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x3F && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x96 && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x64 && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x3F && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x98 && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x64 && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x88 && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x98 && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x82 && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x88 && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x69 && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x82 && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x62 && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x69 && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x25 && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x62 && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x71 && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x25 && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x74 && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x71 && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x94 && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x74 && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x9C && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x94 && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x8C && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x9C && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0xA7 && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x8C && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0xAE && (BYTE)buffer[17] == 0x35)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0xA7 && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
 	}
-	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x30 && (BYTE)buffer[17] == 0x0A)
-	{
-		//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-		//fprintf(SendFile, "异常包：\n");
-		//for (int i = 0; i < len; i++)
-			//fprintf(SendFile, "%02X ", buffer[i]);
-		//fprintf(SendFile, "\n\n");
-		//fclose(SendFile);
-
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0xAE && (BYTE)buffer[17] == 0x35) {
 		ce->CheatEngine::Send_hook->motify_address();
-		SetEvent(ce->CheatEngine::SendEvent);
+		//SetEvent(ce->CheatEngine::SendEvent);
 		return -1;
-	}//十年16-2
+	}
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0x81 && (BYTE)buffer[17] == 0x35) {
+		ce->CheatEngine::Send_hook->motify_address();
+		//SetEvent(ce->CheatEngine::SendEvent);
+		return -1;
+	}
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0xAA && (BYTE)buffer[17] == 0x35) {
+		ce->CheatEngine::Send_hook->motify_address();
+		//SetEvent(ce->CheatEngine::SendEvent);
+		return -1;
+	}
+	if ((BYTE)buffer[0] == 0xF1 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[15] == 0xDE && (BYTE)buffer[17] == 0x0A) {
+		ce->CheatEngine::Send_hook->motify_address();
+		//SetEvent(ce->CheatEngine::SendEvent);
+		return -1;
+	}
 
-	FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
-	for (int i = 0; i < len; i++)
-		fprintf(SendFile, "%02X ", buffer[i]);
-	fprintf(SendFile, "\n\n");
-	fclose(SendFile);
+	//FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
+	//for (int i = 0; i < len; i++)
+	//	fprintf(SendFile, "%02X ", buffer[i]);
+	//fprintf(SendFile, "\n\n");
+	//fclose(SendFile);
 
 	HRESULT result = ::send(s, buf, len, flags);
 	ce->CheatEngine::Send_hook->motify_address();
-	SetEvent(ce->CheatEngine::SendEvent);
+	//SetEvent(ce->CheatEngine::SendEvent);
 	return result;
 }
 

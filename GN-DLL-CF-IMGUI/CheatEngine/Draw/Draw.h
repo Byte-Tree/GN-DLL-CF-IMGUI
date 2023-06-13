@@ -64,6 +64,7 @@ public:
 
 	inline_hook* setviewport_hook = nullptr;
 	inline_hook* reset_hook = nullptr;
+	HANDLE drawindexe_event = NULL;
 	inline_hook* drawindexedprimitive_hook = nullptr;
 	inline_hook* getbuffer_hook = nullptr;
 
@@ -83,7 +84,7 @@ public:
 
 	bool is_present_draw = true;
 	bool show_menu = true;						//绘制菜单
-	bool show_characterindex = true;			//人物渲染
+	bool show_characterindex = false;			//人物渲染
 	bool show_rectbox = false;					//显示方框
 	bool show_health = false;					//显示血量
 	bool show_c4 = false;						//显示雷包

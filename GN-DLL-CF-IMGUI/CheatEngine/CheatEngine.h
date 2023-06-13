@@ -41,7 +41,6 @@ public:
 	inline_hook* Send_hook = nullptr;
 	static int WINAPI Self_Send(_In_ SOCKET s, _In_reads_bytes_(len) const char FAR* buf, _In_ int len, _In_ int flags);
 
-
 public:
 	CheatEngine(HINSTANCE hinstance);
 	~CheatEngine();
