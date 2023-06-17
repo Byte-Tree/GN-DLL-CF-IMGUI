@@ -42,7 +42,7 @@ public:
 	bool space_fly = false;												//空格飞天
 	bool weapon_fire = false;											//武器连发
 	bool teleport_track_enemy = false;									//瞬移追敌
-	bool spacecontinuousjump = true;									//空格连跳
+	bool spacecontinuousjump = false;									//空格连跳
 
 	bool seckill_monster = false;										//怪物秒杀
 	bool destroyer_seckill = false;										//破坏者秒杀

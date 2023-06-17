@@ -398,35 +398,37 @@ void Draw::MenuDraw()
 		////	ImGui::Separator();
 		////	ImGui::DragFloat(u8"设置范围大小", &this->Game::range_track_value, 1.0f, 1, 200, "%.0f");			ImGui::Separator();
 		////}
-		//if (ImGui::CollapsingHeader(u8"功能专区"))
-		//{
-		//	if (ImGui::Checkbox(u8"无后座力", &this->Game::no_backseat))
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + BulletWithoutBackSeatHookOffset);
-		//	ImGui::SameLine();
-		//	if (ImGui::Checkbox(u8"零秒换弹", &this->Game::zero_second_reload))
-		//	{
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + ZeroBulletChange_NewMapHookOffset);
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + ZeroBulletChange_OldMapHookOffset);
-		//	}	ImGui::SameLine();
-		//	if (ImGui::Checkbox(u8"卡不掉血", &this->Game::no_blood_loss))
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + KillSelfFuncOffset);
-		//	ImGui::SameLine();
-		//	if (ImGui::Checkbox(u8"空格飞天", &this->Game::space_fly))
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cross + FlyOffset);
-		//	ImGui::SameLine();
-		//	if (ImGui::Checkbox(u8"武器连发", &this->Game::weapon_fire))
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + WeaponFireHookOffset);
-		//	ImGui::Separator();
-		//	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//	ImGui::Checkbox(u8"B键追敌", &this->Game::teleport_track_enemy);	ImGui::Separator();
-		//	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//	if (ImGui::InputFloat(u8"静步加速度", &this->Game::static_acceleration_value, 0.5f, 1.0f, "%0.1f"))
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cross + StaticAccelerationHookOffset);
-		//	ImGui::Separator();
-		//	if (ImGui::InputFloat(u8"下蹲加速度", &this->Game::squat_acceleration_value, 0.5f, 1.0f, "%0.1f"))
-		//		this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cross + SquatAccelerationHookOffset);
-		//	ImGui::Separator();
-		//}
+		if (ImGui::CollapsingHeader(u8"功能专区"))
+		{
+			////if (ImGui::Checkbox(u8"无后座力", &this->Game::no_backseat))
+			////	this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + BulletWithoutBackSeatHookOffset);
+			////ImGui::SameLine();
+			////if (ImGui::Checkbox(u8"零秒换弹", &this->Game::zero_second_reload))
+			////{
+			////	this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + ZeroBulletChange_NewMapHookOffset);
+			////	this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + ZeroBulletChange_OldMapHookOffset);
+			////}	ImGui::SameLine();
+			////if (ImGui::Checkbox(u8"卡不掉血", &this->Game::no_blood_loss))
+			////	this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + KillSelfFuncOffset);
+			////ImGui::SameLine();
+			////if (ImGui::Checkbox(u8"空格飞天", &this->Game::space_fly))
+			////	this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cross + FlyOffset);
+			////ImGui::SameLine();
+			////if (ImGui::Checkbox(u8"武器连发", &this->Game::weapon_fire))
+			////	this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + WeaponFireHookOffset);
+			////ImGui::Separator();
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			////ImGui::Checkbox(u8"B键追敌", &this->Game::teleport_track_enemy);	ImGui::Separator();
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			////if (ImGui::InputFloat(u8"静步加速度", &this->Game::static_acceleration_value, 0.5f, 1.0f, "%0.1f"))
+			////	this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cross + StaticAccelerationHookOffset);
+			////ImGui::Separator();
+			////if (ImGui::InputFloat(u8"下蹲加速度", &this->Game::squat_acceleration_value, 0.5f, 1.0f, "%0.1f"))
+			////	this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cross + SquatAccelerationHookOffset);
+			////ImGui::Separator();
+
+			ImGui::Checkbox(u8"空格连跳", &ce->CheatEngine::Game::spacecontinuousjump);			ImGui::Separator();
+		}
 		if (ImGui::CollapsingHeader(u8"刀距专区"))
 		{
 			static bool ChangeStatu = FALSE;

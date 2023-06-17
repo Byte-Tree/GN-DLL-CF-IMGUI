@@ -50,6 +50,8 @@ void Game::BaseAddressInit()
 	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-Base64.dll"), &ModuleInfo, sizeof(MODULEINFO));
 	this->GameBase.ACE_BASE64End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
 	this->GameBase.ACE_ATS64 = (unsigned __int64)GetModuleHandle(L"ACE-ATS64.dll");
+	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-ATS64.dll"), &ModuleInfo, sizeof(MODULEINFO));
+	this->GameBase.ACE_ATS64End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
 	this->GameBase.ACE_DFS64 = (unsigned __int64)GetModuleHandle(L"ACE-DFS64.dll");
 	this->GameBase.ACE_CSI64 = (unsigned __int64)GetModuleHandle(L"ACE-CSI64.dll");
 	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-CSI64.dll"), &ModuleInfo, sizeof(MODULEINFO));
@@ -159,7 +161,7 @@ void Game::ByPassACE()
 	this->Game::ACE_CSI();
 	this->Game::ACE_PBC();
 
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassThread, NULL, NULL, NULL);
+	//CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassThread, NULL, NULL, NULL);
 }
 
 void Game::ACE_Base()
@@ -272,26 +274,32 @@ void Game::ACE_PBC()
 
 void Game::ACE_CSI()
 {
-	//while (true)
-	//{
-	//	if (this->Game::GameBase.ACE_CSI64)
-	//	{
-	//		if (this->MemoryTools::ReadLong(this->Game::GameBase.ACE_CSI64 + CSIGetClassNameWOffset) == (__int64)GetProcAddress(GetModuleHandleA("USER32.dll"), "GetClassNameW"))
-	//		{
-	//			//this->Game::driver->WriteLong(this->Game::GameBase.ACE_CSI64 + CSIEnumWindowsOffset, (__int64)&Self_EnumWindows);
-	//			//this->Game::driver->WriteLong(this->Game::GameBase.ACE_CSI64 + CSIEnumChildWindowsOffset, (__int64)&Self_EnumChildWindows);
-	//			this->Game::driver->WriteLong(this->Game::GameBase.ACE_CSI64 + CSIGetClassNameWOffset, (__int64)&HookAPI::GetClassNameW);
-	//			break;
-	//		}
-	//		else
-	//		{
-	//			MessageBoxA(NULL, "检测到CSI需要更新，请联系管理员更新后再使用！", "警告", MB_OK);
-	//			exit(-1);
-	//		}
-	//	}
-	//	else
-	//		this->Game::GameBase.ACE_CSI64 = (__int64)GetModuleHandleA("ACE-CSI64.dll");
-	//}
+	DWORD64 judgment_address = 0;
+
+	while (true)
+	{
+		if (this->Game::GameBase.ACE_CSI64)
+		{
+			static DWORD64 import_table_offset = 0x4E0000;
+			for (size_t i = 0; i < 56; i++)
+			{
+				judgment_address = this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8);
+				if (judgment_address != (DWORD64)::GetProcAddress(GetModuleHandleA("CRYPT32.dll"), "CertFindCertificateInStore") &&
+					judgment_address != (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "GetProcAddress"))
+				{
+					ce->CheatEngine::driver->WriteLongByMDL((PVOID)judgment_address, (DWORD64)&RetNullApi);
+					OutputDebugStringA("[GN]:写伪造指针");
+				}
+				else
+					OutputDebugStringA_2Param("[GN]:%s-> 找到两个地址：%p", __FUNCTION__, judgment_address);
+			}
+			if (judgment_address == (DWORD64)&RetNullApi)
+				break;
+		}
+		else
+			this->Game::GameBase.ACE_CSI64 = (__int64)GetModuleHandleA("ACE-CSI64.dll");
+		Sleep(500);
+	}
 }
 
 void Game::PassThread()
@@ -334,9 +342,13 @@ void Game::PassThread()
 	//	Sleep(2000);
 	//}
 	
-	//处理CSI三方
 	while (true)
 	{
+		//处理ATS扫描
+		if(!ce->CheatEngine::Tools::SuspendThreadByModulehandle(GetCurrentProcessId(), ce->CheatEngine::Game::GameBase.ACE_ATS64, ce->CheatEngine::Game::GameBase.ACE_ATS64End))
+			OutputDebugStringA("[GN]:SuspendThreadByModulehandle() ACE_ATS64 error\n");
+
+		//处理CSI三方
 		if (!ce->CheatEngine::Tools::SuspendThreadByModulehandle(GetCurrentProcessId(), ce->CheatEngine::Game::GameBase.ACE_CSI64, ce->CheatEngine::Game::GameBase.ACE_CSI64End))
 			OutputDebugStringA("[GN]:SuspendThreadByModulehandle() ACE_CSI64 error\n");
 		Sleep(1000);

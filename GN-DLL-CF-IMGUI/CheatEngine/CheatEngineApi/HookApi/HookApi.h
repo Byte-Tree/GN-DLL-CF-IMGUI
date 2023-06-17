@@ -1,6 +1,8 @@
 #pragma once
 #include "../../../pch.h"
 
+extern "C" void RetNullApi(void);
+
 
 namespace HookApi
 {

@@ -206,4 +206,9 @@
       <Filter>CheatEngine\CheatEngineApi\HookApi</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="HookApi.asm">
+      <Filter>CheatEngine\CheatEngineApi\HookApi</Filter>
+    </CustomBuild>
+  </ItemGroup>
 </Project>

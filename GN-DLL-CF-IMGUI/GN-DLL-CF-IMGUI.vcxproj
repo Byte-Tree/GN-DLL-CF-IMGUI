@@ -186,6 +186,13 @@
     <ClCompile Include="NetVerification\网络验证.cpp" />
     <ClCompile Include="ReflectiveLoader-User\GN-ReflectiveLoader-User.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="HookApi.asm">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ml64 /c %(fileName).asm</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(fileName).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
