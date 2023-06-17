@@ -156,12 +156,12 @@ void Game::BaseAddressInit()
 
 void Game::ByPassACE()
 {
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassThread, NULL, NULL, NULL);
+
 	this->Game::ACE_Base();
 	this->Game::ACE_ATS();
 	//this->Game::ACE_CSI();
 	this->Game::ACE_PBC();
-
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassThread, NULL, NULL, NULL);
 }
 
 void Game::ACE_Base()
@@ -210,27 +210,18 @@ void Game::ACE_ATS()
 	////	else
 	////		this->Game::GameBase.ACE_ATS64 = (__int64)GetModuleHandleA("ACE-ATS64.dll");
 	////}
-	//
-	//while (true)
-	//{
-	//	if (this->Game::GameBase.ACE_ATS64)
-	//	{
-	//		//crc
-	//		//if (this->MemoryTools::ReadLong(this->Game::GameBase.ACE_ATS64 + ATSGetModuleInformationOffset) == (__int64)GetProcAddress(GetModuleHandleA("PSAPI.dll"), "GetModuleInformation"))
-	//		//{
-	//		//	this->Game::driver->WriteLong(this->Game::GameBase.ACE_ATS64 + ATSGetModuleInformationOffset, (__int64)&Self_GetModuleInformation);
-	//		//	this->Game::driver->WriteLong(this->Game::GameBase.ACE_ATS64 + ATSGetModuleHandleAOffset, (__int64)&Self_GetModuleHandleA);
-	//		//	break;
-	//		//}
-	//		//else
-	//		//{
-	//		//	MessageBoxA(NULL, "检测到ATS需要更新，请联系管理员更新后再使用！", "警告", MB_OK);
-	//		//	exit(-1);
-	//		//}
-	//	}
-	//	else
-	//		this->Game::GameBase.ACE_ATS64 = (__int64)GetModuleHandleA("ace-ats64.dll");
-	//}
+	
+	while (true)
+	{
+		if (this->Game::GameBase.ACE_ATS64)
+		{
+			if (!ce->CheatEngine::Tools::UnloadDll((HMODULE)ce->CheatEngine::Game::GameBase.ACE_ATS64))
+				OutputDebugStringA("[GN]:UnloadDll() error!");
+			break;
+		}
+		else
+			this->Game::GameBase.ACE_ATS64 = (__int64)GetModuleHandleA("ace-ats64.dll");
+	}
 }
 
 void Game::ACE_PBC()

@@ -43,5 +43,7 @@ public:
 	bool SuspendThreadByTag(DWORD pid, const char* judgment_tag);
 	bool ResumeThreadByTag(DWORD pid, const char* judgment_tag);
 	bool TerminateThreadByModulehandle(DWORD pid, DWORD64 module_handle, DWORD64 module_handle_end_address);
+	bool UnloadDll(HMODULE module_handle);
+
 };
 

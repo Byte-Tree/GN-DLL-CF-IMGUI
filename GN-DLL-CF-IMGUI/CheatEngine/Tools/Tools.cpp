@@ -557,4 +557,16 @@ bool Tools::TerminateThreadByModulehandle(DWORD pid, DWORD64 module_handle, DWOR
 	return terminate_status;
 }
 
+bool Tools::UnloadDll(HMODULE module_handle)
+{
+	bool status = false;
+	if (module_handle != NULL)
+	{
+		status = ::FreeLibrary(module_handle);
+	}
+	else
+		OutputDebugStringA("[GN]:UnloaddllÄ£¿éÎª0");
+	return status;
+}
+
 
