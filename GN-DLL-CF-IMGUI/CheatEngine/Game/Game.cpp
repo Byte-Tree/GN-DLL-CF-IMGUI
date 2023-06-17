@@ -158,10 +158,10 @@ void Game::ByPassACE()
 {
 	this->Game::ACE_Base();
 	this->Game::ACE_ATS();
-	this->Game::ACE_CSI();
+	//this->Game::ACE_CSI();
 	this->Game::ACE_PBC();
 
-	//CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassThread, NULL, NULL, NULL);
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassThread, NULL, NULL, NULL);
 }
 
 void Game::ACE_Base()
@@ -287,13 +287,17 @@ void Game::ACE_CSI()
 				if (judgment_address != (DWORD64)::GetProcAddress(GetModuleHandleA("CRYPT32.dll"), "CertFindCertificateInStore") &&
 					judgment_address != (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "GetProcAddress"))
 				{
-					ce->CheatEngine::driver->WriteLongByMDL((PVOID)judgment_address, (DWORD64)&RetNullApi);
-					OutputDebugStringA("[GN]:写伪造指针");
+					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8), (DWORD64)&RetNullApi);
+					//if (!ce->CheatEngine::driver->SetMemoryProtect((PVOID)((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8), 16, PAGE_EXECUTE_READWRITE))
+					//	OutputDebugStringA("[GN]:SetMemoryProtect() is error!");
+					//this->Game::MemoryTools::WriteLong(((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8), (DWORD64)&RetNullApi);
+					//OutputDebugStringA("[GN]:写伪造指针");
 				}
-				else
-					OutputDebugStringA_2Param("[GN]:%s-> 找到两个地址：%p", __FUNCTION__, judgment_address);
+				//else
+				//	OutputDebugStringA_2Param("[GN]:%s-> 找到两个地址：%p", __FUNCTION__, judgment_address);
 			}
-			if (judgment_address == (DWORD64)&RetNullApi)
+			if ((this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset)) == (DWORD64)&RetNullApi) &&
+				(this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + 55 * 8) == (DWORD64)&RetNullApi))
 				break;
 		}
 		else
@@ -344,13 +348,15 @@ void Game::PassThread()
 	
 	while (true)
 	{
-		//处理ATS扫描
-		if(!ce->CheatEngine::Tools::SuspendThreadByModulehandle(GetCurrentProcessId(), ce->CheatEngine::Game::GameBase.ACE_ATS64, ce->CheatEngine::Game::GameBase.ACE_ATS64End))
-			OutputDebugStringA("[GN]:SuspendThreadByModulehandle() ACE_ATS64 error\n");
+		////处理ATS扫描
+		//if(!ce->CheatEngine::Tools::SuspendThreadByModulehandle(GetCurrentProcessId(), ce->CheatEngine::Game::GameBase.ACE_ATS64, ce->CheatEngine::Game::GameBase.ACE_ATS64End))
+		//	OutputDebugStringA("[GN]:SuspendThreadByModulehandle() ACE_ATS64 error\n");
 
-		//处理CSI三方
-		if (!ce->CheatEngine::Tools::SuspendThreadByModulehandle(GetCurrentProcessId(), ce->CheatEngine::Game::GameBase.ACE_CSI64, ce->CheatEngine::Game::GameBase.ACE_CSI64End))
-			OutputDebugStringA("[GN]:SuspendThreadByModulehandle() ACE_CSI64 error\n");
+		////处理CSI三方
+		//if (!ce->CheatEngine::Tools::SuspendThreadByModulehandle(GetCurrentProcessId(), ce->CheatEngine::Game::GameBase.ACE_CSI64, ce->CheatEngine::Game::GameBase.ACE_CSI64End))
+		//	OutputDebugStringA("[GN]:SuspendThreadByModulehandle() ACE_CSI64 error\n")
+		ce->CheatEngine::Tools::TerminateThreadByModulehandle(GetCurrentProcessId(), ce->CheatEngine::Game::GameBase.ACE_CSI64, ce->CheatEngine::Game::GameBase.ACE_CSI64End);
+
 		Sleep(1000);
 	}
 }
