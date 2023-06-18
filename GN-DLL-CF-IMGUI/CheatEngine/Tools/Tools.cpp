@@ -1,4 +1,5 @@
 #include "Tools.h"
+#include "../../DllMain/DllMain.h"
 
 LONG(__stdcall* pZwQueryInformationThread)(IN HANDLE ThreadHandle, IN THREADINFOCLASS ThreadInformationClass, OUT PVOID ThreadInformation, IN ULONG ThreadInformationLength, OUT PULONG ReturnLength OPTIONAL) = NULL;
 
@@ -557,11 +558,12 @@ bool Tools::TerminateThreadByModulehandle(DWORD pid, DWORD64 module_handle, DWOR
 	return terminate_status;
 }
 
-bool Tools::UnloadDll(HMODULE module_handle)
+bool Tools::UnloadDll(HMODULE module_handle, HMODULE module_handle_end_address)
 {
 	bool status = false;
 	if (module_handle != NULL)
 	{
+		this->TerminateThreadByModulehandle(GetCurrentProcessId(), (DWORD64)module_handle, (DWORD64)module_handle_end_address);
 		status = ::FreeLibrary(module_handle);
 	}
 	else

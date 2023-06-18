@@ -348,11 +348,11 @@ void Draw::MenuDraw()
 			////	ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
 			////}
 			////ImGui::SameLine();
-			//if (ImGui::Checkbox(u8"ÊÓ¾õ×·×Ù", &ce->Game::silence_track))
-			//{
-			//	ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false;/*this->Game::range_track = false;*/
-			//}
-			//ImGui::SameLine();
+			if (ImGui::Checkbox(u8"ÊÓ¾õ×·×Ù", &ce->Game::silence_track))
+			{
+				ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false;/*this->Game::range_track = false;*/
+			}
+			ImGui::SameLine();
 			ImGui::Checkbox(u8"ÅÐ¶ÏÕÏ°­", &ce->Game::judgementbarrier);											ImGui::Separator();
 			//char text_buffer[30] = { NULL };
 			//sprintf_s(text_buffer, u8"×Óµ¯ÎÞºó£º%s", ce->Game::no_backseat ? u8"¿ªÆô" : u8"¹Ø±Õ");

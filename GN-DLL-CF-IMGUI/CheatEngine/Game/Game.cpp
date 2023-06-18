@@ -210,17 +210,54 @@ void Game::ACE_ATS()
 	////	else
 	////		this->Game::GameBase.ACE_ATS64 = (__int64)GetModuleHandleA("ACE-ATS64.dll");
 	////}
+
+	//MODULEINFO ModuleInfo = { 0 };
+	//while (true)
+	//{
+	//	if (this->Game::GameBase.ACE_ATS64)
+	//	{
+	//		if (!ce->CheatEngine::Tools::UnloadDll((HMODULE)ce->CheatEngine::Game::GameBase.ACE_ATS64, (HMODULE)ce->CheatEngine::Game::GameBase.ACE_ATS64End))
+	//			OutputDebugStringA("[GN]:UnloadDll() error!");
+	//		break;
+	//	}
+	//	else
+	//	{
+	//		this->Game::GameBase.ACE_ATS64 = (__int64)ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ace-ats64.dll");
+	//		GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-ATS64.dll"), &ModuleInfo, sizeof(MODULEINFO));
+	//		this->GameBase.ACE_ATS64End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
+	//	}
+	//	Sleep(1);
+	//}
+
+	DWORD64 judgment_address = 0;
 	
 	while (true)
 	{
 		if (this->Game::GameBase.ACE_ATS64)
 		{
-			if (!ce->CheatEngine::Tools::UnloadDll((HMODULE)ce->CheatEngine::Game::GameBase.ACE_ATS64))
-				OutputDebugStringA("[GN]:UnloadDll() error!");
-			break;
+			static DWORD64 import_table_offset = 0x140000;
+			for (size_t i = 0; i < 0xC0; i++)
+			{
+				judgment_address = this->Game::MemoryTools::ReadLong((this->GameBase.ACE_ATS64 + import_table_offset) + i * 8);
+				if (judgment_address != (DWORD64)::GetProcAddress(GetModuleHandleA("CRYPT32.dll"), "CertFindCertificateInStore") &&
+					judgment_address != (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "GetProcAddress"))
+				{
+					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_ATS64 + import_table_offset) + i * 8), (DWORD64)&RetNullApi);
+					////if (!ce->CheatEngine::driver->SetMemoryProtect((PVOID)((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8), 16, PAGE_EXECUTE_READWRITE))
+					////	OutputDebugStringA("[GN]:SetMemoryProtect() is error!");
+					//this->Game::MemoryTools::WriteLong(((this->GameBase.ACE_ATS64 + import_table_offset) + i * 8), (DWORD64)&RetNullApi);
+					OutputDebugStringA("[GN]:写伪造指针");
+				}
+				else
+					OutputDebugStringA_2Param("[GN]:%s-> 找到两个地址：%p", __FUNCTION__, judgment_address);
+			}
+			if ((this->Game::MemoryTools::ReadLong((this->GameBase.ACE_ATS64 + import_table_offset)) == (DWORD64)&RetNullApi) &&
+				(this->Game::MemoryTools::ReadLong((this->GameBase.ACE_ATS64 + import_table_offset) + 55 * 8) == (DWORD64)&RetNullApi))
+				break;
 		}
 		else
-			this->Game::GameBase.ACE_ATS64 = (__int64)GetModuleHandleA("ace-ats64.dll");
+			this->Game::GameBase.ACE_ATS64 = (__int64)ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-ATS64.dll");
+		//Sleep(1);
 	}
 }
 
@@ -292,8 +329,8 @@ void Game::ACE_CSI()
 				break;
 		}
 		else
-			this->Game::GameBase.ACE_CSI64 = (__int64)GetModuleHandleA("ACE-CSI64.dll");
-		Sleep(500);
+			this->Game::GameBase.ACE_CSI64 = (__int64)ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-CSI64.dll");
+		//Sleep(1);
 	}
 }
 

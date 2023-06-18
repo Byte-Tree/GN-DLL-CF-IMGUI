@@ -39,7 +39,7 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 		/*0*/this->Game::GameBase.ACE_BASE64 + GlobalBaseFuncOffset,
 		/*0*/Hitchaddress,
 		0/*RedNameTrackAddress*/,
-		0/*SilentTrackAddress*/);
+		/*0*/SilentTrackAddress);
 	this->CheatEngine::SetSoftWareBreakPoint();
 	
 	//Clear Modulehandle Header

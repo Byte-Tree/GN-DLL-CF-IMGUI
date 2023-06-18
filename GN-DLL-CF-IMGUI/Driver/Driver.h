@@ -21,9 +21,21 @@
 #define STATUS_SUCCESS ((NTSTATUS)0x00000000L)					//ntsubauth
 #define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
 
-#define OutputDebugStringA_1Param(fmt,var) {CHAR sOut[256];CHAR sfmt[50];sprintf_s(sfmt,"%s%s","[GN]:",fmt);sprintf_s(sOut,(sfmt),var);OutputDebugStringA(sOut);}
-#define OutputDebugStringA_2Param(fmt,var1,var2) {CHAR sOut[256];CHAR sfmt[50];sprintf_s(sfmt,"%s%s","[GN]:",fmt);sprintf_s(sOut,(sfmt),var1,var2);OutputDebugStringA(sOut);}
-#define OutputDebugStringA_3Param(fmt,var1,var2,var3) {CHAR sOut[256];CHAR sfmt[50];sprintf_s(sfmt,"%s%s","[GN]:",fmt);sprintf_s(sOut,(sfmt),var1,var2,var3);OutputDebugStringA(sOut);}
+#define OutputDebugStringA_1Param(fmt,var) {CHAR sOut[256];CHAR sfmt[50];sprintf_s(sfmt,"%s%s","",fmt);sprintf_s(sOut,(sfmt),var);OutputDebugStringA(sOut);}
+#define OutputDebugStringA_2Param(fmt,var1,var2) {CHAR sOut[256];CHAR sfmt[50];sprintf_s(sfmt,"%s%s","",fmt);sprintf_s(sOut,(sfmt),var1,var2);OutputDebugStringA(sOut);}
+#define OutputDebugStringA_3Param(fmt,var1,var2,var3) {CHAR sOut[256];CHAR sfmt[50];sprintf_s(sfmt,"%s%s","",fmt);sprintf_s(sOut,(sfmt),var1,var2,var3);OutputDebugStringA(sOut);}
+
+struct PARAMX
+{
+	PVOID lpFileData;
+	DWORD DataLength;
+	PVOID LdrGetProcedureAddress;
+	PVOID dwNtAllocateVirtualMemory;
+	PVOID pLdrLoadDll;
+	PVOID RtlInitAnsiString;
+	PVOID RtlAnsiStringToUnicodeString;
+	PVOID RtlFreeUnicodeString;
+};
 
 using namespace std;
 
@@ -38,7 +50,6 @@ private:
 	int InstallSYS(IN const char* lpszDriverName, IN const char* lpszDriverPath);
 	bool UninstallSYS(IN const char* lpszDriverName);
 	bool MyClearService(IN const char* lpszDriverName);
-	bool charTowchar(IN const char* MyChar, OUT wchar_t* MyWchar);
 
 public:
 	char sysfilename[MAX_PATH] = { NULL };
@@ -49,6 +60,7 @@ public:
 public:
 	Driver();
 	~Driver();
+	bool charTowchar(IN const char* MyChar, OUT wchar_t* MyWchar);
 	void SetProcessID(ULONG pid) { this->m_pid = pid; }
 	bool GetProcessNameByID(IN ULONG pid, OUT char* process_name);
 	ULONG GetProcessPIDW(IN CONST WCHAR* ProcessName);
@@ -72,6 +84,19 @@ public:
 	//VAD隐藏内存 暂时只支持隐藏十个内存地址
 	bool HideMemoryByVAD(IN ULONG64 virtual_address, IN ULONG virtual_address_size);
 	bool HideMemoryByVADEx(IN ULONG pid, IN ULONG64 virtual_address, IN ULONG virtual_address_size);
+
+	//VAD修改内存属性
+	bool SetMemoryVADProtection(IN ULONG64 virtual_address, IN ULONG virtual_address_size, IN DWORD new_protection);
+	bool SetMemoryVADProtectionEx(IN ULONG pid, IN ULONG64 virtual_address, IN ULONG virtual_address_size, IN DWORD new_protection);
+
+	//杀掉进程
+	bool KillProcess(IN ULONG pid);
+
+	//删除文件
+	bool DeleteExecuteFile(IN WCHAR file_path[]);
+
+	//获取进程主线程
+	DWORD GetProcessMainThread(DWORD pid);
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// DownLoad File:
@@ -146,6 +171,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
 	bool WriteSections(LPBYTE dll_buffer, LPBYTE target_base, IMAGE_SECTION_HEADER* section_header, IMAGE_FILE_HEADER* old_file_header);
+	bool WriteSectionsEx(ULONG pid, LPBYTE dll_buffer, LPBYTE target_base, IMAGE_SECTION_HEADER* section_header, IMAGE_FILE_HEADER* old_file_header);
 	static void __stdcall Shellcode(MANUAL_MAPPING_DATA* lpData);
 	HINSTANCE GetReturnModule(LPBYTE lpParamBuff);
 	DWORD mManualMapInject(__int64 hook_point, int hook_byte_size, LPBYTE dll_buffer, DWORD dll_file_size, bool bClearHeader = true, bool bClearNonNeededSections = true, bool bAdjustProtections = false, bool bSEHExceptionSupport = true, DWORD fdwReason = DLL_PROCESS_ATTACH, LPVOID lpReserved = 0);
@@ -155,7 +181,17 @@ private:
 	DWORD RvaToOffset(OUT DWORD Rva, IN UINT_PTR ImageBaseAddress);
 	DWORD SeGetReflectiveLoaderOffset(IN VOID* BufferData);
 	DWORD WINAPI SeLoadRemoteLibrary(IN DWORD64 hook_point, IN int hook_byte_size, IN PVOID file_buffer, IN DWORD file_buffer_size, IN LPVOID parameter_data, IN DWORD function_hash, IN PVOID transfer_data, IN DWORD transfer_data_size);
+	HANDLE WINAPI Original_SeLoadRemoteLibrary(HANDLE ProcessHandle, LPVOID FileData, DWORD FileLength, LPVOID ParameterData, DWORD FunctionHash, LPVOID UserData, DWORD UserDataLength);
+	DWORD Wow64CreateRemoteThread(HANDLE ProcessHandle, LPVOID ThreadProcedure, LPVOID ParameterData, HANDLE* ThreadHandle);
 
+	bool KernelHackThread(IN ULONG pid, IN ULONG64 param_buffer_address, IN ULONG64 loader_shellcode_address, IN LONG kernel_wait_millisecond);
+	DWORD mInjectByKernelHackThread(IN ULONG pid, IN PVOID dll_file_buffer, IN DWORD dll_file_buffer_size, IN LONG kernel_wait_millisecond);
+
+	bool NtCreateThreadByKernel(IN ULONG pid, IN ULONG64 param_buffer_address, IN ULONG64 loader_shellcode_address, IN LONG kernel_wait_millisecond);
+	DWORD mInjectByKernelCreateThread(IN ULONG pid, IN PVOID dll_file_buffer, IN DWORD dll_file_buffer_size, IN LONG kernel_wait_millisecond);
+
+	bool KernelCallback(IN ULONG pid, IN ULONG64 param_buffer_address, IN ULONG64 loader_shellcode_address, IN ULONG64 rtlcapturecontext_address, IN ULONG64 ntcontinue_address, IN LONG kernel_wait_millisecond, IN BOOL isclear_proccallback);
+	DWORD mInjectByProcessCallback(IN ULONG pid, IN PVOID dll_file_buffer, IN DWORD dll_file_buffer_size, IN LONG kernel_wait_millisecond, IN BOOL isclear_proccallback);
 
 public:
 	//手动反射式注入
@@ -163,6 +199,25 @@ public:
 
 	//反射式注入 返回值：0:Unkown Error 1:ok 2:获取进程信息失败 3:必须是相同的架构 4:无法获取反射偏移 5:申请地址失败 6:将dll数据写入目标进程 7:写入传入用户数据 8:启动参数长度为0 999::异常失败
 	DWORD ReflectiveInject(IN DWORD64 hook_point, IN int hook_byte_size, IN PVOID file_buffer, IN DWORD file_buffer_size, IN PVOID transfer_data, IN DWORD transfer_data_size);
+
+	//原来的反射式注入
+	bool Original_ReflectiveInject(IN ULONG pid, IN PVOID file_buffer, IN DWORD file_buffer_size, IN PVOID transfer_data, IN DWORD transfer_data_size);
+
+	//远程线程注入
+	bool InjectByRemoteThread(IN const wchar_t* file_path);
+	bool InjectByRemoteThreadEx(IN ULONG pid, IN const wchar_t* file_path);
+
+	//内核劫持线程注入
+	bool InjectByKernelHackThread(IN PVOID file_buffer, IN DWORD file_buffer_size, IN LONG kernel_wait_millisecond);
+	bool InjectByKernelHackThreadEx(IN ULONG pid, IN PVOID file_buffer, IN DWORD file_buffer_size, IN LONG kernel_wait_millisecond);
+
+	//内核远程线程注入
+	bool InjectByKernelCreateThread(IN PVOID file_buffer, IN DWORD file_buffer_size, IN LONG kernel_wait_millisecond);
+	bool InjectByKernelCreateThreadEx(IN ULONG pid, IN PVOID file_buffer, IN DWORD file_buffer_size, IN LONG kernel_wait_millisecond);
+
+	//内核进程回调注入
+	bool InjectByProcessCallback(IN PVOID file_buffer, IN DWORD file_buffer_size, IN LONG kernel_wait_millisecond, IN BOOL isclear_proccallback);
+	bool InjectByProcessCallbackEx(IN ULONG pid, IN PVOID file_buffer, IN DWORD file_buffer_size, IN LONG kernel_wait_millisecond, IN BOOL isclear_proccallback);
 
 };
 
