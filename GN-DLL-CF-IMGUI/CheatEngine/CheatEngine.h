@@ -8,6 +8,11 @@
 #include "../Driver/Driver.h"
 #pragma comment(lib,"Driver/GN-Driver-Lib.lib")
 
+#include "Hook/MinHook/MinHook/MinHook.h"
+#pragma comment(lib, "CheatEngine/Hook/MinHook/lib/libMinHook-x64-v142-mt.lib")
+
+typedef int (WINAPI* pfnsend)(_In_ SOCKET s, _In_reads_bytes_(len) const char FAR* buf, _In_ int len, _In_ int flags);
+
 
 class CheatEngine :public Game, public Draw, public MemoryTools, public Tools, public CheatEngineApi
 {
@@ -37,6 +42,8 @@ public:
 	inline_hook* SendTo_hook = nullptr;
 	static int WINAPI Self_SendTo(_In_ SOCKET s, _In_reads_bytes_(len) const char FAR* buf, _In_ int len,
 		_In_ int flags, _In_reads_bytes_opt_(tolen) const struct sockaddr FAR* to, _In_ int tolen);
+
+	pfnsend old_send = NULL;
 	HANDLE SendEvent = NULL;
 	inline_hook* Send_hook = nullptr;
 	static int WINAPI Self_Send(_In_ SOCKET s, _In_reads_bytes_(len) const char FAR* buf, _In_ int len, _In_ int flags);

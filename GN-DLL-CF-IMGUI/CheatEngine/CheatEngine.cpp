@@ -187,10 +187,30 @@ void CheatEngine::InitHook()
 	//this->CheatEngine::SendTo_hook = new inline_hook(sendto_address, (__int64)&CheatEngine::Self_SendTo, FALSE);
 	//this->CheatEngine::SendTo_hook->motify_address();
 	
-	DWORD64 send_address = (DWORD64)GetProcAddress(GetModuleHandle(L"ws2_32.dll"), "send");
-	//OutputDebugStringA_1Param("[GN]:Send地址：%p", send_address);
-	this->CheatEngine::Send_hook = new inline_hook(send_address, (__int64)&CheatEngine::Self_Send, FALSE);
-	this->CheatEngine::Send_hook->motify_address();
+	//DWORD64 send_address = (DWORD64)GetProcAddress(GetModuleHandle(L"ws2_32.dll"), "send");
+	////OutputDebugStringA_1Param("[GN]:Send地址：%p", send_address);
+	//this->CheatEngine::Send_hook = new inline_hook(send_address, (__int64)&CheatEngine::Self_Send, FALSE);
+	//this->CheatEngine::Send_hook->motify_address();
+
+	//初始化MiniHook
+	if (MH_Initialize() != MH_OK)
+	{
+		::MessageBoxA(NULL, "MiniHook初始化失败，请重试！", "警告", MB_OK);
+		exit(-5);
+	}
+	else
+	{
+		if (MH_CreateHookApi(L"Ws2_32", "send", CheatEngine::Self_Send, (LPVOID*)&ce->CheatEngine::old_send) != MH_OK)
+		{
+			::MessageBoxA(NULL, "MH_CreateHookApi Send error", "Notice", MB_OK);
+			exit(-5);
+		}
+		if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK)
+		{
+			::MessageBoxA(NULL, "MH_EnableHook error", "Notice", MB_OK);
+			exit(-5);
+		}
+	}
 
 }
 
