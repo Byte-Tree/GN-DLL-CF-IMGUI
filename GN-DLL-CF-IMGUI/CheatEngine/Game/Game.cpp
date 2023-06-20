@@ -302,7 +302,7 @@ void Game::ACE_PBC()
 
 void Game::ACE_CSI()
 {
-	DWORD64 judgment_address = 0, LoadLibraryExW_count = 0, Process32NextW_count = 0;
+	DWORD64 judgment_address = 0, CreateFileW_count = 0, LoadLibraryExW_count = 0, Process32NextW_count = 0;
 
 	//while (true)
 	//{
@@ -340,7 +340,7 @@ void Game::ACE_CSI()
 		if (this->Game::GameBase.ACE_CSI64)
 		{
 			static DWORD64 import_table_offset = 0x4E0000;
-			for (size_t i = 0; i < 0x200; i++)
+			for (size_t i = 0; i < 0x1000; i++)
 			{
 				judgment_address = this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8);
 
@@ -351,6 +351,12 @@ void Game::ACE_CSI()
 					LoadLibraryExW_count = i;
 					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_LoadLibraryExW);
 				}
+				if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "CreateFileW"))
+				{
+					OutputDebugStringA("[GN]:ÕÒµ½CreateFileW");
+					CreateFileW_count = i;
+					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_CreateFileW);
+				}
 				if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "Process32NextW"))
 				{
 					//OutputDebugStringA("[GN]:ÕÒµ½Process32NextW");
@@ -359,7 +365,8 @@ void Game::ACE_CSI()
 				}
 
 			}
-			if ((this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + LoadLibraryExW_count * 8) == (DWORD64)&HookApi::Self_LoadLibraryExW) &&
+			if ((this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + CreateFileW_count * 8) == (DWORD64)&HookApi::Self_CreateFileW) &&
+				(this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + LoadLibraryExW_count * 8) == (DWORD64)&HookApi::Self_LoadLibraryExW) &&
 				(this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + Process32NextW_count * 8) == (DWORD64)&RetApi))
 				break;
 		}

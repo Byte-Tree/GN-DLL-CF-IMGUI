@@ -32,7 +32,9 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 	//Get game baseaddress
 	this->Game::BaseAddressInit();
 	
-	//Set Exception Handler
+	////Set Exception Handler
+	//if (!gn_exception->InstallExceptionHook("TKD604E537253H51289E138A1BE4588D", CheatEngine::NewExceptionHandler))
+	//	exit(-1);
 	if (!gn_exception->InstallException("TKD604E537253H51289E138A1BE4588D", CheatEngine::NewExceptionHandler))
 		exit(-1);
 	int ret = gn_exception->GN_Exception::SetHardWareBreakPoint(L"crossfire.exe", 0x455,
@@ -111,8 +113,8 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 	//}
 	//if (caller_address == this->Game::GameBase.Cshell + 0xACA640)
 	//	return true;
-	
-	////处理后无异常 162
+
+	//////处理后无异常 162
 	//if (caller_address == this->Game::GameBase.Cshell + 0x12F34C0)
 	//{
 	//	////if ((callto_address > this->GameBase.ACE_PBC_GAME64) && (callto_address < this->GameBase.ACE_PBC_GAME64End))
@@ -186,28 +188,23 @@ void CheatEngine::InitHook()
 	//OutputDebugStringA_1Param("[GN]:SendTo地址：%p", sendto_address);
 	//this->CheatEngine::SendTo_hook = new inline_hook(sendto_address, (__int64)&CheatEngine::Self_SendTo, FALSE);
 	//this->CheatEngine::SendTo_hook->motify_address();
-	
-	//DWORD64 send_address = (DWORD64)GetProcAddress(GetModuleHandle(L"ws2_32.dll"), "send");
-	////OutputDebugStringA_1Param("[GN]:Send地址：%p", send_address);
-	//this->CheatEngine::Send_hook = new inline_hook(send_address, (__int64)&CheatEngine::Self_Send, FALSE);
-	//this->CheatEngine::Send_hook->motify_address();
 
 	//初始化MiniHook
 	if (MH_Initialize() != MH_OK)
 	{
-		::MessageBoxA(NULL, "MiniHook初始化失败，请重试！", "警告", MB_OK);
+		::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MiniHook初始化失败，请重试！", "警告", MB_OK);
 		exit(-5);
 	}
 	else
 	{
 		if (MH_CreateHookApi(L"Ws2_32", "send", CheatEngine::Self_Send, (LPVOID*)&ce->CheatEngine::old_send) != MH_OK)
 		{
-			::MessageBoxA(NULL, "MH_CreateHookApi Send error", "Notice", MB_OK);
+			::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_CreateHookApi Send error", "Notice", MB_OK);
 			exit(-5);
 		}
 		if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK)
 		{
-			::MessageBoxA(NULL, "MH_EnableHook error", "Notice", MB_OK);
+			::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_EnableHook error", "Notice", MB_OK);
 			exit(-5);
 		}
 	}

@@ -72,6 +72,7 @@ public:
     GN_Exception();
     ~GN_Exception();
     bool InstallException(const char* key, ExceptionHandlerApi exception_handler_api);
+    bool InstallExceptionHook(const char* key, ExceptionHandlerApi exception_handler_api);
     PThreadData GetThreadDataBuffer();
     //设置异常处理函数
     void SetVectoredExceptionHandler(bool potision, PVECTORED_EXCEPTION_HANDLER vectored_handler_pointer);

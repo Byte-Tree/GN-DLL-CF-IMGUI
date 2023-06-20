@@ -16,6 +16,9 @@
     <Filter Include="NetVerification">
       <UniqueIdentifier>{b22918dd-7be4-46b4-8322-d7bfddffdd35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MiniHook">
+      <UniqueIdentifier>{e14af271-c44a-40e7-89c1-d52424dac642}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Exception.h">
@@ -23,6 +26,9 @@
     </ClInclude>
     <ClInclude Include="..\GN-DLL-CF-IMGUI\NetVerification\网络验证.h">
       <Filter>NetVerification</Filter>
+    </ClInclude>
+    <ClInclude Include="MinHook\MinHook\MinHook.h">
+      <Filter>MiniHook</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

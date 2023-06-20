@@ -1,5 +1,7 @@
 #include "Exception.h"
 #include "../GN-DLL-CF-IMGUI/NetVerification/网络验证.h"
+#include "MinHook/MinHook/MinHook.h"
+//#pragma comment(lib,"../MinHook/lib/libMinHook-x64-v142-mt.lib")
 
 #define ServerHost "221.236.21.196"
 #define ServerPort 1882
@@ -13,14 +15,17 @@ typedef struct _PROCESS_INSTRUMENTATION_CALLBACK_INFORMATION
 	PVOID Callback;
 } PROCESS_INSTRUMENTATION_CALLBACK_INFORMATION, * PPROCESS_INSTRUMENTATION_CALLBACK_INFORMATION;
 
+typedef void (WINAPI* pfnKiUserExceptionDispatcher)(__in PEXCEPTION_RECORD ExceptionRecord, __in PCONTEXT ContextRecord);
 extern "C" LONG(__stdcall * ZwQueryInformationThread)(IN HANDLE ThreadHandle, IN THREADINFOCLASS ThreadInformationClass, OUT PVOID ThreadInformation, IN ULONG ThreadInformationLength, OUT PULONG ReturnLength OPTIONAL) = NULL;
 extern "C" NTSTATUS NTAPI NtSetInformationProcess(HANDLE ProcessHandle, ULONG ProcessInformationClass, PVOID ProcessInformation, ULONG ProcessInformationLength);
 extern "C" NTSTATUS NtContinue(PCONTEXT, unsigned long long);
 extern "C" void MyCallbackEntry();
 extern "C" void MyCallbackRoutine(CONTEXT * context);
+void Self_KiUserExceptionDispatcher(__in PEXCEPTION_RECORD ExceptionRecord, __in PCONTEXT ContextRecord);
 
 bool call_status = false;
 __int64 sysret_address = 0, RtlRestoreContext_offset = 0;
+pfnKiUserExceptionDispatcher old_KiUserExceptionDispatcher = NULL;
 
 
 GN_Exception::GN_Exception()
@@ -185,6 +190,49 @@ bool GN_Exception::InstallException(const char* key, ExceptionHandlerApi excepti
 	return true;
 }
 
+bool GN_Exception::InstallExceptionHook(const char* key, ExceptionHandlerApi exception_handler_api)
+{
+	//NetVerification
+	if (!全_验证通讯::验证_初始化(ServerHost, ServerPort))
+	{
+		OutputDebugStringA("[GN]:验证_初始化() error");
+		exit(-1);
+	}
+	string a(key);
+	if (!全_验证通讯::验证_卡登录(a))
+	{
+		OutputDebugStringA("[GN]:验证_卡登录() error");
+		exit(-1);
+	}
+
+	//保存函数指针
+	this->pExceptionHandlerApi = exception_handler_api;
+
+	//初始化MiniHook
+	if (MH_Initialize() != MH_OK)
+	{
+		OutputDebugStringA("[GN]:MH_Initialize() error");
+		::MessageBoxA(NULL, "GN_Exception: MiniHook初始化失败，请重试！", "警告", MB_OK);
+		exit(-5);
+	}
+	if (MH_CreateHookApi(L"ntdll", "KiUserExceptionDispatcher", Self_KiUserExceptionDispatcher, (LPVOID*)&old_KiUserExceptionDispatcher) != MH_OK)
+	{
+		OutputDebugStringA("[GN]:MH_CreateHookApi() error");
+		::MessageBoxA(NULL, "GN_Exception:MH_CreateHookApi KiUserExceptionDispatcher error", "Notice", MB_OK);
+		exit(-5);
+	}
+	//if (MH_EnableHook((LPVOID)::GetProcAddress(GetModuleHandleA("ntdll.dll"), "KiUserExceptionDispatcher")) != MH_OK)
+	if (MH_EnableHook(NULL) != MH_OK)
+	{
+		OutputDebugStringA("[GN]:MH_EnableHook() error");
+		::MessageBoxA(NULL, "GN_Exception:MH_EnableHook error", "Notice", MB_OK);
+		exit(-5);
+	}
+
+	OutputDebugStringA("[GN]:MiniHook over");
+	return true;
+}
+
 bool GN_Exception::InitSymbol()
 {
 	SymSetOptions(SYMOPT_UNDNAME);
@@ -332,5 +380,22 @@ void MyCallbackRoutine(CONTEXT* context)
 	NtContinue(context, 0);
 }
 
+void Self_KiUserExceptionDispatcher(__in PEXCEPTION_RECORD ExceptionRecord, __in PCONTEXT ContextRecord)
+{
+	LONG status = gn_exception->pExceptionHandlerApi(ExceptionRecord, ContextRecord);
+	if (status == EXCEPTION_CONTINUE_EXECUTION)
+	{
+		OutputDebugStringA("[GN]:恢复寄存器前");
+		RtlRestoreContext(ContextRecord, ExceptionRecord);
+		//NtContinue(ContextRecord, 0);
+		OutputDebugStringA("[GN]:恢复寄存器后...");
+	}
+	else
+		return old_KiUserExceptionDispatcher(ExceptionRecord, ContextRecord);
+
+	OutputDebugStringA("[GN]:进入KiUserExceptionDispatcher");
+
+	//return old_KiUserExceptionDispatcher(ExceptionRecord, ContextRecord);
+}
 
 
