@@ -313,6 +313,9 @@ void Draw::MenuDraw()
 	if (this->show_menu)
 	{
 		ImGui::Begin(u8"蓝鲸 | （Home隐藏显示）");
+		//if (ImGui::CollapsingHeader(ce->Tools::string_to_utf8((char*)new BYTE[12]{ 0xE6,0x98,0xBE,0xE7,0xA4,0xBA,0xE4,0xB8,0x93,0xE5,0x8C,0xBA }).c_str()))
+		//if (ImGui::CollapsingHeader(ce->Tools::string_to_utf8((char*)new BYTE[12]{ 0xBA,0x8C,0xE5,0x93,0xB8,0xE4,0xBA,0xA4,0xE7,0xBE,0x98,0xE6 }).c_str()))
+		//if (ImGui::CollapsingHeader(ce->Tools::string_to_utf8("显示专区").c_str()))
 		if (ImGui::CollapsingHeader(u8"显示专区"))
 		{
 			//ImGui::Checkbox(u8"显示方框", &this->show_rectbox);													ImGui::SameLine();

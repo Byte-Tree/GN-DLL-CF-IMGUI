@@ -115,9 +115,14 @@ HANDLE WINAPI HookApi::Self_CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess
 	HANDLE phandle = NULL;
 
 	OutputDebugStringA_1Param("[GN]:Self_CreateFileW() Ãû³Æ£º%s", lpFileName);
-
+	
 	phandle = ::CreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
 	return phandle;
+}
+
+VOID WINAPI HookApi::Self_Sleep(_In_ DWORD dwMilliseconds)
+{
+
 }
 
 

@@ -45,7 +45,7 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 	this->CheatEngine::SetSoftWareBreakPoint();
 	
 	//Clear Modulehandle Header
-	ZeroMemory(hinstance, 1024);
+	ZeroMemory(hinstance, 0x1000);
 	
 	//////Hide Dll Memory
 	////if (!this->CheatEngine::driver->HideMemoryByVAD((ULONG64)this->self_module_handle, 0/*模块大小*/))
@@ -188,26 +188,26 @@ void CheatEngine::InitHook()
 	//OutputDebugStringA_1Param("[GN]:SendTo地址：%p", sendto_address);
 	//this->CheatEngine::SendTo_hook = new inline_hook(sendto_address, (__int64)&CheatEngine::Self_SendTo, FALSE);
 	//this->CheatEngine::SendTo_hook->motify_address();
-
-	//初始化MiniHook
-	if (MH_Initialize() != MH_OK)
-	{
-		::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MiniHook初始化失败，请重试！", "警告", MB_OK);
-		exit(-5);
-	}
-	else
-	{
-		if (MH_CreateHookApi(L"Ws2_32", "send", CheatEngine::Self_Send, (LPVOID*)&ce->CheatEngine::old_send) != MH_OK)
-		{
-			::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_CreateHookApi Send error", "Notice", MB_OK);
-			exit(-5);
-		}
-		if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK)
-		{
-			::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_EnableHook error", "Notice", MB_OK);
-			exit(-5);
-		}
-	}
+	
+	////初始化MiniHook
+	//if (MH_Initialize() != MH_OK)
+	//{
+	//	::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MiniHook初始化失败，请重试！", "警告", MB_OK);
+	//	exit(-5);
+	//}
+	//else
+	//{
+	//	if (MH_CreateHookApi(L"Ws2_32", "send", CheatEngine::Self_Send, (LPVOID*)&ce->CheatEngine::old_send) != MH_OK)
+	//	{
+	//		::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_CreateHookApi Send error", "Notice", MB_OK);
+	//		exit(-5);
+	//	}
+	//	if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK)
+	//	{
+	//		::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_EnableHook error", "Notice", MB_OK);
+	//		exit(-5);
+	//	}
+	//}
 
 }
 

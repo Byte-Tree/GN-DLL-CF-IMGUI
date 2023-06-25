@@ -682,6 +682,21 @@ int WINAPI CheatEngine::Self_Send(_In_ SOCKET s, _In_reads_bytes_(len) const cha
 	//ce->CheatEngine::Send_hook->restore_address();
 
 	PBYTE buffer = (PBYTE)buf;
+	
+	////隔离效验
+	//if ((BYTE)buffer[0] == 0x01)
+	//{
+	//	if (len > 800)
+	//	{
+	//		FILE* SendFile = fopen("C:\\SendLog.txt", "a+");
+	//		fprintf(SendFile, "拦截大于800的包：\n");
+	//		for (int i = 0; i < len; i++)
+	//			fprintf(SendFile, "%02X ", buffer[i]);
+	//		fprintf(SendFile, "\n\n");
+	//		fclose(SendFile);
+	//		return -1;
+	//	}
+	//}
 
 	if ((BYTE)buffer[2] == 0x01 && (BYTE)buffer[3] == 0x01 && (BYTE)buffer[4] == 0xEC && (BYTE)buffer[5] == 0x00) {
 		//ce->CheatEngine::Send_hook->motify_address();

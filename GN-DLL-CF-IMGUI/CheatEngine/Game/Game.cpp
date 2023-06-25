@@ -344,19 +344,19 @@ void Game::ACE_CSI()
 			{
 				judgment_address = this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8);
 
-				//ÅÐ¶ÏµØÖ·
-				if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "LoadLibraryExW"))
-				{
-					//OutputDebugStringA("[GN]:ÕÒµ½LoadLibraryExW");
-					LoadLibraryExW_count = i;
-					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_LoadLibraryExW);
-				}
-				if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "CreateFileW"))
-				{
-					OutputDebugStringA("[GN]:ÕÒµ½CreateFileW");
-					CreateFileW_count = i;
-					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_CreateFileW);
-				}
+				////ÅÐ¶ÏµØÖ·
+				//if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "LoadLibraryExW"))
+				//{
+				//	//OutputDebugStringA("[GN]:ÕÒµ½LoadLibraryExW");
+				//	LoadLibraryExW_count = i;
+				//	ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_LoadLibraryExW);
+				//}
+				//if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "CreateFileW"))
+				//{
+				//	OutputDebugStringA("[GN]:ÕÒµ½CreateFileW");
+				//	CreateFileW_count = i;
+				//	ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_CreateFileW);
+				//}
 				if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "Process32NextW"))
 				{
 					//OutputDebugStringA("[GN]:ÕÒµ½Process32NextW");
@@ -365,8 +365,8 @@ void Game::ACE_CSI()
 				}
 
 			}
-			if ((this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + CreateFileW_count * 8) == (DWORD64)&HookApi::Self_CreateFileW) &&
-				(this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + LoadLibraryExW_count * 8) == (DWORD64)&HookApi::Self_LoadLibraryExW) &&
+			if (/*(this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + CreateFileW_count * 8) == (DWORD64)&HookApi::Self_CreateFileW) &&
+				(this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + LoadLibraryExW_count * 8) == (DWORD64)&HookApi::Self_LoadLibraryExW) &&*/
 				(this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + Process32NextW_count * 8) == (DWORD64)&RetApi))
 				break;
 		}
