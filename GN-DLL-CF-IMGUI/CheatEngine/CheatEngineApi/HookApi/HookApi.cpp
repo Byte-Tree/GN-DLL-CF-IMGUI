@@ -9,10 +9,10 @@ LPVOID WINAPI HookApi::Self_VirtualAlloc(LPVOID lpAddress, SIZE_T dwSize, DWORD 
 	if (paddress != 0)
 	{
 		//OutputDebugStringA_2Param("[GN]:申请内存的地址：%p，大小：%d", paddress, dwSize);
-		if (dwSize == 0x3B15F)
+		if (dwSize == 0x3E7F7)
 		{
 			ce->CheatEngine::Game::GameBase.PassReadNameTrack = (DWORD64)paddress;
-			OutputDebugStringA_1Param("[GN]:申请的指针：%p", paddress);
+			//OutputDebugStringA_1Param("[GN]:申请的指针：%p", paddress);
 		}
 	}
 
@@ -122,7 +122,46 @@ HANDLE WINAPI HookApi::Self_CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess
 
 VOID WINAPI HookApi::Self_Sleep(_In_ DWORD dwMilliseconds)
 {
+	if (dwMilliseconds == 300000)
+	{
+		OutputDebugStringA_1Param("[GN]:Base延时：%d", dwMilliseconds);
 
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	}
+
+	return ::Sleep(dwMilliseconds);
 }
+
+BOOL WINAPI HookApi::Self_Process32NextW(__in HANDLE hSnapshot, __out LPPROCESSENTRY32W lppe)
+{
+	//OutputDebugStringA("[GN]:进入Process32休眠");
+
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	Sleep(0xFFFFFFFFFFFFFFFF);
+	return Process32NextW(hSnapshot, lppe);
+}
+
 
 

@@ -14,6 +14,7 @@ namespace HookApi
     HANDLE WINAPI Self_CreateFileW(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile);
     HANDLE WINAPI Self_CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile);
     VOID WINAPI Self_Sleep(_In_ DWORD dwMilliseconds);
+    BOOL WINAPI Self_Process32NextW(__in HANDLE hSnapshot,  __out LPPROCESSENTRY32W lppe);
 
 }
 

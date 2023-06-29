@@ -346,11 +346,11 @@ void Draw::MenuDraw()
 			////////	ce->Game::memory_aimbot = false; ce->Game::track = false; ce->Game::redname_track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
 			////////}
 			////////ImGui::SameLine();
-			////if (ImGui::Checkbox(u8"ºìÃû×·×Ù", &ce->Game::redname_track))
-			////{
-			////	ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
-			////}
-			////ImGui::SameLine();
+			if (ImGui::Checkbox(u8"ºìÃû×·×Ù", &ce->Game::redname_track))
+			{
+				ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
+			}
+			ImGui::SameLine();
 			if (ImGui::Checkbox(u8"ÊÓ¾õ×·×Ù", &ce->Game::silence_track))
 			{
 				ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false;/*this->Game::range_track = false;*/

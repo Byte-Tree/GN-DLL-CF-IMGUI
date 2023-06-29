@@ -40,10 +40,10 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 	int ret = gn_exception->GN_Exception::SetHardWareBreakPoint(L"crossfire.exe", 0x455,
 		/*0*/this->Game::GameBase.ACE_BASE64 + GlobalBaseFuncOffset,
 		/*0*/Hitchaddress,
-		0/*RedNameTrackAddress*/,
+		/*0*/RedNameTrackAddress,
 		/*0*/SilentTrackAddress);
 	this->CheatEngine::SetSoftWareBreakPoint();
-	
+
 	//Clear Modulehandle Header
 	ZeroMemory(hinstance, 0x1000);
 	
@@ -67,6 +67,37 @@ CheatEngine::~CheatEngine()
 
 bool CheatEngine::ByPassCheck(PCONTEXT context)
 {
+	static bool first_call = false;
+
+	if (!first_call)
+	{
+		if (this->CheatEngine::Game::GameBase.PassReadNameTrack != 0)
+		{
+			if (this->CheatEngine::MemoryTools::ReadByte(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x5E48) == 0x74)
+			{
+				//处理第一处检测
+				this->CheatEngine::MemoryTools::WriteVecBytes(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x5E48, { 0xEB });
+				//OutputDebugStringA_1Param("[GN]:第一处检测地址：%p", this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x5E48);
+
+				if (this->CheatEngine::MemoryTools::ReadInt(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x4DAA) != 0)
+				{
+					//处理第二处检测
+					this->CheatEngine::MemoryTools::WriteVecBytes(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x4DAA, { 0x0F,0x81 });
+					//OutputDebugStringA_1Param("[GN]:第二处检测地址：%p", this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x4DAA);
+				
+					if (this->CheatEngine::MemoryTools::ReadInt(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x585F) != 0)
+					{
+						//处理第二处检测
+						this->CheatEngine::MemoryTools::WriteVecBytes(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x585F, { 0x0F,0x81 });
+						//OutputDebugStringA_1Param("[GN]:第二处检测地址：%p", this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x585F);
+				
+						first_call = true;
+					}
+				}
+			}
+		}
+	}
+
 	DWORD64 caller_address = this->MemoryTools::ReadLong(context->Rsi);
 	DWORD64 callto_address = this->MemoryTools::ReadLong(context->Rbx + 0x20);
 

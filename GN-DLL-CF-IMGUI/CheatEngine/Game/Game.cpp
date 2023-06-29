@@ -160,33 +160,44 @@ void Game::ByPassACE()
 
 	this->Game::ACE_Base();
 	//this->Game::ACE_ATS();
-	this->Game::ACE_CSI();
+	//this->Game::ACE_CSI();
 	this->Game::ACE_PBC();
 }
 
 void Game::ACE_Base()
 {
-	//while (true)
-	//{
-	//	this->Game::GameBase.ACE_BASE64 = (__int64)GetModuleHandleA("ACE-Base64.dll");
-	//	if (this->Game::GameBase.ACE_BASE64)
-	//	{
-	//		DWORD64 virtualalloc_address = this->Game::GameBase.ACE_BASE64 + BASEVirtualAllocOffset;
-	//		DWORD64 loadlibraryw_address = this->Game::GameBase.ACE_BASE64 + BASELoadLibraryWOffset;
-	//		if ((this->Game::MemoryTools::ReadLong(virtualalloc_address) == (__int64)GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "VirtualProtect")) || ((this->Game::MemoryTools::ReadLong(virtualalloc_address) != (__int64)&HookApi::Self_VirtualAlloc)))
-	//		{
-	//			ce->CheatEngine::driver->WriteLongByMDL((PVOID)virtualalloc_address, (__int64)&HookApi::Self_VirtualAlloc);
-	//			ce->CheatEngine::driver->WriteLongByMDL((PVOID)loadlibraryw_address, (__int64)&HookApi::Self_LoadLibraryW);
-	//
-	//			if (this->Game::MemoryTools::ReadLong(virtualalloc_address) == (__int64)&HookApi::Self_VirtualAlloc)
-	//			{
-	//				//OutputDebugStringA_1Param("[GN]:跳出，读取的值：%p", this->Game::MemoryTools::ReadLong(virtualalloc_address));
-	//				break;
-	//			}
-	//		}
-	//	}
-	//	Sleep(1);
-	//}
+	DWORD64 judgment_address = 0, VirtualAlloc_count = 0, Sleep_count = 0;
+
+	while (true)
+	{
+		if (this->Game::GameBase.ACE_BASE64)
+		{
+			static DWORD64 import_table_offset = 0x314000;
+			for (size_t i = 0; i < 0x1000; i++)
+			{
+				judgment_address = this->Game::MemoryTools::ReadLong((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8);
+
+				////判断地址
+				if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "VirtualAlloc"))
+				{
+					//OutputDebugStringA_1Param("[GN]:找到VirtualAlloc,地址：%p", (this->GameBase.ACE_BASE64 + import_table_offset) + i * 8);
+					VirtualAlloc_count = i;
+					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_VirtualAlloc);
+				}
+				if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "Sleep"))
+				{
+					Sleep_count = i;
+					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_Sleep);
+				}
+
+			}
+			if ((this->Game::MemoryTools::ReadLong((this->GameBase.ACE_BASE64 + import_table_offset) + VirtualAlloc_count * 8) == (DWORD64)&HookApi::Self_VirtualAlloc))
+				break;
+		}
+		else
+			this->Game::GameBase.ACE_BASE64 = (__int64)ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-Base64.dll");
+		//Sleep(1);
+	}
 }
 
 void Game::ACE_ATS()
@@ -359,15 +370,15 @@ void Game::ACE_CSI()
 				//}
 				if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "Process32NextW"))
 				{
-					//OutputDebugStringA("[GN]:找到Process32NextW");
+					//OutputDebugStringA_1Param("[GN]:找到Process32NextW,地址：%p", (this->GameBase.ACE_CSI64 + import_table_offset) + i * 8);
 					Process32NextW_count = i;
-					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8), (DWORD64)&RetApi);
+					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_Process32NextW);
 				}
 
 			}
 			if (/*(this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + CreateFileW_count * 8) == (DWORD64)&HookApi::Self_CreateFileW) &&
 				(this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + LoadLibraryExW_count * 8) == (DWORD64)&HookApi::Self_LoadLibraryExW) &&*/
-				(this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + Process32NextW_count * 8) == (DWORD64)&RetApi))
+				(this->Game::MemoryTools::ReadLong((this->GameBase.ACE_CSI64 + import_table_offset) + Process32NextW_count * 8) == (DWORD64)&HookApi::Self_Process32NextW))
 				break;
 		}
 		else
