@@ -105,6 +105,8 @@ HRESULT CALLBACK Draw::Self_Present(IDirect3DDevice9* direct3ddevice9, RECT* pSo
 		first_call = true;
 		ce->CheatEngine::Draw::SetDevice9(direct3ddevice9);
 		ce->CheatEngine::Draw::InitImGuiDx9(direct3ddevice9);
+		IDirect3DTexture9* texture = ce->CheatEngine::Draw::GetD3D9Texture();
+		ce->CheatEngine::Draw::CreateD3D9Texture(direct3ddevice9, &texture, D3DCOLOR_ARGB(255, 0, 255, 0));//ÂÌÉ«
 		ce->CheatEngine::InitHook();
 		ce->CheatEngine::original_proc = (WNDPROC)SetWindowLongPtr(ce->CheatEngine::GetGameWindowHandle(), GWLP_WNDPROC, (LONG_PTR)CheatEngine::SelfGameWindowProc);
 	}
@@ -120,7 +122,7 @@ HRESULT CALLBACK Draw::Self_Present(IDirect3DDevice9* direct3ddevice9, RECT* pSo
 //Self DrawIndexedPrimitive api
 HRESULT CALLBACK Draw::Self_DrawIndexedPrimitive(IDirect3DDevice9* direct3ddevice9, D3DPRIMITIVETYPE Type, INT BaseVertexIndex, UINT MinVertexIndex, UINT NumVertices, UINT startIndex, UINT primCount)
 {
-	ce->Draw::drawindexedprimitive_hook->restore_address();
+	//ce->Draw::drawindexedprimitive_hook->restore_address();
 	//WaitForSingleObject(ce->Draw::drawindexe_event, INFINITE);
 
 	if (ce->Draw::show_characterindex)
@@ -133,16 +135,23 @@ HRESULT CALLBACK Draw::Self_DrawIndexedPrimitive(IDirect3DDevice9* direct3ddevic
 			DWORD Value = 0;
 			if (iStride == 40 || iStride == 44 || iStride == 48 || iStride == 68 || iStride == 72)
 			{
-				direct3ddevice9->GetRenderState(D3DRS_ZENABLE, &Value);
-				direct3ddevice9->SetRenderState((D3DRENDERSTATETYPE)7, 0);
+				direct3ddevice9->SetPixelShader(ce->CheatEngine::Draw::GetD3D9PixelShader());		//Çå¿Õ×ÅÉ«Æ÷
+				direct3ddevice9->SetTexture(0, ce->CheatEngine::Draw::GetD3D9Texture());			//ÉÏÉ«äÖÈ¾
+				//direct3ddevice9->GetRenderState(D3DRS_ZENABLE, &Value);								//±£´æZÖá»º³å×´Ì¬
+				direct3ddevice9->SetRenderState(D3DRS_ZENABLE, FALSE);								//½ûÓÃZÖá»º³å
+				direct3ddevice9->SetRenderState(D3DRS_ZFUNC, D3DCMP_NEVER);
+				ce->CheatEngine::Draw::old_drawindexprimitive(direct3ddevice9, Type, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+				direct3ddevice9->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 			}
 		}
 	}
 
-	HRESULT result = direct3ddevice9->DrawIndexedPrimitive(Type, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
-	ce->Draw::drawindexedprimitive_hook->motify_address();
-	//SetEvent(ce->Draw::drawindexe_event);
-	return result;
+	//HRESULT result = direct3ddevice9->DrawIndexedPrimitive(Type, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+	//ce->Draw::drawindexedprimitive_hook->motify_address();
+	////SetEvent(ce->Draw::drawindexe_event);
+	//return result;
+
+	return ce->CheatEngine::Draw::old_drawindexprimitive(direct3ddevice9, Type, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
 }
 
 //Self SetViewport api
@@ -479,6 +488,7 @@ LONG WINAPI CheatEngine::NewExceptionHandler(PEXCEPTION_RECORD ExceptionRecord, 
 	//hardware breakpoint
 	if (ExceptionRecord->ExceptionCode == EXCEPTION_SINGLE_STEP)
 	{
+		//BaseÈ«¾Ö¼ì²âÅÉÇ²
 		if (ExceptionRecord->ExceptionAddress == (PVOID64)gn_exception->mdr1)
 		{
 			if (ce->CheatEngine::ByPassCheck(context))

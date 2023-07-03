@@ -28,6 +28,8 @@ struct _Direct9
 	IDirect3DStateBlock9* stateBlock = nullptr;
 	ID3DXFont* fontSmall = nullptr;							//创建一个D3D绘制文本对象
 	ID3DXLine* line = nullptr;								//创建一个D3D画线对象
+	IDirect3DPixelShader9* pixelshader9 = NULL;				//创建一个着色器
+	IDirect3DTexture9* texture;								//创建一个纹理资源
 	int fontSize = 17;										//设置字体大小
 };
 
@@ -40,7 +42,7 @@ struct _Direct11
 };
 
 typedef HRESULT(WINAPI* OriginalGetBufferStruct)(IDXGISwapChain* pSwapChain, UINT Buffer, REFIID riid, void** ppSurface);
-
+typedef HRESULT(WINAPI* pfnDrawIndexedPrimitive)(IDirect3DDevice9* direct3ddevice9, D3DPRIMITIVETYPE Type, INT BaseVertexIndex, UINT MinVertexIndex, UINT NumVertices, UINT startIndex, UINT primCount);
 
 class Draw :public Tools
 {
@@ -61,11 +63,16 @@ public:
 	IDirect3DDevice9* GetD3D9Device() { return direct9.device; }
 	ID3D11Device* GetD3D11Device() { return direct11.pd3d11device; }
 	IDXGISwapChain* GetD3D11SwapChain() { return direct11.pswapchain; }
+	IDirect3DPixelShader9* GetD3D9PixelShader() { return this->direct9.pixelshader9; }
+	IDirect3DTexture9* GetD3D9Texture() { return this->direct9.texture; }
 
 	inline_hook* setviewport_hook = nullptr;
 	inline_hook* reset_hook = nullptr;
+
 	HANDLE drawindexe_event = NULL;
+	pfnDrawIndexedPrimitive old_drawindexprimitive = NULL;
 	inline_hook* drawindexedprimitive_hook = nullptr;
+
 	inline_hook* getbuffer_hook = nullptr;
 
 	static LRESULT CALLBACK OverlayWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -105,6 +112,7 @@ public:
 	void InitImGui(HWND hwnd);
 	void InitImGuiDx9(IDirect3DDevice9* direct3ddevice9);
 	bool CreateDeviceD3D9(HWND hwnd);
+	HRESULT CreateD3D9Texture(IDirect3DDevice9* pdevice, IDirect3DTexture9** ppd3d9texture, DWORD colour32);
 	bool CreateDeviceD3D11(HWND hwnd);
 	void CreateRenderTarget();
 	void CleanupDeviceD3D11();

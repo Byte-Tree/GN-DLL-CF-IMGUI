@@ -34,6 +34,8 @@ public:
 	systime GetSystemtime();
 	std::string string_to_utf8(const std::string& str);
 	void BrokenModuleLink(HANDLE modulehandle);
+	DWORD RVA_2_RAW(char* buf, DWORD RVA, DWORD RAW, BOOL flag);
+	DWORD64 GetImportTableIndexOffset(HANDLE modulehandle, PDWORD import_table_size);
 	void StackTrace64();
 	PVOID GetReturnAddress();
 	void GetCallStackInfo(CALL_STACK_INFO& callStack, DWORD dwMaxFrame);

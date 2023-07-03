@@ -134,6 +134,28 @@ bool Draw::CreateDeviceD3D9(HWND hwnd)
 	return true;
 }
 
+HRESULT Draw::CreateD3D9Texture(IDirect3DDevice9* pdevice, IDirect3DTexture9** ppd3d9texture, DWORD colour32)
+{
+	if (FAILED(pdevice->CreateTexture(8, 8, 1, 0, D3DFMT_A4R4G4B4, D3DPOOL_MANAGED, ppd3d9texture, NULL)))
+		return E_FAIL;
+
+	WORD colour16 =
+		((WORD)((colour32 >> 28) & 0xF) << 12)
+		| (WORD)(((colour32 >> 20) & 0xF) << 8)
+		| (WORD)(((colour32 >> 12) & 0xF) << 4)
+		| (WORD)(((colour32 >> 4) & 0xF) << 0);
+
+	D3DLOCKED_RECT d3dlr;
+	(*ppd3d9texture)->LockRect(0, &d3dlr, 0, 0);
+
+	WORD* pDst16 = (WORD*)d3dlr.pBits;
+	for (int xy = 0; xy < 8 * 8; xy++)
+		*pDst16++ = colour16;
+
+	(*ppd3d9texture)->UnlockRect(0);
+	return S_OK;
+}
+
 bool Draw::CreateDeviceD3D11(HWND hwnd)
 {
 	//OutputDebugStringA_1Param("[GN]:%s->", __FUNCTION__);
@@ -341,16 +363,16 @@ void Draw::MenuDraw()
 				ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
 			}
 			ImGui::SameLine();
-			////////if (ImGui::Checkbox(u8"鼠标自瞄", &ce->Game::aimbot))
-			////////{
-			////////	ce->Game::memory_aimbot = false; ce->Game::track = false; ce->Game::redname_track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
-			////////}
-			////////ImGui::SameLine();
-			if (ImGui::Checkbox(u8"红名追踪", &ce->Game::redname_track))
-			{
-				ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
-			}
-			ImGui::SameLine();
+			//////////if (ImGui::Checkbox(u8"鼠标自瞄", &ce->Game::aimbot))
+			//////////{
+			//////////	ce->Game::memory_aimbot = false; ce->Game::track = false; ce->Game::redname_track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
+			//////////}
+			//////////ImGui::SameLine();
+			//if (ImGui::Checkbox(u8"红名追踪", &ce->Game::redname_track))
+			//{
+			//	ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
+			//}
+			//ImGui::SameLine();
 			if (ImGui::Checkbox(u8"视觉追踪", &ce->Game::silence_track))
 			{
 				ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false;/*this->Game::range_track = false;*/
@@ -476,16 +498,14 @@ void Draw::MenuDraw()
 		{
 			static int MenuStyleSwitch = 0;
 			ImGui::SetNextItemWidth(68);
-			//if (ImGui::Combo(u8"菜单风格", &MenuStyleSwitch, u8"亮白色\0经典色\0半透明\0全透明\0"))
-			if (ImGui::Combo(u8"菜单风格", &MenuStyleSwitch, u8"基础色\0亮白色\0经典色\0半透明\0"))
+			if (ImGui::Combo(u8"菜单风格", &MenuStyleSwitch, u8"亮白色\0经典色\0半透明\0全透明\0"))
 			{
 				switch (MenuStyleSwitch)
 				{
-				//case 0: {ImGui::StyleColorsChinaRed(); break; }
-				case 1: {ImGui::StyleColorsLight(); break; }
-				case 2: {ImGui::StyleColorsDark(); break; }
-				case 3: {ImGui::StyleColorsClassic(); break; }
-					  //case 3: {ImGui::My_Style_FullyTransparent(); break; }
+				case 0: {ImGui::StyleColorsLight(); break; }
+				case 1: {ImGui::StyleColorsDark(); break; }
+				case 2: {ImGui::StyleColorsClassic(); break; }
+				case 3: {ImGui::My_Style_FullyTransparent(); break; }
 				default:break;
 				}
 			}

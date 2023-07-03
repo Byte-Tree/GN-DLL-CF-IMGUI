@@ -6,19 +6,19 @@
 CheatEngine::CheatEngine(HINSTANCE hinstance)
 {
 	OutputDebugStringA_2Param("[GN]:%s-> 模块地址：%p", __FUNCTION__, hinstance);
+	ce = this;
 
 	////打开控制台
 	//AllocConsole();
 	//freopen("CONOUT$", "w", stdout);
 
 	//Save Modulehandle
-	this->self_module_handle = hinstance;
-	ce = this;
+	this->CheatEngine::self_module_handle = hinstance;
 
 	//Find game windowhandle and set game windowhandle
-	while (this->Draw::GetGameWindowHandle() == NULL)
+	while (this->CheatEngine::Draw::GetGameWindowHandle() == NULL)
 	{
-		this->Draw::SetGameWindowHandle(this->CheatEngineApi::FindWindowA("CrossFire", "穿越火线"));
+		this->CheatEngine::Draw::SetGameWindowHandle(this->CheatEngineApi::FindWindowA("CrossFire", "穿越火线"));
 	}
 	
 	DWORD game_pid = 0;
@@ -30,7 +30,7 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 	this->CheatEngine::driver->SetProcessID(this->CheatEngineApi::GetCurrentProcessId());
 	
 	//Get game baseaddress
-	this->Game::BaseAddressInit();
+	this->CheatEngine::Game::BaseAddressInit();
 	
 	////Set Exception Handler
 	//if (!gn_exception->InstallExceptionHook("TKD604E537253H51289E138A1BE4588D", CheatEngine::NewExceptionHandler))
@@ -40,7 +40,7 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 	int ret = gn_exception->GN_Exception::SetHardWareBreakPoint(L"crossfire.exe", 0x455,
 		/*0*/this->Game::GameBase.ACE_BASE64 + GlobalBaseFuncOffset,
 		/*0*/Hitchaddress,
-		/*0*/RedNameTrackAddress,
+		0/*RedNameTrackAddress*/,
 		/*0*/SilentTrackAddress);
 	this->CheatEngine::SetSoftWareBreakPoint();
 
@@ -68,7 +68,7 @@ CheatEngine::~CheatEngine()
 bool CheatEngine::ByPassCheck(PCONTEXT context)
 {
 	static bool first_call = false;
-
+	
 	if (!first_call)
 	{
 		if (this->CheatEngine::Game::GameBase.PassReadNameTrack != 0)
@@ -78,7 +78,7 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 				//处理第一处检测
 				this->CheatEngine::MemoryTools::WriteVecBytes(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x5E48, { 0xEB });
 				//OutputDebugStringA_1Param("[GN]:第一处检测地址：%p", this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x5E48);
-
+	
 				if (this->CheatEngine::MemoryTools::ReadInt(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x4DAA) != 0)
 				{
 					//处理第二处检测
@@ -202,6 +202,7 @@ void CheatEngine::InitHook()
 	//this->CheatEngine::Draw::reset_hook->motify_address();
 	//this->CheatEngine::Draw::drawindexedprimitive_hook = new inline_hook(direct3ddevice9_table[82], (__int64)&Draw::Self_DrawIndexedPrimitive, FALSE);
 	//this->CheatEngine::Draw::drawindexedprimitive_hook->motify_address();
+	//this->CheatEngine::Draw::old_drawindexprimitive = (pfnDrawIndexedPrimitive)direct3ddevice9_table[82];
 
 	//if (this->CheatEngine::Draw::CreateDeviceD3D11(this->GetGameWindowHandle()))
 	//{
@@ -228,14 +229,24 @@ void CheatEngine::InitHook()
 	//}
 	//else
 	//{
-	//	if (MH_CreateHookApi(L"Ws2_32", "send", CheatEngine::Self_Send, (LPVOID*)&ce->CheatEngine::old_send) != MH_OK)
+	//	//if (MH_CreateHookApi(L"Ws2_32", "send", CheatEngine::Self_Send, (LPVOID*)&ce->CheatEngine::old_send) != MH_OK)
+	//	//{
+	//	//	::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_CreateHookApi Send error", "Notice", MB_OK);
+	//	//	exit(-5);
+	//	//}
+	//	//if (MH_EnableHook(GetProcAddress(GetModuleHandleA("Ws2_32.dll"), "send")) != MH_OK)
+	//	//{
+	//	//	::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_EnableHook error", "Notice", MB_OK);
+	//	//	exit(-5);
+	//	//}
+	//	if (MH_CreateHook((LPVOID)direct3ddevice9_table[82], Draw::Self_DrawIndexedPrimitive, (LPVOID*)&this->CheatEngine::Draw::old_drawindexprimitive) != MH_OK)
 	//	{
-	//		::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_CreateHookApi Send error", "Notice", MB_OK);
+	//		::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_CreateHook DrawIndexedPrimitive error", "Notice", MB_OK);
 	//		exit(-5);
 	//	}
-	//	if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK)
+	//	if (MH_EnableHook((LPVOID)direct3ddevice9_table[82]) != MH_OK)
 	//	{
-	//		::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_EnableHook error", "Notice", MB_OK);
+	//		::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_EnableHook drawindexprimitive error", "Notice", MB_OK);
 	//		exit(-5);
 	//	}
 	//}
@@ -247,4 +258,5 @@ void CheatEngine::SetSoftWareBreakPoint()
 	gn_exception->software_breakpoint1 = this->CheatEngine::Game::GameBase.Cshell + BulletWithoutBackSeatHookOffset;
 
 }
+
 

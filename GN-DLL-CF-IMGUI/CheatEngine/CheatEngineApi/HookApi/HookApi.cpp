@@ -12,9 +12,26 @@ LPVOID WINAPI HookApi::Self_VirtualAlloc(LPVOID lpAddress, SIZE_T dwSize, DWORD 
 		if (dwSize == 0x3E7F7)
 		{
 			ce->CheatEngine::Game::GameBase.PassReadNameTrack = (DWORD64)paddress;
-			//OutputDebugStringA_1Param("[GN]:申请的指针：%p", paddress);
+			////OutputDebugStringA_1Param("[GN]:申请的指针：%p", paddress);
 		}
 	}
+
+	//PVOID64 return_address = ::_ReturnAddress();
+	//if (((DWORD64)return_address >= ce->CheatEngine::Game::GameBase.ACE_BASE64) && ((DWORD64)return_address <= ce->CheatEngine::Game::GameBase.ACE_BASE64End))
+	//{
+	//	if (dwSize == 0x3E7F7)
+	//	{
+	//		ce->CheatEngine::Game::GameBase.PassReadNameTrack = (DWORD64)paddress;
+	//		//OutputDebugStringA_1Param("[GN]:申请的指针：%p", paddress);
+	//		return paddress;
+	//	}
+	//
+	//	//OutputDebugStringA_1Param("[GN]:Base-> VirtualAlloc进入死循环,地址：%p", return_address);
+	//	//while (true)
+	//	//{
+	//	//	Sleep(1);
+	//	//}
+	//}
 
 	return paddress;
 
@@ -134,6 +151,29 @@ VOID WINAPI HookApi::Self_Sleep(_In_ DWORD dwMilliseconds)
 		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
 		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
 		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	}
+
+	PVOID64 return_address = ::_ReturnAddress();
+	if (((DWORD64)return_address >= ce->CheatEngine::Game::GameBase.ACE_ATS64) && ((DWORD64)return_address <= ce->CheatEngine::Game::GameBase.ACE_ATS64End))
+	{
+		OutputDebugStringA_1Param("[GN]:返回地址在ATS：%p", return_address);
+
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
 	}
 
 	return ::Sleep(dwMilliseconds);
@@ -143,24 +183,31 @@ BOOL WINAPI HookApi::Self_Process32NextW(__in HANDLE hSnapshot, __out LPPROCESSE
 {
 	//OutputDebugStringA("[GN]:进入Process32休眠");
 
-	Sleep(0xFFFFFFFFFFFFFFFF);
-	Sleep(0xFFFFFFFFFFFFFFFF);
-	Sleep(0xFFFFFFFFFFFFFFFF);
-	Sleep(0xFFFFFFFFFFFFFFFF);
-	Sleep(0xFFFFFFFFFFFFFFFF);
-	Sleep(0xFFFFFFFFFFFFFFFF);
-	Sleep(0xFFFFFFFFFFFFFFFF);
-	Sleep(0xFFFFFFFFFFFFFFFF);
-	Sleep(0xFFFFFFFFFFFFFFFF);
-	Sleep(0xFFFFFFFFFFFFFFFF);
-	Sleep(0xFFFFFFFFFFFFFFFF);
-	Sleep(0xFFFFFFFFFFFFFFFF);
-	Sleep(0xFFFFFFFFFFFFFFFF);
-	Sleep(0xFFFFFFFFFFFFFFFF);
-	Sleep(0xFFFFFFFFFFFFFFFF);
-	Sleep(0xFFFFFFFFFFFFFFFF);
-	Sleep(0xFFFFFFFFFFFFFFFF);
+	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+
 	return Process32NextW(hSnapshot, lppe);
+}
+
+HANDLE WINAPI HookApi::Self_CreateThread(LPSECURITY_ATTRIBUTES lpThreadAttributes, SIZE_T dwStackSize, LPTHREAD_START_ROUTINE lpStartAddress, LPVOID lpParameter, DWORD dwCreationFlags, LPDWORD lpThreadId)
+{
+	OutputDebugStringA("[GN]:Base-> CreateThread死循环");
+	while (true)
+	{
+		Sleep(1);
+	}
+
+	return ::CreateThread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
 }
 
 
