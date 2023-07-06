@@ -143,6 +143,24 @@ HRESULT CALLBACK Draw::Self_DrawIndexedPrimitive(IDirect3DDevice9* direct3ddevic
 				ce->CheatEngine::Draw::old_drawindexprimitive(direct3ddevice9, Type, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
 				direct3ddevice9->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 			}
+
+			if (iStride == 48 || iStride == 68 || iStride == 72)
+			{
+				direct3ddevice9->SetRenderState(D3DRS_ZENABLE, NULL);
+				direct3ddevice9->SetRenderState(D3DRS_ALPHABLENDENABLE, 1);
+				direct3ddevice9->SetRenderState(D3DRS_DESTBLEND, 2);
+				ce->CheatEngine::Draw::old_drawindexprimitive(direct3ddevice9, Type, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+				direct3ddevice9->SetRenderState(D3DRS_ZENABLE, 1);
+				direct3ddevice9->SetRenderState(D3DRS_ALPHABLENDENABLE, 0);
+			}
+			if (iStride == 40)
+			{
+				direct3ddevice9->SetRenderState(D3DRS_ZENABLE, NULL);
+				direct3ddevice9->SetRenderState(D3DRS_ALPHABLENDENABLE, NULL);
+				direct3ddevice9->SetRenderState(D3DRS_LIGHTING, NULL);
+				direct3ddevice9->SetRenderState(D3DRS_FOGENABLE, 1);
+				direct3ddevice9->SetRenderState(D3DRS_FOGCOLOR, D3DCOLOR_ARGB(255, 0, 255, 0));
+			}
 		}
 	}
 

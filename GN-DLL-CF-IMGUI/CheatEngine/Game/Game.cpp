@@ -396,7 +396,7 @@ void Game::PassThread()
 	//while (true)
 	//{
 	//	//¶¯Ì¬
-	//	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "a4ef"))
+		//if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "a4ef"))
 	//		OutputDebugStringA("[GN]:SuspendThreadByTag() a4ef error\n");
 	//	if (!ce->CheatEngine::Tools::SuspendThreadByTag(GetCurrentProcessId(), "914c"))
 	//		OutputDebugStringA("[GN]:SuspendThreadByTag() 914c error\n");

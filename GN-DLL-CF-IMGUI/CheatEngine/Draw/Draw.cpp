@@ -511,6 +511,24 @@ void Draw::MenuDraw()
 			}
 			ImGui::Separator();
 		}
+		//if (ImGui::CollapsingHeader(u8"测试区"))
+		//{
+		//	if (ImGui::Button(u8"ACE-BASE"))
+		//		ce->CheatEngine::driver->SuspendKernelThread("ACE-BASE.sys", "0");
+		//	ImGui::SameLine();
+		//	if (ImGui::Button(u8"ACE-GAME"))
+		//		ce->CheatEngine::driver->SuspendKernelThread("ACE-GAME.sys", "0");
+		//	ImGui::SameLine();
+		//	if (ImGui::Button(u8"ACE-SSC-DRV64"))
+		//		ce->CheatEngine::driver->SuspendKernelThread("ACE-SSC-DRV64.sys", "0");
+		//	ImGui::Separator();
+		//
+		//	static int thread_id = 0;
+		//	ImGui::DragInt(u8"线程ID", &thread_id, 1, 1, 900000, "%d");					ImGui::Separator();
+		//	if (ImGui::Button(u8"暂停线程"))
+		//		ce->CheatEngine::driver->SuspendKernelThreadByID("ACE-BASE.sys", (HANDLE)thread_id);
+		//	ImGui::Separator();
+		//}
 		static systime start_time = this->Tools::GetSystemtime();
 		ImGui::Text(u8"辅助启动时间：%4d-%02d-%02d %02d:%02d:%02d", start_time.year, start_time.month, start_time.day, start_time.hour, start_time.min, start_time.sec);
 		ImGui::SameLine(200);

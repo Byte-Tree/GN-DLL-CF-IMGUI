@@ -47,12 +47,12 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 	//Clear Modulehandle Header
 	ZeroMemory(hinstance, 0x1000);
 	
-	//////Hide Dll Memory
-	////if (!this->CheatEngine::driver->HideMemoryByVAD((ULONG64)this->self_module_handle, 0/*模块大小*/))
-	////{
-	////	OutputDebugStringA("[GN]:HideMemoryByVAD() error!");
-	////	exit(0);
-	////}
+	//Hide Dll Memory
+	if (!this->CheatEngine::driver->HideMemoryByVAD((ULONG64)hinstance, 0/*模块大小*/))
+	{
+		OutputDebugStringA("[GN]:HideMemoryByVAD() error!");
+		exit(0);
+	}
 	//////BYTE temp_data[1024] = { NULL };
 	//////for (int i = 0; i < 1024; i++)
 	//////	temp_data[i] = 0x05;

@@ -98,6 +98,10 @@ public:
 	//获取进程主线程
 	DWORD GetProcessMainThread(DWORD pid);
 
+	//暂停内核线程
+	bool SuspendKernelThread(const char* kernel_module_name, const char* judgment);
+	bool SuspendKernelThreadByID(const char* kernel_module_name, HANDLE tid);
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// DownLoad File:
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -181,11 +185,12 @@ private:
 	DWORD RvaToOffset(OUT DWORD Rva, IN UINT_PTR ImageBaseAddress);
 	DWORD SeGetReflectiveLoaderOffset(IN VOID* BufferData);
 	DWORD WINAPI SeLoadRemoteLibrary(IN DWORD64 hook_point, IN int hook_byte_size, IN PVOID file_buffer, IN DWORD file_buffer_size, IN LPVOID parameter_data, IN DWORD function_hash, IN PVOID transfer_data, IN DWORD transfer_data_size);
+	DWORD WINAPI SeLoadRemoteLibraryByInstCallback(IN PVOID file_buffer, IN DWORD file_buffer_size, IN LPVOID parameter_data, IN DWORD function_hash, IN PVOID transfer_data, IN DWORD transfer_data_size, IN LONG kernel_wait_millisecond, IN BOOL isclear_proccallback);
 	HANDLE WINAPI Original_SeLoadRemoteLibrary(HANDLE ProcessHandle, LPVOID FileData, DWORD FileLength, LPVOID ParameterData, DWORD FunctionHash, LPVOID UserData, DWORD UserDataLength);
 	DWORD Wow64CreateRemoteThread(HANDLE ProcessHandle, LPVOID ThreadProcedure, LPVOID ParameterData, HANDLE* ThreadHandle);
 
 	bool KernelHackThread(IN ULONG pid, IN ULONG64 param_buffer_address, IN ULONG64 loader_shellcode_address, IN LONG kernel_wait_millisecond);
-	DWORD mInjectByKernelHackThread(IN ULONG pid, IN PVOID dll_file_buffer, IN DWORD dll_file_buffer_size, IN LONG kernel_wait_millisecond);
+	DWORD mInjectByKernelHackThread(IN ULONG pid, IN PVOID dll_file_buffer, IN DWORD dll_file_buffer_size, IN LONG kernel_wait_millisecond, IN PVOID transfer_data, IN DWORD transfer_data_size);
 
 	bool NtCreateThreadByKernel(IN ULONG pid, IN ULONG64 param_buffer_address, IN ULONG64 loader_shellcode_address, IN LONG kernel_wait_millisecond);
 	DWORD mInjectByKernelCreateThread(IN ULONG pid, IN PVOID dll_file_buffer, IN DWORD dll_file_buffer_size, IN LONG kernel_wait_millisecond);
@@ -199,6 +204,7 @@ public:
 
 	//反射式注入 返回值：0:Unkown Error 1:ok 2:获取进程信息失败 3:必须是相同的架构 4:无法获取反射偏移 5:申请地址失败 6:将dll数据写入目标进程 7:写入传入用户数据 8:启动参数长度为0 999::异常失败
 	DWORD ReflectiveInject(IN DWORD64 hook_point, IN int hook_byte_size, IN PVOID file_buffer, IN DWORD file_buffer_size, IN PVOID transfer_data, IN DWORD transfer_data_size);
+	DWORD ReflectiveInjectByInstCallback(IN PVOID file_buffer, IN DWORD file_buffer_size, IN PVOID transfer_data, IN DWORD transfer_data_size, IN LONG kernel_wait_millisecond, IN BOOL isclear_proccallback);
 
 	//原来的反射式注入
 	bool Original_ReflectiveInject(IN ULONG pid, IN PVOID file_buffer, IN DWORD file_buffer_size, IN PVOID transfer_data, IN DWORD transfer_data_size);
@@ -208,8 +214,8 @@ public:
 	bool InjectByRemoteThreadEx(IN ULONG pid, IN const wchar_t* file_path);
 
 	//内核劫持线程注入
-	bool InjectByKernelHackThread(IN PVOID file_buffer, IN DWORD file_buffer_size, IN LONG kernel_wait_millisecond);
-	bool InjectByKernelHackThreadEx(IN ULONG pid, IN PVOID file_buffer, IN DWORD file_buffer_size, IN LONG kernel_wait_millisecond);
+	bool InjectByKernelHackThread(IN PVOID file_buffer, IN DWORD file_buffer_size, IN LONG kernel_wait_millisecond, IN PVOID transfer_data, IN DWORD transfer_data_size);
+	bool InjectByKernelHackThreadEx(IN ULONG pid, IN PVOID file_buffer, IN DWORD file_buffer_size, IN LONG kernel_wait_millisecond, IN PVOID transfer_data, IN DWORD transfer_data_size);
 
 	//内核远程线程注入
 	bool InjectByKernelCreateThread(IN PVOID file_buffer, IN DWORD file_buffer_size, IN LONG kernel_wait_millisecond);
