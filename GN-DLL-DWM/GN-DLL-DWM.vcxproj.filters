@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="MiniHook">
+      <UniqueIdentifier>{b0311502-f2f3-4d42-b288-351637e87066}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DllMain">
+      <UniqueIdentifier>{dd02b3ff-e8a4-455e-a28d-290a43470a6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DWMTools">
+      <UniqueIdentifier>{a9f13074-bd9d-4afc-96e3-d4d39bdf8005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DWMTools\Draw">
+      <UniqueIdentifier>{afd399ff-e529-439e-8235-ba9af7631250}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{6786f57f-ea6e-4f53-b57e-707900b1e897}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DWMTools\DWM">
+      <UniqueIdentifier>{3d7bc723-4fee-46fc-b7e9-a922f5e5342b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GN-DLL-CF-IMGUI\CheatEngine\Hook\MinHook\MinHook\MinHook.h">
+      <Filter>MiniHook</Filter>
+    </ClInclude>
+    <ClInclude Include="DllMain.h">
+      <Filter>DllMain</Filter>
+    </ClInclude>
+    <ClInclude Include="lmGui\imconfig.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lmGui\imgui.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lmGui\imgui_impl_dx11.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lmGui\imgui_impl_win32.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lmGui\imgui_internal.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lmGui\imstb_rectpack.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lmGui\imstb_textedit.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="lmGui\imstb_truetype.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="DWMTools\DWM\dwm.h">
+      <Filter>DWMTools\DWM</Filter>
+    </ClInclude>
+    <ClInclude Include="DWMTools\DWM\lazy_importer.hpp">
+      <Filter>DWMTools\DWM</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DllMain.cpp">
+      <Filter>DllMain</Filter>
+    </ClCompile>
+    <ClCompile Include="lmGui\imgui.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="lmGui\imgui_demo.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="lmGui\imgui_draw.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="lmGui\imgui_impl_dx11.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="lmGui\imgui_impl_win32.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="lmGui\imgui_tables.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="lmGui\imgui_widgets.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="DWMTools\DWM\dwm_win10_up.cpp">
+      <Filter>DWMTools\DWM</Filter>
+    </ClCompile>
+    <ClCompile Include="DWMTools\DWM\dwm_win7_down.cpp">
+      <Filter>DWMTools\DWM</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lmGui\imgui.cppback">
+      <Filter>ImGui</Filter>
+    </None>
+  </ItemGroup>
+</Project>

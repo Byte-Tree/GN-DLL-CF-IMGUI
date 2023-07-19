@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GN-DLL-CF-IMGUI", "GN-DLL-C
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GN-EXCEPTION", "GN-EXCEPTION\GN-EXCEPTION.vcxproj", "{39447102-C54D-4E28-A5BB-D195C93C4A23}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GN-DLL-DWM", "GN-DLL-DWM\GN-DLL-DWM.vcxproj", "{04A1E9B8-A07C-4FDF-93A3-16DDAB71914F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{39447102-C54D-4E28-A5BB-D195C93C4A23}.Release|x64.Build.0 = Release|x64
 		{39447102-C54D-4E28-A5BB-D195C93C4A23}.Release|x86.ActiveCfg = Release|Win32
 		{39447102-C54D-4E28-A5BB-D195C93C4A23}.Release|x86.Build.0 = Release|Win32
+		{04A1E9B8-A07C-4FDF-93A3-16DDAB71914F}.Debug|x64.ActiveCfg = Debug|x64
+		{04A1E9B8-A07C-4FDF-93A3-16DDAB71914F}.Debug|x64.Build.0 = Debug|x64
+		{04A1E9B8-A07C-4FDF-93A3-16DDAB71914F}.Debug|x86.ActiveCfg = Debug|Win32
+		{04A1E9B8-A07C-4FDF-93A3-16DDAB71914F}.Debug|x86.Build.0 = Debug|Win32
+		{04A1E9B8-A07C-4FDF-93A3-16DDAB71914F}.Release|x64.ActiveCfg = Release|x64
+		{04A1E9B8-A07C-4FDF-93A3-16DDAB71914F}.Release|x64.Build.0 = Release|x64
+		{04A1E9B8-A07C-4FDF-93A3-16DDAB71914F}.Release|x86.ActiveCfg = Release|Win32
+		{04A1E9B8-A07C-4FDF-93A3-16DDAB71914F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -159,7 +159,7 @@ void Game::ByPassACE()
 	//CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassThread, NULL, NULL, NULL);
 
 	this->Game::ACE_Base();
-	this->Game::ACE_CSI();
+	//this->Game::ACE_CSI();
 	this->Game::ACE_PBC();
 	this->Game::ACE_ATS();
 }
@@ -189,11 +189,11 @@ void Game::ACE_Base()
 					Sleep_count = i;
 					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_Sleep);
 				}
-				if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "CreateThread"))
-				{
-					//Sleep_count = i;
-					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_CreateThread);
-				}
+				//if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "CreateThread"))
+				//{
+				//	//Sleep_count = i;
+				//	ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_CreateThread);
+				//}
 			}
 			if ((this->Game::MemoryTools::ReadLong((this->GameBase.ACE_BASE64 + import_table_offset) + VirtualAlloc_count * 8) == (DWORD64)&HookApi::Self_VirtualAlloc))
 				break;
@@ -980,9 +980,27 @@ void Game::TrackDeployment(m_D3DCoordinate AimCoordinates)
 //内存自瞄部署
 void Game::WriteMouse(m_D3DCoordinate enemy)
 {
-	__int64 address = this->MemoryTools::ReadLong(this->GameBase.CharacterBase);
-	this->Game::MemoryTools::WriteFloat(address + MouseY, enemy.y);
-	this->Game::MemoryTools::WriteFloat(address + MouseX, enemy.x);
+	//__int64 address = this->MemoryTools::ReadLong(this->GameBase.CharacterBase);
+	//this->Game::MemoryTools::WriteFloat(address + MouseY, enemy.y);
+	//this->Game::MemoryTools::WriteFloat(address + MouseX, enemy.x);
+
+	//DWORD64 基地址 = Read<DWORD64>(this->Base.CrossFire + 人物地址);
+	//if (功能.枪械压强) {
+	//	枪口幅度.y = Read<float>(基地址 + 鼠标X + 16);
+	//	枪口幅度.x = Read<float>(基地址 + 鼠标Y + 20);
+	//	写小数型(基地址 + 鼠标X, Output.y - 枪口幅度.y);
+	//	写小数型(基地址 + 鼠标Y, Output.x - 枪口幅度.x);
+	//}
+	//else {
+	//	写小数型(基地址 + 鼠标X, Output.y);
+	//	写小数型(基地址 + 鼠标Y, Output.x);
+
+	m_D3DCoordinate muzzle_offset;//枪口偏移
+	DWORD64 character_address = this->MemoryTools::ReadLong(this->GameBase.CharacterBase);
+	muzzle_offset.x = this->MemoryTools::ReadFloat(character_address + MouseY + 20);
+	muzzle_offset.y = this->MemoryTools::ReadFloat(character_address + MouseX + 16);
+	this->Game::MemoryTools::WriteFloat(character_address + MouseY, enemy.y - muzzle_offset.y);
+	this->Game::MemoryTools::WriteFloat(character_address + MouseX, enemy.x - muzzle_offset.x);
 }
 
 //取骨骼坐标
@@ -1088,8 +1106,16 @@ void Game::DrawBone(int Addr, int color, int LineSize)
 //静默追踪功能
 void Game::WriteSilenceTrack(m_D3DCoordinate aim_coordinates)
 {
-	this->m_silence_track_coordinates.x = aim_coordinates.x;
-	this->m_silence_track_coordinates.y = aim_coordinates.y;
+	m_D3DCoordinate muzzle_offset;//枪口偏移
+	DWORD64 character_address = this->MemoryTools::ReadLong(this->GameBase.CharacterBase);
+	muzzle_offset.x = this->MemoryTools::ReadFloat(character_address + MouseX + 20);
+	muzzle_offset.y = this->MemoryTools::ReadFloat(character_address + MouseY + 16);
+	this->m_silence_track_coordinates.x = aim_coordinates.x - muzzle_offset.x;
+	this->m_silence_track_coordinates.y = aim_coordinates.y - muzzle_offset.y;
+
+	////原来的
+	//this->m_silence_track_coordinates.x = aim_coordinates.x;
+	//this->m_silence_track_coordinates.y = aim_coordinates.y;
 }
 
 //无限喷漆开关
@@ -1565,6 +1591,8 @@ void Game::SendPacket()
 		//}
 	}
 }
+
+void SilentTrackFunction()
 
 //void 飞镖秒杀(DWORD 本人ID, DWORD 目标ID, ULONG64 击杀目标, int 武器类型, int HostCreateTime, D3DXVECTOR3 Pos)
 //{
