@@ -23,8 +23,6 @@ namespace dwm
         sprintf_s(buffer + strlen(buffer), 2500 - strlen(buffer), format, args...);
         sprintf_s(buffer + strlen(buffer), 2500 - strlen(buffer), "\n");
         OutputDebugStringA(buffer);
-
-
     }
 
     //constexpr GUID IID_IDXGISwapChainDWM = { 0xF69F223B,0x45D3,0x4AA0,{0x98,0xC8,0xC4,0x0C,0x2B,0x23,0x10,0x29} };
@@ -49,13 +47,10 @@ namespace dwm
 
     struct IDXGIFactoryDWM : public IUnknown
     {
-
-
         virtual HRESULT STDMETHODCALLTYPE CreateSwapChain(IUnknown* pDevice,
             DXGI_SWAP_CHAIN_DESC* pDesc, IDXGIOutput* pOutput,
             IDXGISwapChainDWM** ppSwapChain) = 0;
     };
-
 
     struct IDXGISwapChainDWM8 : public IDXGIObject
     {
@@ -128,9 +123,7 @@ namespace dwm
             _In_  POINT* pScrollOffset
         ) = 0;
 
-        virtual HRESULT STDMETHODCALLTYPE GetLogicalSurfaceHandle(
-            LPVOID pVoid
-        ) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetLogicalSurfaceHandle(LPVOID pVoid) = 0;
 
         //
         //Called by the Desktop Window Manager (DWM) to verify that the user-mode driver supports Direct Flip operations, in which video memory is seamlessly flipped between an application's 
@@ -165,8 +158,6 @@ namespace dwm
     };
     struct IDXGIFactoryDWM8 : public IUnknown
     {
-
-
         virtual HRESULT STDMETHODCALLTYPE CreateSwapChainDWM(
             /* [annotation][in] */
             _In_ IUnknown* pDevice,
@@ -192,18 +183,13 @@ namespace dwm
         ) = 0;
     };
 
-
-
-
-    namespace win7 {
-
+    namespace win7
+    {
         DWORD init(LPVOID parameter);
-
     };
-    namespace win10 {
-
+    namespace win10
+    {
         DWORD init(LPVOID parameter);
-
     };
 };
 

@@ -1,7 +1,9 @@
 #include "dwm.h"
 
 #include <d3d11.h>
-#define OutputDebugStringA_1Param(fmt,var) {CHAR sOut[256];CHAR sfmt[50];sprintf_s(sfmt,"%s%s","",fmt);sprintf_s(sOut,(sfmt),var);OutputDebugStringA(sOut);}
+
+#include "../../DllMain.h"
+
 #define hr_fail_ret(ret) if(hr != S_OK){return ret;}
 #define hr_fail_break if(hr != S_OK) {\
 ERO_LOG("hr fail 0x%x",hr);\
@@ -13,7 +15,6 @@ namespace dwm
 {
     namespace win10
     {
-
         char* hook_fun_address = 0;
         char* hook_fun_ori_address = 0;
         DWORD hook_fun_memory_proct = 0;
@@ -34,90 +35,41 @@ namespace dwm
                 static bool init = false;
                 if (!init)
                 {
-                    do
+                    init = true;
+                    IDXGISwapChain* swap_chain = (IDXGISwapChain*)a1;
+                    if (!draw->InitImGui(swap_chain))
                     {
-                        IDXGISwapChain* swap_chain = (IDXGISwapChain*)a1;
-
-                        auto hr = 0;
-
-                        com_ptr<ID3D11Device> d3dDevice;
-
-                        TEMP_GUID(IID_ID3D11Device, 0xdb6f6ddb, 0xac77, 0x4e88, 0x82, 0x53, 0x81, 0x9d, 0xf9, 0xbb, 0xf1, 0x40);
-                        hr = swap_chain->GetDevice(IID_ID3D11Device, &d3dDevice);
-
-                        hr_fail_break;
-
-                        com_ptr<ID3D11DeviceContext> d3dDeviceContext;
-                        d3dDevice->GetImmediateContext(&d3dDeviceContext);
-
-
-                        TEMP_GUID(IID_ID3D11Texture2D, 0x6f15aaf2, 0xd208, 0x4e89, 0x9a, 0xb4, 0x48, 0x95, 0x35, 0xd3, 0x4f, 0x9c);
-
-                        hr = swap_chain->GetBuffer(0, IID_ID3D11Texture2D, &g_back_buffer);
-
-                        hr_fail_break;
-
-
-                        g_back_buffer->GetDesc(&back_buffer_desc);
-
-                        MSG_LOG("width %d , height %d", back_buffer_desc.Width, back_buffer_desc.Height);
-
-                        com_ptr<ID3D11RenderTargetView> main_render_target_view;
-
-                        hr = d3dDevice->CreateRenderTargetView(g_back_buffer.Get(), NULL, &main_render_target_view);
-
-                        //hr_fail_break;
-                        //
-                        //{
-                        //    D3D11_TEXTURE2D_DESC desc;
-                        //    memset(&desc, 0x00, sizeof(desc));
-                        //    g_back_buffer->GetDesc(&desc);
-                        //    hr = d3dDevice->CreateTexture2D(&desc, 0, &(g_AnitCaptureTexture2D));
-                        //    hr_fail_break;
-                        //}
-                        //
-                        //g_dxgiSwapChain.Attach(swap_chain);
-                        //g_d3dDevice.Attach(d3dDevice.Get());
-                        //g_d3dDeviceContext.Attach(d3dDeviceContext.Get());
-                        //
-                        //if (!IImDataRender::GetInstance(0xD3D11)->Init(g_dxgiSwapChain.Get())) {
-                        //    break;
-                        //}
-                        //
-                        //if (!draw::init()) {
-                        //    break;
-                        //}
-                        //
-                        //g_mainRenderTargetView = main_render_target_view;
-                        //
-                        //MSG_LOG("direct 11 init success");
-                        
-                        init = true;
-                    } while (false);
+                        OutputDebugStringA("[GN]:draw->InitImGui(): error!");
+                    }
                 }
 
-                //if (init)
-                //{
-                //    g_d3dDeviceContext->CopyResource(g_AnitCaptureTexture2D.Get(), g_back_buffer.Get());
-                //
-                //    g_d3dDeviceContext->OMSetRenderTargets(1, g_mainRenderTargetView.GetAddressOf(), NULL);
-                //
-                //    draw::draw_call();
-                //}
-                /* if (!bypass::CanPresent() && init) {
-                     g_d3dDeviceContext->CopyResource(g_back_buffer.Get(), g_AnitCaptureTexture2D.Get());
-                 }*/
-                //
-                 //OutputDebugStringA("[GN]:my present hook ...");
+                //开始绘制
+                ImGui_ImplDX11_NewFrame();
+                //ImGui_ImplWin32_NewFrame(::GetDesktopWindow());
+                ////ImGui_ImplWin32_NewFrame((HWND)0);
+                ImGui_ImplWin32_NewFrame();
+                ImGui::NewFrame();
 
-                OutputDebugStringA("[GN]:present循环");
+                //控制鼠标
+                draw->SetImGuiMouse();
+
+                //绘制
+                draw->Rendering();
+
+                //提交渲染
+                ImGui::Render();
+                //ImGuiIO& io = ImGui::GetIO();
+                //if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+                //{
+                //    ImGui::UpdatePlatformWindows();
+                //    ImGui::RenderPlatformWindowsDefault();
+                //}
+                float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+                draw->OMSetRenderTargets(1, &draw->prendertargetview, NULL);
+                //draw->ClearRenderTargetView(draw->prendertargetview, (float*)&clearColor);
+                ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
                 __int64 ret_val = ((decltype(my_present_hook)*)hook_fun_ori_address)(a1, a2, a3, a4, a5, a6, a7, a8);
-
-                //if (init) {
-                //    g_d3dDeviceContext->CopyResource(g_back_buffer.Get(), g_AnitCaptureTexture2D.Get());
-                //}
-
                 return ret_val;
             }
 

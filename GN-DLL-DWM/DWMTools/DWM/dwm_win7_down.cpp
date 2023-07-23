@@ -2,6 +2,8 @@
 #include <d3d10_1.h>
 #include <d3d10.h>
 
+#include "../../DllMain.h"
+
 #define hr_fail_ret(ret) if(hr != S_OK){return ret;}
 #define hr_fail_break if(hr != S_OK) {\
 ERO_LOG("hr fail 0x%x",hr);\
@@ -30,82 +32,32 @@ namespace dwm
                 static bool init = false;
                 if (!init)
                 {
-                    do {
-                        IDXGISwapChain* swap_chain = (IDXGISwapChain*)a1;
-
-                        auto hr = 0;
-
-                        com_ptr<ID3D10Device1> d3dDevice;
-
-                        TEMP_GUID(IID_ID3D10Device1, 0x9B7E4C8F, 0x342C, 0x4106, 0xA1, 0x9F, 0x4F, 0x27, 0x04, 0xF6,
-                            0x89, 0xF0);
-
-                        hr = swap_chain->GetDevice(IID_ID3D10Device1, &d3dDevice);
-
-                        hr_fail_break;
-
-                        TEMP_GUID(IID_ID3D10Texture2D, 0x9B7E4C04, 0x342C, 0x4106, 0xA1, 0x9F, 0x4F, 0x27, 0x04, 0xF6,
-                            0x89, 0xF0);
-
-                        hr = swap_chain->GetBuffer(0, IID_ID3D10Texture2D, &g_back_buffer);
-
-                        hr_fail_break;
-
-                        g_back_buffer->GetDesc(&back_buffer_desc);
-
-                        MSG_LOG("Width %d , Height %d", back_buffer_desc.Width, back_buffer_desc.Height);
-
-                        com_ptr<ID3D10RenderTargetView> main_render_target_view;
-
-                        hr = d3dDevice->CreateRenderTargetView(g_back_buffer.Get(), NULL, &main_render_target_view);
-
-                        hr_fail_break;
-
-                        //{
-                        //    D3D10_TEXTURE2D_DESC desc;
-                        //    memset(&desc, 0x00, sizeof(desc));
-                        //    g_back_buffer->GetDesc(&desc);
-                        //    hr = d3dDevice->CreateTexture2D(&desc, 0, &(g_AnitCaptureTexture2D));
-                        //    hr_fail_break;
-                        //}
-                        //
-                        //g_dxgiSwapChain.Attach(swap_chain);
-                        //g_d3dDevice.Attach(d3dDevice.Get());
-                        //g_mainRenderTargetView = main_render_target_view;
-                        //
-                        //if (!IImDataRender::GetInstance(0xD3D10)->Init(g_dxgiSwapChain.Get())) {
-                        //    break;
-                        //}
-                        //
-                        //if (!draw::init()) {
-                        //    break;
-                        //}
-                        //
-                        //MSG_LOG("direct10 init success");
-
-                        init = true;
-                    } while (false);
+                    IDXGISwapChain* swap_chain = (IDXGISwapChain*)a1;
+                    if (!draw->InitImGui(swap_chain))
+                    {
+                        OutputDebugStringA("[GN]:draw->InitImGui(): error!");
+                    }
+                    init = true;
                 }
 
-                //if (init)
-                //{
-                //    g_d3dDevice->CopyResource(g_AnitCaptureTexture2D.Get(), g_back_buffer.Get());
-                //    g_d3dDevice->OMSetRenderTargets(1, g_mainRenderTargetView.GetAddressOf(), NULL);
-                //    draw::draw_call();
-                //}
-                //
-                /*if (!bypass::CanPresent() && init)
-                {
-                    g_d3dDevice->CopyResource(g_back_buffer.Get(), g_AnitCaptureTexture2D.Get());
-                }*/
+                //开始绘制
+                ImGui_ImplDX11_NewFrame();
+                //ImGui_ImplWin32_NewFrame((HWND)0);
+                ImGui_ImplWin32_NewFrame();
+                ImGui::NewFrame();
+
+                //控制鼠标
+                draw->SetImGuiMouse();
+
+                //绘制
+                draw->Rendering();
+
+                //提交渲染
+                ImGui::Render();
+                draw->OMSetRenderTargets(1, &draw->prendertargetview, NULL);
+                ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
                 __int64 ret_val = ((decltype(my_present_hook)*)hook_fun_ori_address)(a1, a2, a3, a4, a5, a6, a7, a8);
-
-                //if (init)
-                //{
-                //    g_d3dDevice->CopyResource(g_back_buffer.Get(), g_AnitCaptureTexture2D.Get());
-                //}
-
                 return ret_val;
             }
         };

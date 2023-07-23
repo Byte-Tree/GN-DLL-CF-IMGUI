@@ -1,12 +1,11 @@
 #include "DllMain.h"
 
-//Draw* draw = nullptr;
+Draw* draw = nullptr;
 
 
 void DllInit()
 {
-	OutputDebugStringA("[GN]:DllInit");
-	//draw = new Draw();
+	draw = new Draw();
 
 	RTL_OSVERSIONINFOW osversion{};
 	LI_FN(RtlGetVersion)(&osversion);
@@ -15,7 +14,6 @@ void DllInit()
 		init_result = dwm::win10::init(0);
 	else
 		init_result = dwm::win7::init(0);
-
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
@@ -25,7 +23,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 	case DLL_PROCESS_ATTACH:
 	{
 		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)DllInit, NULL, NULL, NULL);
-		//draw = new Draw();
 		break;
 	}
 	case DLL_PROCESS_DETACH:

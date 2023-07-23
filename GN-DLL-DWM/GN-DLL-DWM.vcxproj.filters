@@ -38,6 +38,15 @@
     <ClInclude Include="DllMain.h">
       <Filter>DllMain</Filter>
     </ClInclude>
+    <ClInclude Include="DWMTools\DWM\dwm.h">
+      <Filter>DWMTools\DWM</Filter>
+    </ClInclude>
+    <ClInclude Include="DWMTools\DWM\lazy_importer.hpp">
+      <Filter>DWMTools\DWM</Filter>
+    </ClInclude>
+    <ClInclude Include="DWMTools\Draw\Draw.h">
+      <Filter>DWMTools\Draw</Filter>
+    </ClInclude>
     <ClInclude Include="lmGui\imconfig.h">
       <Filter>ImGui</Filter>
     </ClInclude>
@@ -62,16 +71,19 @@
     <ClInclude Include="lmGui\imstb_truetype.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="DWMTools\DWM\dwm.h">
-      <Filter>DWMTools\DWM</Filter>
-    </ClInclude>
-    <ClInclude Include="DWMTools\DWM\lazy_importer.hpp">
-      <Filter>DWMTools\DWM</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp">
       <Filter>DllMain</Filter>
+    </ClCompile>
+    <ClCompile Include="DWMTools\DWM\dwm_win10_up.cpp">
+      <Filter>DWMTools\DWM</Filter>
+    </ClCompile>
+    <ClCompile Include="DWMTools\DWM\dwm_win7_down.cpp">
+      <Filter>DWMTools\DWM</Filter>
+    </ClCompile>
+    <ClCompile Include="DWMTools\Draw\Draw.cpp">
+      <Filter>DWMTools\Draw</Filter>
     </ClCompile>
     <ClCompile Include="lmGui\imgui.cpp">
       <Filter>ImGui</Filter>
@@ -88,22 +100,8 @@
     <ClCompile Include="lmGui\imgui_impl_win32.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="lmGui\imgui_tables.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="lmGui\imgui_widgets.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="DWMTools\DWM\dwm_win10_up.cpp">
-      <Filter>DWMTools\DWM</Filter>
-    </ClCompile>
-    <ClCompile Include="DWMTools\DWM\dwm_win7_down.cpp">
-      <Filter>DWMTools\DWM</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="lmGui\imgui.cppback">
-      <Filter>ImGui</Filter>
-    </None>
   </ItemGroup>
 </Project>

@@ -139,6 +139,7 @@
   <ItemGroup>
     <ClInclude Include="..\GN-DLL-CF-IMGUI\CheatEngine\Hook\MinHook\MinHook\MinHook.h" />
     <ClInclude Include="DllMain.h" />
+    <ClInclude Include="DWMTools\Draw\Draw.h" />
     <ClInclude Include="DWMTools\DWM\dwm.h" />
     <ClInclude Include="DWMTools\DWM\lazy_importer.hpp" />
     <ClInclude Include="lmGui\imconfig.h" />
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="DWMTools\Draw\Draw.cpp" />
     <ClCompile Include="DWMTools\DWM\dwm_win10_up.cpp" />
     <ClCompile Include="DWMTools\DWM\dwm_win7_down.cpp" />
     <ClCompile Include="lmGui\imgui.cpp" />
@@ -160,11 +162,7 @@
     <ClCompile Include="lmGui\imgui_draw.cpp" />
     <ClCompile Include="lmGui\imgui_impl_dx11.cpp" />
     <ClCompile Include="lmGui\imgui_impl_win32.cpp" />
-    <ClCompile Include="lmGui\imgui_tables.cpp" />
     <ClCompile Include="lmGui\imgui_widgets.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="lmGui\imgui.cppback" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
