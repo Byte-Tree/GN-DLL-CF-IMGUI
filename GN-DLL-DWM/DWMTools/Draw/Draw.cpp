@@ -52,7 +52,7 @@ bool Draw::InitImGui(IDXGISwapChain* pDxgiSwapChain)
 	ImGui_ImplDX11_Init(this->pd3d11device, this->pd3d11devicecontext);
 
 	//ÉèÖÃImGui×ÖÌå
-	io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\simhei.ttf", 14.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+	//io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\simhei.ttf", 14.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 	io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\simhei.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 
 	return true;

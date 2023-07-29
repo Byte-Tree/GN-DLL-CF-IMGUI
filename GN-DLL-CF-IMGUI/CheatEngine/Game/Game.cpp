@@ -1593,6 +1593,9 @@ void Game::SendPacket()
 }
 
 void SilentTrackFunction()
+{
+
+}
 
 //void 飞镖秒杀(DWORD 本人ID, DWORD 目标ID, ULONG64 击杀目标, int 武器类型, int HostCreateTime, D3DXVECTOR3 Pos)
 //{
