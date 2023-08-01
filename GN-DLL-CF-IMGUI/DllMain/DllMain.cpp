@@ -27,7 +27,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
     {
     case DLL_PROCESS_ATTACH:
     {
-        CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)CheatEngineInit, (LPVOID)hModule, NULL, NULL);
+        CloseHandle(CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)CheatEngineInit, (LPVOID)hModule, NULL, NULL));
         //CheatEngineInit(hModule);
         break;
     }
