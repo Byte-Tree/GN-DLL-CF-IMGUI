@@ -140,6 +140,7 @@ struct BaseAddress
 	__int64 ACE_GDP64;
 	__int64 ACE_GDP64End;
 	__int64 ACE_DFS64;
+	__int64 ACE_DFS64End;
 	__int64 ACE_CSI64;
 	__int64 ACE_CSI64End;
 	__int64 ACE_MMS64;

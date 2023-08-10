@@ -114,6 +114,14 @@ DWORD64 Tools::GetImportTableIndexOffset(HANDLE modulehandle, PDWORD import_tabl
 	return import_table_rva;
 }
 
+PVOID64 Tools::GetModuleEndAddress(HMODULE module_handle)
+{
+	PVOID64 return_address = 0;
+	MODULEINFO moduleinfo = { 0 };
+	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), module_handle, &moduleinfo, sizeof(MODULEINFO));
+	return return_address = (PVOID64)((__int64)moduleinfo.lpBaseOfDll + moduleinfo.SizeOfImage);
+}
+
 void Tools::StackTrace64()
 {
 	CONTEXT                       Context;

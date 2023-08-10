@@ -36,6 +36,7 @@ public:
 	void BrokenModuleLink(HANDLE modulehandle);
 	DWORD RVA_2_RAW(char* buf, DWORD RVA, DWORD RAW, BOOL flag);
 	DWORD64 GetImportTableIndexOffset(HANDLE modulehandle, PDWORD import_table_size);
+	PVOID64 GetModuleEndAddress(HMODULE module_handle);
 	void StackTrace64();
 	PVOID GetReturnAddress();
 	void GetCallStackInfo(CALL_STACK_INFO& callStack, DWORD dwMaxFrame);

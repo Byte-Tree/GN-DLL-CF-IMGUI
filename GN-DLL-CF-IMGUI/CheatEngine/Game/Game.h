@@ -85,7 +85,6 @@ public:
 	void ACE_CSI();
 	static void PassThread();
 	void PassErrorCode();
-	bool WriteIatTable(DWORD64 module_handle, DWORD64 iat_table_offset, DWORD iat_table_size, DWORD64 my_function_address);
 	BOOL WorldToScreen2(m_D3DCoordinate view_, D3DXVECTOR2* RetCoordinates);
 	BOOL WorldToScreen(m_D3DCoordinate EnemyCoordinates, m_D3DCoordinate* RetCoordinates);
 	bool IsInGaming();

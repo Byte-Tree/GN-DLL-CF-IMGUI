@@ -18,49 +18,60 @@ void Game::BaseAddressInit()
 	//OutputDebugStringA_1Param("[GN]:%s", __FUNCTION__);
 	MODULEINFO ModuleInfo = { 0 };
 	this->GameBase.Cshell = (unsigned __int64)ce->CheatEngineApi::GetModuleHandleA("cshell_x64.dll");
-	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("cshell_x64.dll"), &ModuleInfo, sizeof(MODULEINFO));
-	this->GameBase.CshellEndAddress = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
+	this->GameBase.CshellEndAddress = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngineApi::GetModuleHandleA("cshell_x64.dll"));
+	//GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("cshell_x64.dll"), &ModuleInfo, sizeof(MODULEINFO));
+	//this->GameBase.CshellEndAddress = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
 	if (this->GameBase.Cshell == 0)
 	{
 		MessageBox(NULL, L"数据读取出错，即将退出游戏", L"温馨提示", 0);
 		exit(0);
 	}
-	this->GameBase.CrossFireBase = (__int64)ce->CheatEngineApi::GetModuleHandleA("crossfireBase.dll");
-	this->GameBase.Cross = (unsigned __int64)GetModuleHandle(L"crossfire.exe");
-	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("crossfire.exe"), &ModuleInfo, sizeof(MODULEINFO));
-	this->GameBase.CrossEndAddress = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
-	this->GameBase.Win32U = (unsigned __int64)GetModuleHandle(L"win32u.dll");
-	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("win32u.dll"), &ModuleInfo, sizeof(MODULEINFO));
-	this->GameBase.Win32UEnd = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
-	this->GameBase.Gdi32 = (unsigned __int64)GetModuleHandle(L"gdi32.dll");
-	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("gdi32.dll"), &ModuleInfo, sizeof(MODULEINFO));
-	this->GameBase.Gdi32End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
-	this->GameBase.D3D9 = (unsigned __int64)GetModuleHandle(L"d3d9.dll");
-	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("d3d9.dll"), &ModuleInfo, sizeof(MODULEINFO));
-	this->GameBase.D3D9End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
-	this->GameBase.dxgi = (unsigned __int64)GetModuleHandle(L"dxgi.dll");
-	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("dxgi.dll"), &ModuleInfo, sizeof(MODULEINFO));
-	this->GameBase.dxgiEnd = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
-	this->GameBase.CrossFireBase = (unsigned __int64)GetModuleHandle(L"crossfireBase.dll");
 	this->GameBase.TerSafe = (unsigned __int64)GetModuleHandle(L"tersafe.dll");
+	this->GameBase.Cross = (unsigned __int64)GetModuleHandle(L"crossfire.exe");
+	this->GameBase.CrossFireBase = (__int64)ce->CheatEngineApi::GetModuleHandleA("crossfireBase.dll");
+	this->GameBase.CrossEndAddress = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngineApi::GetModuleHandleA("crossfire.exe"));
+	//GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("crossfire.exe"), &ModuleInfo, sizeof(MODULEINFO));
+	//this->GameBase.CrossEndAddress = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
+	this->GameBase.Win32U = (unsigned __int64)GetModuleHandle(L"win32u.dll");
+	this->GameBase.Win32UEnd = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngineApi::GetModuleHandleA("win32u.dll"));
+	//GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("win32u.dll"), &ModuleInfo, sizeof(MODULEINFO));
+	//this->GameBase.Win32UEnd = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
+	this->GameBase.Gdi32 = (unsigned __int64)GetModuleHandle(L"gdi32.dll");
+	this->GameBase.Gdi32End = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngineApi::GetModuleHandleA("gdi32.dll"));
+	//GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("gdi32.dll"), &ModuleInfo, sizeof(MODULEINFO));
+	//this->GameBase.Gdi32End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
+	this->GameBase.D3D9 = (unsigned __int64)GetModuleHandle(L"d3d9.dll");
+	this->GameBase.D3D9End = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngineApi::GetModuleHandleA("d3d9.dll"));
+	//GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("d3d9.dll"), &ModuleInfo, sizeof(MODULEINFO));
+	//this->GameBase.D3D9End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
+	this->GameBase.dxgi = (unsigned __int64)GetModuleHandle(L"dxgi.dll");
+	this->GameBase.dxgiEnd = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngineApi::GetModuleHandleA("dxgi.dll"));
+	//GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("dxgi.dll"), &ModuleInfo, sizeof(MODULEINFO));
+	//this->GameBase.dxgiEnd = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
 	this->GameBase.ACE_PBC_GAME64 = (unsigned __int64)GetModuleHandle(L"ACE-PBC-Game64.dll");
-	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-PBC-Game64.dll"), &ModuleInfo, sizeof(MODULEINFO));
-	this->GameBase.ACE_PBC_GAME64End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
+	this->GameBase.ACE_PBC_GAME64End = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngineApi::GetModuleHandleA("ACE-PBC-Game64.dll"));
+	//GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-PBC-Game64.dll"), &ModuleInfo, sizeof(MODULEINFO));
+	//this->GameBase.ACE_PBC_GAME64End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
 	this->GameBase.ACE_BASE64 = (unsigned __int64)GetModuleHandle(L"ACE-Base64.dll");
-	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-Base64.dll"), &ModuleInfo, sizeof(MODULEINFO));
-	this->GameBase.ACE_BASE64End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
+	this->GameBase.ACE_BASE64End = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngineApi::GetModuleHandleA("ACE-Base64.dll"));
+	//GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-Base64.dll"), &ModuleInfo, sizeof(MODULEINFO));
+	//this->GameBase.ACE_BASE64End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
 	this->GameBase.ACE_ATS64 = (unsigned __int64)GetModuleHandle(L"ACE-ATS64.dll");
-	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-ATS64.dll"), &ModuleInfo, sizeof(MODULEINFO));
-	this->GameBase.ACE_ATS64End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
-	this->GameBase.ACE_DFS64 = (unsigned __int64)GetModuleHandle(L"ACE-DFS64.dll");
+	this->GameBase.ACE_ATS64End = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngineApi::GetModuleHandleA("ACE-ATS64.dll"));
+	//GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-ATS64.dll"), &ModuleInfo, sizeof(MODULEINFO));
+	//this->GameBase.ACE_ATS64End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
 	this->GameBase.ACE_CSI64 = (unsigned __int64)GetModuleHandle(L"ACE-CSI64.dll");
-	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-CSI64.dll"), &ModuleInfo, sizeof(MODULEINFO));
-	this->GameBase.ACE_CSI64End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
+	this->GameBase.ACE_CSI64End = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngineApi::GetModuleHandleA("ACE-CSI64.dll"));
+	//GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-CSI64.dll"), &ModuleInfo, sizeof(MODULEINFO));
+	//this->GameBase.ACE_CSI64End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
+	this->GameBase.ACE_GDP64 = (unsigned __int64)GetModuleHandle(L"ACE-GDP64.dll");
+	this->GameBase.ACE_GDP64End = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngineApi::GetModuleHandleA("ACE-GDP64.dll"));
+	//GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-GDP64.dll"), &ModuleInfo, sizeof(MODULEINFO));
+	//this->GameBase.ACE_GDP64End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
+	this->GameBase.ACE_DFS64 = (unsigned __int64)GetModuleHandle(L"ACE-DFS64.dll");
+	this->GameBase.ACE_DFS64End = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngineApi::GetModuleHandleA("ACE-DFS64.dll"));
 	this->GameBase.ACE_Tips64 = (unsigned __int64)GetModuleHandle(L"ACE-Tips64.dll");
 	this->GameBase.ACE_DRV64 = (unsigned __int64)GetModuleHandle(L"ACE-Drv64.dll");
-	this->GameBase.ACE_GDP64 = (unsigned __int64)GetModuleHandle(L"ACE-GDP64.dll");
-	GetModuleInformation(ce->CheatEngineApi::GetCurrentProcess(), ce->CheatEngineApi::GetModuleHandleA("ACE-GDP64.dll"), &ModuleInfo, sizeof(MODULEINFO));
-	this->GameBase.ACE_GDP64End = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
 	this->GameBase.ACE_GDPServer64 = (unsigned __int64)GetModuleHandle(L"ACE-GDPServer64.dll");
 	this->GameBase.SGuard64 = (unsigned __int64)GetModuleHandle(L"SGuardAgent64.dll");
 	this->GameBase.MatrixBase = Mtrix;
@@ -243,7 +254,6 @@ void Game::ACE_ATS()
 	////	}
 	////	Sleep(1);
 	////}
-
 
 
 	DWORD import_table_size = 0;
@@ -454,14 +464,6 @@ void Game::PassErrorCode()
 	this->MemoryTools::WriteVecBytes(this->Game::GameBase.Cshell + Code193Three, { 0x90,0x90,0x90,0x90,0x90,0x90 });
 	this->MemoryTools::WriteVecBytes(this->Game::GameBase.Cshell + Code143One, { 0x90,0x90,0x90,0x90,0x90,0x90 });
 	this->MemoryTools::WriteVecBytes(this->Game::GameBase.Cshell + Code143Two, { 0x90,0x90,0x90,0x90,0x90,0x90 });
-}
-
-bool Game::WriteIatTable(DWORD64 module_handle, DWORD64 iat_table_offset, DWORD iat_table_size, DWORD64 my_function_address)
-{
-	DWORD64 iat_address = module_handle + iat_table_offset;
-
-
-	return true;
 }
 
 BOOL Game::WorldToScreen2(m_D3DCoordinate view_, D3DXVECTOR2* RetCoordinates)
