@@ -157,10 +157,9 @@ VOID WINAPI HookApi::Self_Sleep(_In_ DWORD dwMilliseconds)
 		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
 	}
 
-	PVOID64 return_address = ::_ReturnAddress();
-	if (((DWORD64)return_address >= ce->CheatEngine::Game::GameBase.ACE_ATS64) && ((DWORD64)return_address <= ce->CheatEngine::Game::GameBase.ACE_ATS64End))
+	if (dwMilliseconds == 1);
 	{
-		OutputDebugStringA_1Param("[GN]:返回地址在ATS：%p", return_address);
+		OutputDebugStringA("[GN]:CSI:Sleep:1ms");
 
 		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
 		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
@@ -175,6 +174,25 @@ VOID WINAPI HookApi::Self_Sleep(_In_ DWORD dwMilliseconds)
 		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
 		::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
 	}
+
+	//PVOID64 return_address = ::_ReturnAddress();
+	//if (((DWORD64)return_address >= ce->CheatEngine::Game::GameBase.ACE_ATS64) && ((DWORD64)return_address <= ce->CheatEngine::Game::GameBase.ACE_ATS64End))
+	//{
+	//	OutputDebugStringA_1Param("[GN]:返回地址在ATS：%p", return_address);
+	//
+	//	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	//	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	//	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	//	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	//	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	//	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	//	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	//	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	//	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	//	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	//	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	//	::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF); ::Sleep(0xFFFFFFFFFFFFFFFF);
+	//}
 
 	return ::Sleep(dwMilliseconds);
 }

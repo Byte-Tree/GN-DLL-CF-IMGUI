@@ -457,7 +457,7 @@ void Draw::MenuDraw()
 		if (ImGui::CollapsingHeader(u8"刀距专区"))
 		{
 			static bool ChangeStatu = FALSE;
-			ImGui::Text(u8"请在持刀状态下修改刀距！还原刀距时需要手持武器先还原");			ImGui::Separator();
+			ImGui::Text(u8"请在持刀状态下修改刀距！还原刀距时需要手持武器后再还原");			ImGui::Separator();
 			ImGui::Text(u8"当前近战武器：");												ImGui::SameLine();
 			ImGui::Text(this->Tools::string_to_utf8(ce->Game::GameBase.WeaponNameValue).c_str());		ImGui::Separator();
 			static float KnifeWieldingDistance = 540.0;//挥刀距离

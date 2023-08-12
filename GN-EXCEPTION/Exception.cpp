@@ -146,18 +146,18 @@ int GN_Exception::SetHardWareBreakPoint(const wchar_t* main_modulename, DWORD64 
 
 bool GN_Exception::InstallException(const char* key, ExceptionHandlerApi exception_handler_api)
 {
-	//NetVerification
-	if (!全_验证通讯::验证_初始化(ServerHost, ServerPort))
-	{
-		OutputDebugStringA("[GN]:验证_初始化() error");
-		exit(-1);
-	}
-	string a(key);
-	if (!全_验证通讯::验证_卡登录(a))
-	{
-		OutputDebugStringA("[GN]:验证_卡登录() error");
-		exit(-1);
-	}
+	////NetVerification
+	//if (!全_验证通讯::验证_初始化(ServerHost, ServerPort))
+	//{
+	//	OutputDebugStringA("[GN]:验证_初始化() error");
+	//	exit(-1);
+	//}
+	//string a(key);
+	//if (!全_验证通讯::验证_卡登录(a))
+	//{
+	//	OutputDebugStringA("[GN]:验证_卡登录() error");
+	//	exit(-1);
+	//}
 	
 	//保存函数指针
 	this->pExceptionHandlerApi = exception_handler_api;
@@ -173,8 +173,8 @@ bool GN_Exception::InstallException(const char* key, ExceptionHandlerApi excepti
 	//	OutputDebugStringA("[GN]:InitSymbol() error!");
 	//	return false;
 	//}
-
-	this->tls_index = TlsAlloc();
+	//
+	//this->tls_index = TlsAlloc();
 
 	PROCESS_INSTRUMENTATION_CALLBACK_INFORMATION info;
 	info.Version = 0;
@@ -380,6 +380,7 @@ void MyCallbackRoutine(CONTEXT* context)
 	NtContinue(context, 0);
 }
 
+//MiniHook用此函数
 void Self_KiUserExceptionDispatcher(__in PEXCEPTION_RECORD ExceptionRecord, __in PCONTEXT ContextRecord)
 {
 	LONG status = gn_exception->pExceptionHandlerApi(ExceptionRecord, ContextRecord);

@@ -43,9 +43,9 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 		0/*RedNameTrackAddress*/,
 		/*0*/SilentTrackAddress);
 	this->CheatEngine::SetSoftWareBreakPoint();
-	
-	//Clear Modulehandle Header
-	ZeroMemory(hinstance, 0x1000);
+
+	////Clear Modulehandle Header
+	//ZeroMemory(hinstance, 0x1000);
 	
 	////Hide Dll Memory
 	//if (!this->CheatEngine::driver->HideMemoryByVAD((ULONG64)hinstance, 0/*模块大小*/))
@@ -107,6 +107,10 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 	if ((caller_address > this->Game::GameBase.Gdi32) && (caller_address < this->Game::GameBase.Gdi32End))
 		return true;
 	if ((caller_address > this->Game::GameBase.D3D9) && (caller_address < this->Game::GameBase.D3D9End))
+		return true;
+
+	//发包检测（调用RtlLookupFunctionEntry进行栈回溯检测）特征码：?? ?? ?? ?? ?? 48 8B CD E8 ?? ?? ?? ?? 0F B6 F8 
+	if (caller_address == this->Game::GameBase.Cross + 0x1A718B)
 		return true;
 
 	//////////功能检测
