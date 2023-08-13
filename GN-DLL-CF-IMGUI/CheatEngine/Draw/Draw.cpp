@@ -825,6 +825,8 @@ void Draw::MainFuncDraw()
 		//	}
 		//}
 	}
+
+	ce->CheatEngine::WhileByPassCheck();
 }
 
 void Draw::HookMainFunc()

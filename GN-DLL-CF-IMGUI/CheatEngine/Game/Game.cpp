@@ -1094,16 +1094,16 @@ void Game::DrawBone(int Addr, int color, int LineSize)
 //静默追踪功能
 void Game::WriteSilenceTrack(m_D3DCoordinate aim_coordinates)
 {
-	//m_D3DCoordinate muzzle_offset;//枪口偏移
-	//DWORD64 character_address = this->MemoryTools::ReadLong(this->GameBase.CharacterBase);
-	//muzzle_offset.x = this->MemoryTools::ReadFloat(character_address + MouseX + 20);
-	//muzzle_offset.y = this->MemoryTools::ReadFloat(character_address + MouseY + 16);
-	//this->m_silence_track_coordinates.x = aim_coordinates.x - muzzle_offset.x;
-	//this->m_silence_track_coordinates.y = aim_coordinates.y - muzzle_offset.y;
+	m_D3DCoordinate muzzle_offset;//枪口偏移
+	DWORD64 character_address = this->MemoryTools::ReadLong(this->GameBase.CharacterBase);
+	muzzle_offset.x = this->MemoryTools::ReadFloat(character_address + MouseX + 0x14);
+	muzzle_offset.y = this->MemoryTools::ReadFloat(character_address + MouseY + 0x10);
+	this->m_silence_track_coordinates.x = aim_coordinates.x - muzzle_offset.x;
+	this->m_silence_track_coordinates.y = aim_coordinates.y - muzzle_offset.y;
 
-	//原来的
-	this->m_silence_track_coordinates.x = aim_coordinates.x;
-	this->m_silence_track_coordinates.y = aim_coordinates.y;
+	////原来的
+	//this->m_silence_track_coordinates.x = aim_coordinates.x;
+	//this->m_silence_track_coordinates.y = aim_coordinates.y;
 }
 
 //无限喷漆开关

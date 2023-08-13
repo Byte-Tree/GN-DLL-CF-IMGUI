@@ -208,7 +208,7 @@
 #define MouseXOffset MouseYOffset + 0x4							//Êó±êXÖáÆ«ÒÆ
 
 //ÄÚ´æ×ÔÃéÊó±êÆ«ÒÆ
-#define MouseY 0x850
+#define MouseY 0x85C
 #define MouseX MouseY + 0x04
 
 //µç¾âÆ«ÒÆ

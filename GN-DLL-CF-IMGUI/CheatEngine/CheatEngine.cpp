@@ -113,6 +113,13 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 	if (caller_address == this->Game::GameBase.Cross + 0x1A718B)
 		return true;
 
+	//鼠标x y的访问 
+	if (caller_address == this->CheatEngine::Game::GameBase.Cshell + 0x16FF3F4)
+		return true;
+	if (caller_address == this->CheatEngine::Game::GameBase.Cshell + 0xCB6A50)
+		return true;
+
+
 	//////////功能检测
 	////////DWORD64 callto_address = ce->MemoryTools::ReadLong(context->Rbx + 0x20);
 	////////if (caller_address == ce->CheatEngine::Game::GameBase.Cshell + 0x12C6890)
@@ -195,6 +202,50 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 	//}
 
 	return false;
+}
+
+void CheatEngine::WhileByPassCheck()
+{
+	static bool is_bypass = false;
+	DWORD64 Win32uDll = (DWORD64)::GetProcAddress(this->CheatEngine::CheatEngineApi::GetModuleHandleA("win32u.dll"), "NtUserGetRawInputData");
+
+	if (!is_bypass)
+	{
+		if (this->CheatEngine::MemoryTools::ReadByte(Win32uDll) == 0xE9)
+		{
+			DWORD64 target_address = (DWORD64)(Win32uDll + this->CheatEngine::MemoryTools::ReadInt(Win32uDll + 1) + 5);
+			DWORD64 dynamic_address = this->CheatEngine::MemoryTools::ReadLong((DWORD64)(target_address + this->CheatEngine::MemoryTools::ReadInt(target_address + 2) + 6));
+			if (this->CheatEngine::MemoryTools::ReadByte(dynamic_address) == 0x48)//函数头  mov [rsp + 10],rsi
+			{
+				DWORD64 toread_address = dynamic_address + 0x1F; //FF 15 xx xx xx xx  call qword ptr [xxxxxxxx]
+				target_address = this->CheatEngine::MemoryTools::ReadLong((DWORD64)(toread_address + this->CheatEngine::MemoryTools::ReadInt(toread_address + 2) + 6));
+				target_address = (DWORD64)(target_address + this->CheatEngine::MemoryTools::ReadInt(target_address + 1) + 5);
+				target_address = this->CheatEngine::MemoryTools::ReadLong((DWORD64)(target_address + this->CheatEngine::MemoryTools::ReadInt(target_address + 2) + 6));
+				target_address = target_address + 0x3B;
+				if (this->CheatEngine::MemoryTools::ReadByte(target_address) == 0x89)
+				{
+					is_bypass = true;
+					OutputDebugStringA_1Param("[GN]:目标地址：%p", target_address);
+					this->CheatEngine::MemoryTools::WriteVecBytes(target_address, { 0xE9,0x9E,0x00,0x00,0x00 });
+				}
+			}
+			else if (this->CheatEngine::MemoryTools::ReadByte(dynamic_address) == 0x4C)//函数头  mov [rsp + 20],r9
+			{
+				dynamic_address = dynamic_address + 0x3B;
+				if (this->CheatEngine::MemoryTools::ReadByte(dynamic_address) == 0x89)//mov [rsp + 40],eax
+				{
+					is_bypass = true;
+					OutputDebugStringA_1Param("[GN]:目标地址：%p", dynamic_address);
+					this->CheatEngine::MemoryTools::WriteVecBytes(dynamic_address, { 0xE9,0x9E,0x00,0x00,0x00 });
+				}
+			}
+			else
+			{
+				OutputDebugStringA_1Param("[GN]:地址1：%p", target_address);
+				OutputDebugStringA_1Param("[GN]:动态地址：%p", dynamic_address);
+			}
+		}
+	}
 }
 
 void CheatEngine::InitHook()

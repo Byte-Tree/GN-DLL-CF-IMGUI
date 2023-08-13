@@ -31,6 +31,7 @@ public:
 
 public:
 	bool ByPassCheck(PCONTEXT context);
+	void WhileByPassCheck();
 	void InitHook();
 	void SetSoftWareBreakPoint();
 
