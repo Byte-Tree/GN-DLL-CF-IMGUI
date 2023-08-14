@@ -67,57 +67,70 @@ CheatEngine::~CheatEngine()
 
 bool CheatEngine::ByPassCheck(PCONTEXT context)
 {
-	static bool first_call = false;
-	
-	if (!first_call)
-	{
-		if (this->CheatEngine::Game::GameBase.PassReadNameTrack != 0)
-		{
-			if (this->CheatEngine::MemoryTools::ReadByte(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x5E48) == 0x74)
-			{
-				//处理第一处检测
-				this->CheatEngine::MemoryTools::WriteVecBytes(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x5E48, { 0xEB });
-				//OutputDebugStringA_1Param("[GN]:第一处检测地址：%p", this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x5E48);
-	
-				if (this->CheatEngine::MemoryTools::ReadInt(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x4DAA) != 0)
-				{
-					//处理第二处检测
-					this->CheatEngine::MemoryTools::WriteVecBytes(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x4DAA, { 0x0F,0x81 });
-					//OutputDebugStringA_1Param("[GN]:第二处检测地址：%p", this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x4DAA);
-				
-					if (this->CheatEngine::MemoryTools::ReadInt(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x585F) != 0)
-					{
-						//处理第二处检测
-						this->CheatEngine::MemoryTools::WriteVecBytes(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x585F, { 0x0F,0x81 });
-						//OutputDebugStringA_1Param("[GN]:第二处检测地址：%p", this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x585F);
-				
-						first_call = true;
-					}
-				}
-			}
-		}
-	}
+	//static bool first_call = false;
+	//
+	//if (!first_call)
+	//{
+	//	if (this->CheatEngine::Game::GameBase.PassReadNameTrack != 0)
+	//	{
+	//		if (this->CheatEngine::MemoryTools::ReadByte(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x5E48) == 0x74)
+	//		{
+	//			//处理第一处检测
+	//			this->CheatEngine::MemoryTools::WriteVecBytes(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x5E48, { 0xEB });
+	//			//OutputDebugStringA_1Param("[GN]:第一处检测地址：%p", this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x5E48);
+	//
+	//			if (this->CheatEngine::MemoryTools::ReadInt(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x4DAA) != 0)
+	//			{
+	//				//处理第二处检测
+	//				this->CheatEngine::MemoryTools::WriteVecBytes(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x4DAA, { 0x0F,0x81 });
+	//				//OutputDebugStringA_1Param("[GN]:第二处检测地址：%p", this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x4DAA);
+	//			
+	//				if (this->CheatEngine::MemoryTools::ReadInt(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x585F) != 0)
+	//				{
+	//					//处理第二处检测
+	//					this->CheatEngine::MemoryTools::WriteVecBytes(this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x585F, { 0x0F,0x81 });
+	//					//OutputDebugStringA_1Param("[GN]:第二处检测地址：%p", this->CheatEngine::Game::GameBase.PassReadNameTrack + 0x585F);
+	//			
+	//					first_call = true;
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 
 	DWORD64 caller_address = this->MemoryTools::ReadLong(context->Rsi);
 	DWORD64 callto_address = this->MemoryTools::ReadLong(context->Rbx + 0x20);
 
-	//绘制检测
-	if ((caller_address > this->Game::GameBase.Win32U) && (caller_address < this->Game::GameBase.Win32UEnd))
-		return true;
-	if ((caller_address > this->Game::GameBase.Gdi32) && (caller_address < this->Game::GameBase.Gdi32End))
-		return true;
-	if ((caller_address > this->Game::GameBase.D3D9) && (caller_address < this->Game::GameBase.D3D9End))
-		return true;
+	//放过人物击杀钩子 特征码：?? ?? ?? ?? ?? 48 83 EC ?? 48 63 05 ?? ?? ?? ?? 41 8B F8 
+	if (caller_address == this->CheatEngine::Game::GameBase.Cshell + 0x1502EF0)
+		return false;
+	else
+	{
+		if ((callto_address > this->CheatEngine::Game::GameBase.ACE_GDP64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_GDP64End))
+			return false;
+		else if ((callto_address > this->CheatEngine::Game::GameBase.ACE_PBC_GAME64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_PBC_GAME64End))
+			return false;
+		else
+			return true;
+	}
 
-	//发包检测（调用RtlLookupFunctionEntry进行栈回溯检测）特征码：?? ?? ?? ?? ?? 48 8B CD E8 ?? ?? ?? ?? 0F B6 F8 
-	if (caller_address == this->Game::GameBase.Cross + 0x1A718B)
-		return true;
-
-	//鼠标x y的访问 
-	if (caller_address == this->CheatEngine::Game::GameBase.Cshell + 0x16FF3F4)
-		return true;
-	if (caller_address == this->CheatEngine::Game::GameBase.Cshell + 0xCB6A50)
-		return true;
+	////绘制检测
+	//if ((caller_address > this->Game::GameBase.Win32U) && (caller_address < this->Game::GameBase.Win32UEnd))
+	//	return true;
+	//if ((caller_address > this->Game::GameBase.Gdi32) && (caller_address < this->Game::GameBase.Gdi32End))
+	//	return true;
+	//if ((caller_address > this->Game::GameBase.D3D9) && (caller_address < this->Game::GameBase.D3D9End))
+	//	return true;
+	//
+	////发包检测（调用RtlLookupFunctionEntry进行栈回溯检测）特征码：?? ?? ?? ?? ?? 48 8B CD E8 ?? ?? ?? ?? 0F B6 F8 
+	//if (caller_address == this->Game::GameBase.Cross + 0x1A718B)
+	//	return true;
+	//
+	////鼠标x y的访问 
+	//if (caller_address == this->CheatEngine::Game::GameBase.Cshell + 0x16FF3F4)
+	//	return true;
+	//if (caller_address == this->CheatEngine::Game::GameBase.Cshell + 0xCB6A50)
+	//	return true;
 
 
 	//////////功能检测
@@ -155,7 +168,7 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 	//}
 	//if (caller_address == this->Game::GameBase.Cshell + 0xACA640)
 	//	return true;
-
+	//
 	//////处理后无异常 162
 	//if (caller_address == this->Game::GameBase.Cshell + 0x12F34C0)
 	//{
@@ -207,21 +220,24 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 void CheatEngine::WhileByPassCheck()
 {
 	static bool is_bypass = false;
-	DWORD64 Win32uDll = (DWORD64)::GetProcAddress(this->CheatEngine::CheatEngineApi::GetModuleHandleA("win32u.dll"), "NtUserGetRawInputData");
+	static DWORD64 win32u = (DWORD64)::GetProcAddress(this->CheatEngine::CheatEngineApi::GetModuleHandleA("win32u.dll"), "NtUserGetRawInputData");
 
 	if (!is_bypass)
 	{
-		if (this->CheatEngine::MemoryTools::ReadByte(Win32uDll) == 0xE9)
+		if (this->CheatEngine::MemoryTools::ReadByte(win32u) == 0xE9)
 		{
-			DWORD64 target_address = (DWORD64)(Win32uDll + this->CheatEngine::MemoryTools::ReadInt(Win32uDll + 1) + 5);
+			DWORD64 target_address = (DWORD64)(win32u + this->CheatEngine::MemoryTools::ReadInt(win32u + 1) + 5);
 			DWORD64 dynamic_address = this->CheatEngine::MemoryTools::ReadLong((DWORD64)(target_address + this->CheatEngine::MemoryTools::ReadInt(target_address + 2) + 6));
+
 			if (this->CheatEngine::MemoryTools::ReadByte(dynamic_address) == 0x48)//函数头  mov [rsp + 10],rsi
 			{
 				DWORD64 toread_address = dynamic_address + 0x1F; //FF 15 xx xx xx xx  call qword ptr [xxxxxxxx]
+
 				target_address = this->CheatEngine::MemoryTools::ReadLong((DWORD64)(toread_address + this->CheatEngine::MemoryTools::ReadInt(toread_address + 2) + 6));
 				target_address = (DWORD64)(target_address + this->CheatEngine::MemoryTools::ReadInt(target_address + 1) + 5);
 				target_address = this->CheatEngine::MemoryTools::ReadLong((DWORD64)(target_address + this->CheatEngine::MemoryTools::ReadInt(target_address + 2) + 6));
 				target_address = target_address + 0x3B;
+
 				if (this->CheatEngine::MemoryTools::ReadByte(target_address) == 0x89)
 				{
 					is_bypass = true;
@@ -232,6 +248,7 @@ void CheatEngine::WhileByPassCheck()
 			else if (this->CheatEngine::MemoryTools::ReadByte(dynamic_address) == 0x4C)//函数头  mov [rsp + 20],r9
 			{
 				dynamic_address = dynamic_address + 0x3B;
+
 				if (this->CheatEngine::MemoryTools::ReadByte(dynamic_address) == 0x89)//mov [rsp + 40],eax
 				{
 					is_bypass = true;

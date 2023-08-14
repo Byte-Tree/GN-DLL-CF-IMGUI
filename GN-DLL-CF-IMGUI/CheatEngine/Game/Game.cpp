@@ -149,7 +149,7 @@ void Game::ByPassACE()
 {
 	//CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassThread, NULL, NULL, NULL);
 
-	//this->Game::ACE_Base();
+	this->Game::ACE_Base();
 	this->Game::ACE_CSI();
 	//////this->Game::ACE_PBC();
 	////this->Game::ACE_ATS();
@@ -173,12 +173,14 @@ void Game::ACE_Base()
 				if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "VirtualAlloc"))
 				{
 					VirtualAlloc_count = i;
-					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_VirtualAlloc);
+					this->Game::MemoryTools::WriteLong(((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_VirtualAlloc);
+					//ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_VirtualAlloc);
 				}
 				if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "Sleep"))
 				{
 					Sleep_count = i;
-					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_Sleep);
+					this->Game::MemoryTools::WriteLong(((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_Sleep);
+					//ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_Sleep);
 				}
 				//if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "CreateThread"))
 				//{
@@ -985,10 +987,10 @@ void Game::WriteMouse(m_D3DCoordinate enemy)
 
 	m_D3DCoordinate muzzle_offset;//Ç¹¿ÚÆ«ÒÆ
 	DWORD64 character_address = this->MemoryTools::ReadLong(this->GameBase.CharacterBase);
-	muzzle_offset.x = this->MemoryTools::ReadFloat(character_address + MouseY + 20);
-	muzzle_offset.y = this->MemoryTools::ReadFloat(character_address + MouseX + 16);
-	this->Game::MemoryTools::WriteFloat(character_address + MouseY, enemy.y - muzzle_offset.y);
+	muzzle_offset.x = this->MemoryTools::ReadFloat(character_address + MouseX + 0x14);
+	muzzle_offset.y = this->MemoryTools::ReadFloat(character_address + MouseY + 0x10);
 	this->Game::MemoryTools::WriteFloat(character_address + MouseX, enemy.x - muzzle_offset.x);
+	this->Game::MemoryTools::WriteFloat(character_address + MouseY, enemy.y - muzzle_offset.y);
 }
 
 //È¡¹Ç÷À×ø±ê
