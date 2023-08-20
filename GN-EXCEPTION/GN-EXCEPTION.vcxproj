@@ -136,12 +136,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\GN-DLL-CF-IMGUI\NetVerification\网络验证.h" />
+    <ClInclude Include="..\GN-DLL-CF-IMGUI\NetVerification\NetVerification.h" />
     <ClInclude Include="Exception.h" />
     <ClInclude Include="MinHook\MinHook\MinHook.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\GN-DLL-CF-IMGUI\NetVerification\网络验证.cpp" />
+    <ClCompile Include="..\GN-DLL-CF-IMGUI\NetVerification\NetVerification.cpp" />
     <ClCompile Include="Exception.cpp" />
   </ItemGroup>
   <ItemGroup>

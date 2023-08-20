@@ -36,6 +36,18 @@ std::string Tools::string_to_utf8(const std::string& str)
 	return ret;
 }
 
+WCHAR* Tools::charToWchar(char* s)
+{
+	WCHAR* ret;
+
+	int w_nlen = MultiByteToWideChar(CP_ACP, 0, s, -1, NULL, 0);
+	ret = (WCHAR*)malloc(sizeof(WCHAR) * w_nlen);
+	memset(ret, 0, sizeof(ret));
+	MultiByteToWideChar(CP_ACP, 0, s, -1, ret, w_nlen);
+
+	return ret;
+}
+
 void Tools::BrokenModuleLink(HANDLE modulehandle)
 {
 	OutputDebugStringA_1Param("[GN]:模块地址：%p", modulehandle);
@@ -645,5 +657,56 @@ bool Tools::UnloadDll(HMODULE module_handle, HMODULE module_handle_end_address)
 		OutputDebugStringA("[GN]:Unloaddll模块为0");
 	return status;
 }
+
+void Tools::EnumPEHeader(HMODULE module_handle)
+{
+	Sleep(3000);
+	//DOS头信息
+	PIMAGE_DOS_HEADER dos_header = (PIMAGE_DOS_HEADER)module_handle;
+	OutputDebugStringA("[GN]:---- Dos头信息: ----");
+	OutputDebugStringA_1Param("[GN]:MZ标志位:%p", dos_header->e_magic);
+	OutputDebugStringA_1Param("[GN]:PE偏移头:%p", dos_header->e_lfanew);
+	//std::cout << "---- Dos头信息: ----" << std::endl;
+	//std::cout << "MZ标志位:" << std::hex << dos_header->e_magic << std::endl;
+	//std::cout << "PE偏移头:" << std::hex << dos_header->e_lfanew << std::endl;
+
+	//PE标准头信息
+	PIMAGE_NT_HEADERS nt_header = (PIMAGE_NT_HEADERS)((DWORD64)module_handle + dos_header->e_lfanew);
+	OutputDebugStringA("[GN]:---- PE头标准信息: ----");
+	OutputDebugStringA_1Param("[GN]:PE标志位:%p", nt_header->Signature);
+	//std::cout << "---- PE头标准信息: ----" << std::endl;
+	//std::cout << "PE标志位:" << std::hex << nt_header->Signature << std::endl;
+	PIMAGE_FILE_HEADER file_header = (PIMAGE_FILE_HEADER)&nt_header->FileHeader;
+	OutputDebugStringA_1Param("[GN]:文件运行平台:%p", file_header->Machine);
+	OutputDebugStringA_1Param("[GN]:节数量:%p", file_header->NumberOfSections);
+	OutputDebugStringA_1Param("[GN]:可选PE头的大小:%p", file_header->SizeOfOptionalHeader);
+	//std::cout << "文件运行平台:" << std::hex << file_header->Machine << std::endl;
+	//std::cout << "节数量:" << std::hex << file_header->NumberOfSections << std::endl;
+	//std::cout << "可选PE头的大小:" << std::hex << file_header->SizeOfOptionalHeader << std::endl;
+
+	//可选PE头信息
+	PIMAGE_OPTIONAL_HEADER optional_header = (PIMAGE_OPTIONAL_HEADER)((DWORD64)file_header + IMAGE_SIZEOF_FILE_HEADER);
+	OutputDebugStringA("[GN]:---- 可选PE头信息: ----");
+	//std::cout << "---- 可选PE头信息: ----" << std::endl;
+	PIMAGE_SECTION_HEADER section_header = (PIMAGE_SECTION_HEADER)((DWORD64)optional_header + file_header->SizeOfOptionalHeader);
+	for (int i = 0; i < file_header->NumberOfSections; i++)
+	{
+		OutputDebugStringA_1Param("[GN]:区段名称:%s", section_header[i].Name);
+		OutputDebugStringA_2Param("[GN]:起始相对虚拟地址:%p,虚拟地址：%p", section_header[i].VirtualAddress, (DWORD64)module_handle + section_header[i].VirtualAddress);
+		OutputDebugStringA_1Param("[GN]:区段大小（内存中）:%p", section_header[i].SizeOfRawData);
+		OutputDebugStringA_1Param("[GN]:文件偏移:%p", section_header[i].PointerToRawData);
+		OutputDebugStringA_1Param("[GN]:区段大小（文件中）:%p", section_header[i].Misc.VirtualSize);
+		OutputDebugStringA_1Param("[GN]:区段属性:%p", section_header[i].Characteristics);
+		OutputDebugStringA("[GN]:----------------------------------");
+		//std::cout << "区段名称:" << std::hex << section_header[i].Name << std::endl;
+		//std::cout << "起始相对虚拟地址:" << std::hex << section_header[i].VirtualAddress << std::endl;
+		//std::cout << "区段大小（内存中）:" << std::hex << section_header[i].SizeOfRawData << std::endl;
+		//std::cout << "文件偏移:" << std::hex << section_header[i].PointerToRawData << std::endl;
+		//std::cout << "区段大小（文件中）:" << std::hex << section_header[i].Misc.VirtualSize << std::endl;
+		//std::cout << "区段属性:" << std::hex << section_header[i].Characteristics << std::endl;
+		//std::cout << "----------------------------------" << std::endl;
+	}
+}
+
 
 

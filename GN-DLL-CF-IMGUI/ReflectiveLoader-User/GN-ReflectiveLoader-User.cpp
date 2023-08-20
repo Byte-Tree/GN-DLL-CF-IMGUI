@@ -12,7 +12,8 @@ __forceinline DWORD ror(DWORD Value)
 
 __forceinline DWORD MakeHashValue(char* StringData)
 {
-	register DWORD HashValue = 0;
+	DWORD HashValue = 0;
+	//register DWORD HashValue = 0;
 	do
 	{
 		HashValue = ror(HashValue);

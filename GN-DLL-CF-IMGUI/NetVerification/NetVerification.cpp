@@ -1,4 +1,4 @@
-#include "网络验证.h"
+#include "NetVerification.h"
 SOCKET  全_验证通讯::通讯句柄; INT32 全_验证通讯::剩余时间;
 
 void char_2_Hex(char* Char, char* Hex)

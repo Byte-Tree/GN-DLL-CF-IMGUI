@@ -1,5 +1,5 @@
 #include "Exception.h"
-#include "../GN-DLL-CF-IMGUI/NetVerification/Õ¯¬Á—È÷§.h"
+#include "../GN-DLL-CF-IMGUI/NetVerification/NetVerification.h"
 #include "MinHook/MinHook/MinHook.h"
 //#pragma comment(lib,"../MinHook/lib/libMinHook-x64-v142-mt.lib")
 

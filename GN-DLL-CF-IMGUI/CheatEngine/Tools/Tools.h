@@ -33,6 +33,7 @@ private:
 public:
 	systime GetSystemtime();
 	std::string string_to_utf8(const std::string& str);
+	WCHAR* charToWchar(char* s);
 	void BrokenModuleLink(HANDLE modulehandle);
 	DWORD RVA_2_RAW(char* buf, DWORD RVA, DWORD RAW, BOOL flag);
 	DWORD64 GetImportTableIndexOffset(HANDLE modulehandle, PDWORD import_table_size);
@@ -47,6 +48,7 @@ public:
 	bool ResumeThreadByTag(DWORD pid, const char* judgment_tag);
 	bool TerminateThreadByModulehandle(DWORD pid, DWORD64 module_handle, DWORD64 module_handle_end_address);
 	bool UnloadDll(HMODULE module_handle, HMODULE module_handle_end_address);
+	void EnumPEHeader(HMODULE module_handle);
 
 };
 

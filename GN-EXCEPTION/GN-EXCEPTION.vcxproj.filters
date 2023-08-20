@@ -24,18 +24,18 @@
     <ClInclude Include="Exception.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\GN-DLL-CF-IMGUI\NetVerification\网络验证.h">
-      <Filter>NetVerification</Filter>
-    </ClInclude>
     <ClInclude Include="MinHook\MinHook\MinHook.h">
       <Filter>MiniHook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GN-DLL-CF-IMGUI\NetVerification\NetVerification.h">
+      <Filter>NetVerification</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Exception.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\GN-DLL-CF-IMGUI\NetVerification\网络验证.cpp">
+    <ClCompile Include="..\GN-DLL-CF-IMGUI\NetVerification\NetVerification.cpp">
       <Filter>NetVerification</Filter>
     </ClCompile>
   </ItemGroup>

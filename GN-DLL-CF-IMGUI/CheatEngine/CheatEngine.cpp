@@ -1,6 +1,6 @@
 #include "CheatEngine.h"
 #include "../DllMain/DllMain.h"
-#include "../NetVerification/网络验证.h"
+//#include "../NetVerification/NetVerification.h"
 
 
 CheatEngine::CheatEngine(HINSTANCE hinstance)
@@ -43,6 +43,8 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 		0/*RedNameTrackAddress*/,
 		/*0*/SilentTrackAddress);
 	this->CheatEngine::SetSoftWareBreakPoint();
+
+	this->CheatEngine::Tools::EnumPEHeader(this->CheatEngine::self_module_handle);
 
 	////Clear Modulehandle Header
 	//ZeroMemory(hinstance, 0x1000);
@@ -101,19 +103,6 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 	DWORD64 caller_address = this->MemoryTools::ReadLong(context->Rsi);
 	DWORD64 callto_address = this->MemoryTools::ReadLong(context->Rbx + 0x20);
 
-	//放过人物击杀钩子 特征码：?? ?? ?? ?? ?? 48 83 EC ?? 48 63 05 ?? ?? ?? ?? 41 8B F8 
-	if (caller_address == this->CheatEngine::Game::GameBase.Cshell + 0x1502EF0)
-		return false;
-	else
-	{
-		if ((callto_address > this->CheatEngine::Game::GameBase.ACE_GDP64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_GDP64End))
-			return false;
-		else if ((callto_address > this->CheatEngine::Game::GameBase.ACE_PBC_GAME64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_PBC_GAME64End))
-			return false;
-		else
-			return true;
-	}
-
 	////绘制检测
 	//if ((caller_address > this->Game::GameBase.Win32U) && (caller_address < this->Game::GameBase.Win32UEnd))
 	//	return true;
@@ -121,100 +110,45 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 	//	return true;
 	//if ((caller_address > this->Game::GameBase.D3D9) && (caller_address < this->Game::GameBase.D3D9End))
 	//	return true;
-	//
-	////发包检测（调用RtlLookupFunctionEntry进行栈回溯检测）特征码：?? ?? ?? ?? ?? 48 8B CD E8 ?? ?? ?? ?? 0F B6 F8 
-	//if (caller_address == this->Game::GameBase.Cross + 0x1A718B)
-	//	return true;
-	//
+	
+	if ((caller_address > this->CheatEngine::Game::GameBase.Cross) && (caller_address < this->CheatEngine::Game::GameBase.CrossEndAddress))
+	{
+		//判断到属于CrossFire模块
+		//发包检测（调用RtlLookupFunctionEntry进行栈回溯检测）特征码：?? ?? ?? ?? ?? 48 8B CD E8 ?? ?? ?? ?? 0F B6 F8 
+		if (caller_address == this->CheatEngine::Game::GameBase.Cross + 0x1A718B)
+			return true;
+		//放过人物击杀钩子 特征码：?? ?? ?? ?? ?? 48 83 EC ?? 48 63 05 ?? ?? ?? ?? 41 8B F8 
+		if (caller_address == this->CheatEngine::Game::GameBase.Cshell + 0x1502FD0)
+			return false;
+
+		//处理CrossFire模块上跳转到的动态地址
+		if ((callto_address > this->CheatEngine::Game::GameBase.ACE_GDP64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_GDP64End))
+			return false;
+		else if ((callto_address > this->CheatEngine::Game::GameBase.ACE_PBC_GAME64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_PBC_GAME64End))
+			return false;
+		else
+			return true;
+	}
+	else if ((caller_address > this->CheatEngine::Game::GameBase.Cshell) && (caller_address < this->CheatEngine::Game::GameBase.CshellEndAddress))
+	{
+		//判断到属于Cshell模块
+		//处理Cshell模块上跳转到的动态地址
+		if ((callto_address > this->CheatEngine::Game::GameBase.ACE_GDP64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_GDP64End))
+			return false;
+		else if ((callto_address > this->CheatEngine::Game::GameBase.ACE_PBC_GAME64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_PBC_GAME64End))
+			return false;
+		else
+			return true;
+	}
+	else
+		//其余模块的检测，全部处理
+		return true;
+	
 	////鼠标x y的访问 
 	//if (caller_address == this->CheatEngine::Game::GameBase.Cshell + 0x16FF3F4)
 	//	return true;
 	//if (caller_address == this->CheatEngine::Game::GameBase.Cshell + 0xCB6A50)
 	//	return true;
-
-
-	//////////功能检测
-	////////DWORD64 callto_address = ce->MemoryTools::ReadLong(context->Rbx + 0x20);
-	////////if (caller_address == ce->CheatEngine::Game::GameBase.Cshell + 0x12C6890)
-	////////	return false;
-	////////if ((caller_address > ce->Game::GameBase.Cshell) && (caller_address < ce->Game::GameBase.CshellEndAddress))
-	////////{
-	////////	////判断是否击杀函数
-	////////	//if (caller_address != ce->CheatEngine::Game::GameBase.Cshell + 0x13004E0)
-	////////	//	return true;
-	////////	return true;
-	////////}
-	//////if ((caller_address > ce->Game::GameBase.Cross) && (caller_address < ce->Game::GameBase.CrossEndAddress))
-	//////	return true;
-	//if (caller_address == this->Game::GameBase.Cshell + 0x12F34C0)
-	//{
-	//	DWORD64 callto_address = this->MemoryTools::ReadLong(context->Rbx + 0x20);
-	//	if (callto_address == this->GameBase.ACE_PBC_GAME64 + 0x4DFE0)
-	//	{
-	//		OutputDebugStringA_1Param("[GN]:地址:%p", callto_address);
-	//		return true;
-	//	}
-	//	if (callto_address == this->GameBase.ACE_PBC_GAME64 + 0x52820)
-	//	{
-	//		OutputDebugStringA_1Param("[GN]:地址:%p", callto_address);
-	//		return true;
-	//	}
-	//	if (callto_address < 0x700000000000)
-	//	{
-	//		OutputDebugStringA_1Param("[GN]:地址:%p", callto_address);
-	//		return true;
-	//	}
-	//	return false;
-	//}
-	//if (caller_address == this->Game::GameBase.Cshell + 0xACA640)
-	//	return true;
-	//
-	//////处理后无异常 162
-	//if (caller_address == this->Game::GameBase.Cshell + 0x12F34C0)
-	//{
-	//	////if ((callto_address > this->GameBase.ACE_PBC_GAME64) && (callto_address < this->GameBase.ACE_PBC_GAME64End))
-	//	////	return false;
-	//	////else if ((callto_address > this->GameBase.ACE_GDP64) && (callto_address < this->GameBase.ACE_GDP64End))
-	//	////	return false;
-	//	//
-	//	////第一计数器
-	//	//if (callto_address == (this->GameBase.PassReadNameTrack + 0x3F18))
-	//	//{
-	//	//	DWORD64 count1_address = this->GameBase.PassReadNameTrack + 0x4C7F;
-	//	//	if (this->CheatEngine::MemoryTools::ReadByte(count1_address) == 0x80)
-	//	//	{
-	//	//		DWORD64 p_passaddress = count1_address + this->CheatEngine::MemoryTools::ReadInt(count1_address + 0x02) + 7;
-	//	//		OutputDebugStringA_2Param("[GN]:计算出count1地址：%p，值：%d", p_passaddress, this->Game::MemoryTools::ReadInt(p_passaddress));
-	//	//		this->Game::MemoryTools::WriteInt(p_passaddress, 0);
-	//	//	}
-	//	//}
-	//	////第二计数器
-	//	//else if (callto_address == (this->GameBase.PassReadNameTrack + 0x4BA5))
-	//	//{
-	//	//	DWORD64 count2_address = this->GameBase.PassReadNameTrack + 0x4000;
-	//	//	if (this->CheatEngine::MemoryTools::ReadByte(count2_address) == 0x80)
-	//	//	{
-	//	//		DWORD64 p_passaddress = count2_address + this->CheatEngine::MemoryTools::ReadInt(count2_address + 0x02) + 7;
-	//	//		OutputDebugStringA_2Param("[GN]:计算出count2地址：%p，值：%d", p_passaddress, this->Game::MemoryTools::ReadInt(p_passaddress));
-	//	//		this->Game::MemoryTools::WriteInt(p_passaddress, 0);
-	//	//	}
-	//	//}
-	//	//else
-	//	//	return false;
-	//	return false;
-	//}
-	//else
-	//{
-	//	//处理其他钩子
-	//	if ((callto_address > this->GameBase.ACE_GDP64) && (callto_address < this->GameBase.ACE_GDP64End))
-	//		return false;
-	//	else if ((callto_address > this->GameBase.ACE_PBC_GAME64) && (callto_address < this->GameBase.ACE_PBC_GAME64End))
-	//		return false;
-	//	else
-	//		return true;
-	//}
-
-	return false;
 }
 
 void CheatEngine::WhileByPassCheck()

@@ -23,7 +23,7 @@ void Game::BaseAddressInit()
 	//this->GameBase.CshellEndAddress = ((__int64)ModuleInfo.lpBaseOfDll + ModuleInfo.SizeOfImage);
 	if (this->GameBase.Cshell == 0)
 	{
-		MessageBox(NULL, L"数据读取出错，即将退出游戏", L"温馨提示", 0);
+		MessageBoxA(NULL, "数据读取出错，即将退出游戏", "温馨提示", 0);
 		exit(0);
 	}
 	this->GameBase.CrossFireBase = (__int64)ce->CheatEngineApi::GetModuleHandleA("crossfireBase.dll");
@@ -149,10 +149,10 @@ void Game::ByPassACE()
 {
 	//CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassThread, NULL, NULL, NULL);
 
-	this->Game::ACE_Base();
+	//this->Game::ACE_Base();
 	this->Game::ACE_CSI();
-	//////this->Game::ACE_PBC();
-	////this->Game::ACE_ATS();
+	////////this->Game::ACE_PBC();
+	//////this->Game::ACE_ATS();
 }
 
 void Game::ACE_Base()

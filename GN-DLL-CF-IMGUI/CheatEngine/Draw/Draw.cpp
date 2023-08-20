@@ -14,7 +14,7 @@ void Draw::InitDirectAndHook(HWND hwnd)
 {
 	if (this->CreateDeviceD3D9(hwnd) != true)
 	{
-		MessageBox(NULL, L"初始化D3D失败！", L"温馨提示", 0);
+		MessageBoxA(NULL, "初始化D3D失败！", "温馨提示", 0);
 		exit(-1);
 	}
 
@@ -118,7 +118,7 @@ bool Draw::CreateDeviceD3D9(HWND hwnd)
 	this->direct9.object = Direct3DCreate9(D3D_SDK_VERSION);
 	if (this->direct9.object == FALSE)
 	{
-		MessageBox(NULL, L"Direct3D9创建失败", L"温馨提示", 0);
+		MessageBoxA(NULL, "Direct3D9创建失败", "温馨提示", 0);
 		return false;
 	}
 	memset(&this->direct9.params, 0, sizeof(this->direct9.params));
@@ -128,7 +128,7 @@ bool Draw::CreateDeviceD3D9(HWND hwnd)
 	HRESULT result = this->direct9.object->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hwnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &this->direct9.params, &this->direct9.device);
 	if (result != S_OK)
 	{
-		MessageBox(NULL, L"Create Device失败！", L"温馨提示", 0);
+		MessageBoxA(NULL, "Create Device失败！", "温馨提示", 0);
 		return false;
 	}
 	return true;
@@ -334,31 +334,28 @@ void Draw::MenuDraw()
 {
 	if (this->show_menu)
 	{
-		ImGui::Begin(u8"蓝鲸 | （Home隐藏显示）");
-		//if (ImGui::CollapsingHeader(ce->Tools::string_to_utf8((char*)new BYTE[12]{ 0xE6,0x98,0xBE,0xE7,0xA4,0xBA,0xE4,0xB8,0x93,0xE5,0x8C,0xBA }).c_str()))
-		//if (ImGui::CollapsingHeader(ce->Tools::string_to_utf8((char*)new BYTE[12]{ 0xBA,0x8C,0xE5,0x93,0xB8,0xE4,0xBA,0xA4,0xE7,0xBE,0x98,0xE6 }).c_str()))
-		//if (ImGui::CollapsingHeader(ce->Tools::string_to_utf8("显示专区").c_str()))
-		if (ImGui::CollapsingHeader(u8"显示专区"))
+		ImGui::Begin(ce->Tools::string_to_utf8("蓝鲸 | （Home隐藏显示）").c_str());
+		if (ImGui::CollapsingHeader(ce->Tools::string_to_utf8("显示专区").c_str()))
 		{
 			//ImGui::Checkbox(u8"显示方框", &this->show_rectbox);													ImGui::SameLine();
 			//ImGui::Checkbox(u8"显示骨骼", &this->show_bone);													ImGui::SameLine();
-			ImGui::Checkbox(u8"显示昵称", &this->show_name);													ImGui::SameLine();
-			ImGui::Checkbox(u8"显示雷包", &this->show_c4);														ImGui::SameLine();
-			ImGui::Checkbox(u8"显示血量", &this->show_health);													ImGui::Separator();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("显示昵称").c_str(), &this->show_name);					ImGui::SameLine();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("显示雷包").c_str(), &this->show_c4);						ImGui::SameLine();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("显示血量").c_str(), &this->show_health);					ImGui::Separator();
 
-			ImGui::Checkbox(u8"显示准心", &this->show_crosshair);												ImGui::SameLine();
-			ImGui::Checkbox(u8"预瞄射线", &this->show_previewray);												ImGui::SameLine();
-			ImGui::Checkbox(u8"追踪范围", &this->show_trackrange);												ImGui::Separator();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("显示准心").c_str(), &this->show_crosshair);				ImGui::SameLine();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("预瞄射线").c_str(), &this->show_previewray);				ImGui::SameLine();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("追踪范围").c_str(), &this->show_trackrange);				ImGui::Separator();
 
-			//ImGui::Checkbox(u8"人物渲染", &this->show_characterindex);											ImGui::Separator();
+			//ImGui::Checkbox(ce->Tools::string_to_utf8("人物渲染").c_str(), &this->show_characterindex);			ImGui::Separator();
 
 			////ImGui::Checkbox(u8"显示天线", &this->show_antenna);													ImGui::SameLine();
 			//ImGui::Checkbox(u8"显示扣扣", &this->show_userQQnumber);											ImGui::SameLine();
 			//ImGui::Checkbox(u8"显示队友", &this->show_teamate);													ImGui::SameLine();
 		}
-		if (ImGui::CollapsingHeader(u8"打击专区"))
+		if (ImGui::CollapsingHeader(ce->Tools::string_to_utf8("打击专区").c_str()))
 		{
-			if (ImGui::Checkbox(u8"内存自瞄", &ce->Game::memory_aimbot))
+			if (ImGui::Checkbox(ce->Tools::string_to_utf8("内存自瞄").c_str(), &ce->Game::memory_aimbot))
 			{
 				ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
 			}
@@ -373,12 +370,12 @@ void Draw::MenuDraw()
 			//	ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::silence_track = false;/*this->Game::range_track = false;*/
 			//}
 			//ImGui::SameLine();
-			if (ImGui::Checkbox(u8"视觉追踪", &ce->Game::silence_track))
+			if (ImGui::Checkbox(ce->Tools::string_to_utf8("视觉追踪").c_str(), &ce->Game::silence_track))
 			{
 				ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false;/*this->Game::range_track = false;*/
 			}
 			ImGui::SameLine();
-			ImGui::Checkbox(u8"判断障碍", &ce->Game::judgementbarrier);											ImGui::Separator();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("判断障碍").c_str(), &ce->Game::judgementbarrier);							ImGui::Separator();
 			//char text_buffer[30] = { NULL };
 			//sprintf_s(text_buffer, u8"子弹无后：%s", ce->Game::no_backseat ? u8"开启" : u8"关闭");
 			//if (ImGui::Button(text_buffer))
@@ -389,13 +386,12 @@ void Draw::MenuDraw()
 			//	else
 			//		ce->CheatEngine::driver->WriteBytesByMDL((PVOID)gn_exception->software_breakpoint1, new BYTE{ 0xF3 }, 1);
 			//}																									ImGui::Separator();
-
 			ImGui::SetNextItemWidth(60);
-			ImGui::Combo(u8"瞄准热键", &ce->Game::aim_hotkey, u8"左键\0右键\0Alt键\0");							ImGui::SameLine();
+			ImGui::Combo(ce->Tools::string_to_utf8("瞄准热键").c_str(), &ce->Game::aim_hotkey, u8"左键\0右键\0Alt键\0");			ImGui::SameLine();
 			ImGui::SetNextItemWidth(60);
-			ImGui::Combo(u8"打击部位", &ce->Game::aim_position, u8"身体\0头部\0");								ImGui::Separator();
-			ImGui::DragInt(u8"自瞄速度(越小越好)", &ce->Game::aim_speed, 0.3f, 1, 80, "%d");					ImGui::Separator();
-			ImGui::DragInt(u8"打击范围(越大越好)", &ce->Game::track_range, 0.6f, 30, 1200, "%d");				ImGui::Separator();
+			ImGui::Combo(ce->Tools::string_to_utf8("打击部位").c_str(), &ce->Game::aim_position, u8"身体\0头部\0");					ImGui::Separator();
+			ImGui::DragInt(ce->Tools::string_to_utf8("自瞄速度(越小越好)").c_str(), &ce->Game::aim_speed, 0.3f, 1, 80, "%d");		ImGui::Separator();
+			ImGui::DragInt(ce->Tools::string_to_utf8("打击范围(越大越好)").c_str(), &ce->Game::track_range, 0.6f, 30, 1200, "%d");	ImGui::Separator();
 		}
 		////if (ImGui::CollapsingHeader(u8"范围专区"))
 		////{
@@ -423,7 +419,7 @@ void Draw::MenuDraw()
 		////	ImGui::Separator();
 		////	ImGui::DragFloat(u8"设置范围大小", &this->Game::range_track_value, 1.0f, 1, 200, "%.0f");			ImGui::Separator();
 		////}
-		if (ImGui::CollapsingHeader(u8"功能专区"))
+		if (ImGui::CollapsingHeader(ce->Tools::string_to_utf8("功能专区").c_str()))
 		{
 			////if (ImGui::Checkbox(u8"无后座力", &this->Game::no_backseat))
 			////	this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cshell + BulletWithoutBackSeatHookOffset);
@@ -452,27 +448,27 @@ void Draw::MenuDraw()
 			////	this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cross + SquatAccelerationHookOffset);
 			////ImGui::Separator();
 
-			ImGui::Checkbox(u8"空格连跳", &ce->CheatEngine::Game::spacecontinuousjump);			ImGui::Separator();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("空格连跳").c_str(), &ce->CheatEngine::Game::spacecontinuousjump);		ImGui::Separator();
 		}
-		if (ImGui::CollapsingHeader(u8"刀距专区"))
+		if (ImGui::CollapsingHeader(ce->Tools::string_to_utf8("刀距专区").c_str()))
 		{
 			static bool ChangeStatu = FALSE;
-			ImGui::Text(u8"请在持刀状态下修改刀距！还原刀距时需要手持武器后再还原");			ImGui::Separator();
-			ImGui::Text(u8"当前近战武器：");												ImGui::SameLine();
-			ImGui::Text(this->Tools::string_to_utf8(ce->Game::GameBase.WeaponNameValue).c_str());		ImGui::Separator();
+			ImGui::Text(ce->Tools::string_to_utf8("请在持刀状态下修改刀距！还原刀距时需要手持武器后再还原").c_str());		ImGui::Separator();
+			ImGui::Text(ce->Tools::string_to_utf8("当前近战武器：").c_str());												ImGui::SameLine();
+			ImGui::Text(this->Tools::string_to_utf8(ce->Game::GameBase.WeaponNameValue).c_str());							ImGui::Separator();
 			static float KnifeWieldingDistance = 540.0;//挥刀距离
-			ImGui::InputFloat(u8"挥刀距离", &KnifeWieldingDistance, 1.0f, 1.0f, "%.0f");	ImGui::Separator();
+			ImGui::InputFloat(ce->Tools::string_to_utf8("挥刀距离").c_str(), &KnifeWieldingDistance, 1.0f, 1.0f, "%.0f");	ImGui::Separator();
 			static float TapSpeed = 1.2;//轻击速度
-			ImGui::InputFloat(u8"轻击速度", &TapSpeed, 0.1f, 1.0f, "%.1f");					ImGui::Separator();
+			ImGui::InputFloat(ce->Tools::string_to_utf8("轻击速度").c_str(), &TapSpeed, 0.1f, 1.0f, "%.1f");				ImGui::Separator();
 			static float HitSpeed = 1.3;//重击速度
-			ImGui::InputFloat(u8"重击速度", &HitSpeed, 0.1f, 1.0f, "%.1f");					ImGui::Separator();
+			ImGui::InputFloat(ce->Tools::string_to_utf8("重击速度").c_str(), &HitSpeed, 0.1f, 1.0f, "%.1f");				ImGui::Separator();
 			static float TapRange = 2.0;//轻击范围
-			ImGui::InputFloat(u8"轻击范围", &TapRange, 1.0f, 1.0f, "%.0f");					ImGui::Separator();
+			ImGui::InputFloat(ce->Tools::string_to_utf8("轻击范围").c_str(), &TapRange, 1.0f, 1.0f, "%.0f");				ImGui::Separator();
 			static float HitRange = 2.0;//重击范围
-			ImGui::InputFloat(u8"重击范围", &HitRange, 1.0f, 1.0f, "%.0f");					ImGui::Separator();
+			ImGui::InputFloat(ce->Tools::string_to_utf8("重击范围").c_str(), &HitRange, 1.0f, 1.0f, "%.0f");				ImGui::Separator();
 			if (!ChangeStatu)
 			{
-				if (ImGui::Button(u8"修改刀距"))
+				if (ImGui::Button(ce->Tools::string_to_utf8("修改刀距").c_str()))
 				{
 					//修改刀距
 					if (ce->Game::ChangeKnifeDistance(KnifeWieldingDistance, TapSpeed, HitSpeed, TapRange, HitRange))
@@ -483,7 +479,7 @@ void Draw::MenuDraw()
 			}
 			else
 			{
-				if (ImGui::Button(u8"还原刀距"))
+				if (ImGui::Button(ce->Tools::string_to_utf8("还原刀距").c_str()))
 				{
 					//还原刀距
 					if (ce->Game::ReductionKnifeDistance())
@@ -494,11 +490,11 @@ void Draw::MenuDraw()
 			}
 			ImGui::Separator();
 		}
-		if (ImGui::CollapsingHeader(u8"菜单专区"))
+		if (ImGui::CollapsingHeader(ce->Tools::string_to_utf8("菜单专区").c_str()))
 		{
 			static int MenuStyleSwitch = 0;
 			ImGui::SetNextItemWidth(68);
-			if (ImGui::Combo(u8"菜单风格", &MenuStyleSwitch, u8"亮白色\0经典色\0半透明\0全透明\0"))
+			if (ImGui::Combo(ce->Tools::string_to_utf8("菜单风格").c_str(), &MenuStyleSwitch, u8"亮白色\0经典色\0半透明\0全透明\0"))
 			{
 				switch (MenuStyleSwitch)
 				{
@@ -530,12 +526,13 @@ void Draw::MenuDraw()
 		//	ImGui::Separator();
 		//}
 		static systime start_time = this->Tools::GetSystemtime();
-		ImGui::Text(u8"辅助启动时间：%4d-%02d-%02d %02d:%02d:%02d", start_time.year, start_time.month, start_time.day, start_time.hour, start_time.min, start_time.sec);
+		ImGui::Text(ce->Tools::string_to_utf8("辅助启动时间：%4d-%02d-%02d %02d:%02d:%02d").c_str(), start_time.year, start_time.month, start_time.day, start_time.hour, start_time.min, start_time.sec);
 		ImGui::SameLine(200);
 		static systime runtime = { NULL };
 		runtime = this->Tools::GetSystemtime();
-		ImGui::Text(u8"当前时间：%4d-%02d-%02d %02d:%02d:%02d", runtime.year, runtime.month, runtime.day, runtime.hour, runtime.min, runtime.sec); ImGui::Separator();
-		ImGui::Text(u8"绘制速度: %.1f FPS", ImGui::GetIO().Framerate);
+		ImGui::Text(ce->Tools::string_to_utf8("当前时间：%4d-%02d-%02d %02d:%02d:%02d").c_str(), runtime.year, runtime.month, runtime.day, runtime.hour, runtime.min, runtime.sec);
+		ImGui::Separator();
+		ImGui::Text(ce->Tools::string_to_utf8("绘制速度: %.1f FPS").c_str(), ImGui::GetIO().Framerate);
 		ImGui::End();
 	}
 }
@@ -646,24 +643,29 @@ void Draw::MainFuncDraw()
 										}
 										if (this->Draw::show_health)
 										{
-											sprintf_s(BloodVolumeText, u8"血量：%d", ce->Game::GetCharacterBlood(i));
+											sprintf_s(BloodVolumeText, "血量：%d", ce->Game::GetCharacterBlood(i));
+											//sprintf_s(BloodVolumeText, ce->Tools::string_to_utf8("血量：%d").c_str(), ce->Game::GetCharacterBlood(i));
+											//sprintf_s(BloodVolumeText, u8"血量：%d", ce->Game::GetCharacterBlood(i));
 											const ImVec2 text_pos = ImVec2(DrawCoordinates[i].X, DrawCoordinates[i].Y - 37);
-											ImGui::GetBackgroundDrawList()->AddText(text_pos, this->Draw::draw_color, BloodVolumeText);
+											ImGui::GetBackgroundDrawList()->AddText(text_pos, this->Draw::draw_color, ce->Tools::string_to_utf8(BloodVolumeText).c_str());
 										}
 										if (ce->show_c4)
 										{
 											if (ce->Game::IsC4(i) == TRUE)
 											{
 												const ImVec2 text_pos = ImVec2(DrawCoordinates[i].X, DrawCoordinates[i].Y - 51);
-												ImGui::GetBackgroundDrawList()->AddText((text_pos), this->Draw::draw_color, u8"!!!C4!!!");
+												ImGui::GetBackgroundDrawList()->AddText((text_pos), this->Draw::draw_color, ce->Tools::string_to_utf8("!!!C4!!!").c_str());
+												//ImGui::GetBackgroundDrawList()->AddText((text_pos), this->Draw::draw_color, u8"!!!C4!!!");
 											}
 										}
 										if (ce->show_userQQnumber)
 										{
-											sprintf_s(UserQQNumberText, u8"QQ：%d", ce->Game::GetUserQQNumber(i));
+											sprintf_s(UserQQNumberText, "QQ：%d", ce->Game::GetUserQQNumber(i));
+											//sprintf_s(UserQQNumberText, ce->Tools::string_to_utf8("QQ：%d").c_str(), ce->Game::GetUserQQNumber(i));
+											//sprintf_s(UserQQNumberText, u8"QQ：%d", ce->Game::GetUserQQNumber(i));
 											this->Draw::FillRectangle(DrawCoordinates[i].X, DrawCoordinates[i].Y - 37, 96, 17, 100, 100, 100, 100); //背景框
 											const ImVec2 text_pos = ImVec2(DrawCoordinates[i].X, DrawCoordinates[i].Y - 65);
-											ImGui::GetBackgroundDrawList()->AddText((text_pos), this->Draw::draw_color, UserQQNumberText);
+											ImGui::GetBackgroundDrawList()->AddText((text_pos), this->Draw::draw_color, ce->Tools::string_to_utf8(UserQQNumberText).c_str());
 										}
 										if (this->Draw::show_bone)
 											ce->Game::DrawBone(i, this->Draw::draw_color, 1);
