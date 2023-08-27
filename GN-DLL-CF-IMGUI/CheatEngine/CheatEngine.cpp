@@ -35,7 +35,7 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 	////Set Exception Handler
 	//if (!gn_exception->InstallExceptionHook("TKD604E537253H51289E138A1BE4588D", CheatEngine::NewExceptionHandler))
 	//	exit(-1);
-	if (!gn_exception->InstallException("TKD604E537253H51289E138A1BE4588D", CheatEngine::NewExceptionHandler))
+	if (!gn_exception->InstallException("TK10B3ED5998H72EB0A8AD58107E7C10", CheatEngine::NewExceptionHandler))
 		exit(-1);
 	int ret = gn_exception->GN_Exception::SetHardWareBreakPoint(L"crossfire.exe", 0x455,
 		/*0*/this->Game::GameBase.ACE_BASE64 + GlobalBaseFuncOffset,
@@ -46,8 +46,8 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 
 	this->CheatEngine::Tools::EnumPEHeader(this->CheatEngine::self_module_handle);
 
-	////Clear Modulehandle Header
-	//ZeroMemory(hinstance, 0x1000);
+	//Clear Modulehandle Header
+	ZeroMemory(hinstance, 0x1000);
 	
 	////Hide Dll Memory
 	//if (!this->CheatEngine::driver->HideMemoryByVAD((ULONG64)hinstance, 0/*模块大小*/))
@@ -100,8 +100,8 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 	//	}
 	//}
 
-	DWORD64 caller_address = this->MemoryTools::ReadLong(context->Rsi);
-	DWORD64 callto_address = this->MemoryTools::ReadLong(context->Rbx + 0x20);
+	DWORD64 caller_address = this->CheatEngine::MemoryTools::ReadLong(context->Rsi);
+	DWORD64 callto_address = this->CheatEngine::MemoryTools::ReadLong(context->Rbx + 0x20);
 
 	////绘制检测
 	//if ((caller_address > this->Game::GameBase.Win32U) && (caller_address < this->Game::GameBase.Win32UEnd))

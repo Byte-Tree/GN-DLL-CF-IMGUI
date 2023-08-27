@@ -173,14 +173,14 @@ void Game::ACE_Base()
 				if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "VirtualAlloc"))
 				{
 					VirtualAlloc_count = i;
-					this->Game::MemoryTools::WriteLong(((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_VirtualAlloc);
-					//ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_VirtualAlloc);
+					//this->Game::MemoryTools::WriteLong(((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_VirtualAlloc);
+					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_VirtualAlloc);
 				}
 				if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "Sleep"))
 				{
 					Sleep_count = i;
-					this->Game::MemoryTools::WriteLong(((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_Sleep);
-					//ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_Sleep);
+					//this->Game::MemoryTools::WriteLong(((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_Sleep);
+					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_BASE64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_Sleep);
 				}
 				//if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "CreateThread"))
 				//{
@@ -328,8 +328,8 @@ void Game::ACE_CSI()
 				if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "Sleep"))
 				{
 					Sleep_count = i;
-					this->Game::MemoryTools::WriteLong(((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_Sleep);
-					//ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_Sleep);
+					//this->Game::MemoryTools::WriteLong(((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_Sleep);
+					ce->CheatEngine::driver->WriteLongByMDL((PVOID)((this->GameBase.ACE_CSI64 + import_table_offset) + i * 8), (DWORD64)&HookApi::Self_Sleep);
 				}
 				//if (judgment_address == (DWORD64)::GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "Process32NextW"))
 				//{

@@ -3,8 +3,9 @@
 #include "MinHook/MinHook/MinHook.h"
 //#pragma comment(lib,"../MinHook/lib/libMinHook-x64-v142-mt.lib")
 
-#define ServerHost "221.236.21.196"
+#define ServerHost "118.123.202.72"
 #define ServerPort 1882
+
 
 GN_Exception* gn_exception = new GN_Exception();
 
@@ -146,18 +147,18 @@ int GN_Exception::SetHardWareBreakPoint(const wchar_t* main_modulename, DWORD64 
 
 bool GN_Exception::InstallException(const char* key, ExceptionHandlerApi exception_handler_api)
 {
-	////NetVerification
-	//if (!全_验证通讯::验证_初始化(ServerHost, ServerPort))
-	//{
-	//	OutputDebugStringA("[GN]:验证_初始化() error");
-	//	exit(-1);
-	//}
-	//string a(key);
-	//if (!全_验证通讯::验证_卡登录(a))
-	//{
-	//	OutputDebugStringA("[GN]:验证_卡登录() error");
-	//	exit(-1);
-	//}
+	//NetVerification
+	if (!全_验证通讯::验证_初始化(ServerHost, ServerPort))
+	{
+		//OutputDebugStringA("[GN]:验证_初始化() error");
+		exit(-1);
+	}
+	string a(key);
+	if (!全_验证通讯::验证_卡登录(a))
+	{
+		//OutputDebugStringA("[GN]:验证_卡登录() error");
+		exit(-1);
+	}
 	
 	//保存函数指针
 	this->pExceptionHandlerApi = exception_handler_api;
@@ -192,18 +193,18 @@ bool GN_Exception::InstallException(const char* key, ExceptionHandlerApi excepti
 
 bool GN_Exception::InstallExceptionHook(const char* key, ExceptionHandlerApi exception_handler_api)
 {
-	//NetVerification
-	if (!全_验证通讯::验证_初始化(ServerHost, ServerPort))
-	{
-		OutputDebugStringA("[GN]:验证_初始化() error");
-		exit(-1);
-	}
-	string a(key);
-	if (!全_验证通讯::验证_卡登录(a))
-	{
-		OutputDebugStringA("[GN]:验证_卡登录() error");
-		exit(-1);
-	}
+	////NetVerification
+	//if (!全_验证通讯::验证_初始化(ServerHost, ServerPort))
+	//{
+	//	OutputDebugStringA("[GN]:验证_初始化() error");
+	//	exit(-1);
+	//}
+	//string a(key);
+	//if (!全_验证通讯::验证_卡登录(a))
+	//{
+	//	OutputDebugStringA("[GN]:验证_卡登录() error");
+	//	exit(-1);
+	//}
 
 	//保存函数指针
 	this->pExceptionHandlerApi = exception_handler_api;
