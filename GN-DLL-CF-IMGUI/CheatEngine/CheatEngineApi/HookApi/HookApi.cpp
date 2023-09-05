@@ -271,7 +271,8 @@ HANDLE WINAPI HookApi::Self_CreateThread(LPSECURITY_ATTRIBUTES lpThreadAttribute
 
 	//OutputDebugStringA("[GN]:·Å¹ýCreateThread");
 
-	return ::CreateThread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
+	//return ::CreateThread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
+	return ce->CheatEngine::old_createthread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
 }
 
 
