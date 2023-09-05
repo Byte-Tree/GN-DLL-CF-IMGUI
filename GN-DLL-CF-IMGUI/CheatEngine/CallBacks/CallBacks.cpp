@@ -107,7 +107,7 @@ HRESULT CALLBACK Draw::Self_Present(IDirect3DDevice9* direct3ddevice9, RECT* pSo
 		ce->CheatEngine::Draw::InitImGuiDx9(direct3ddevice9);
 		IDirect3DTexture9* texture = ce->CheatEngine::Draw::GetD3D9Texture();
 		ce->CheatEngine::Draw::CreateD3D9Texture(direct3ddevice9, &texture, D3DCOLOR_ARGB(255, 0, 255, 0));//бли╚
-		ce->CheatEngine::InitHook();
+		//ce->CheatEngine::InitHook();
 		ce->CheatEngine::original_proc = (WNDPROC)SetWindowLongPtr(ce->CheatEngine::GetGameWindowHandle(), GWLP_WNDPROC, (LONG_PTR)CheatEngine::SelfGameWindowProc);
 	}
 
