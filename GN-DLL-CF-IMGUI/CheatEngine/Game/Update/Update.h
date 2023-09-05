@@ -64,8 +64,8 @@
 //换弹搜5，没换搜2
 //主武器0，副武器1，近战2，雷3
 #define InjectHookOffset 0x1BC604								//dll注入点					特征码：45 33 C9 C7 44 24 ?? 01 00 00 00 45 33 C0 48 ?? ?? ?? 33 D2 FF 15 ?? ?? ?? ?? 85 C0 75 ?? E8 ?? ?? ?? ?? 85 C0
-#define Mtrix 0x14053D4A0										//矩阵						特征码：48 8B 0D ?? ?? ?? ?? 48 8D ?? ?? 41 B8 ?? ?? ?? ?? 48 8B 01 FF 90 ?? ?? ?? ??    cshell_x64.dll模块上：mov rcx,[cshell_x64.dll+0xXXXXXXX] '矩阵地址 = (cshell_x64.dll+0xXXXXXXX)的值 + 0x2D00 - 0x10
-//#define Mtrix 0x140525630										//矩阵						特征码：F3 0F 10 83 ?? ?? ?? ?? F3 0F 10 8B ?? ?? ?? ?? 48 8B 4B ?? 48 85 C9 0F 84 ?? ?? ?? ?? 44 8B 81 ?? ?? ?? ??  [rbx + 0x2D00] - 0x10  |  矩阵地址 = ((rbx的值 + 0x2D00(offset)) - 0x10)  |  注：0x2D00是个偏移，可能存在更新
+#define Mtrix 0x140540190										//矩阵						特征码：48 8B 0D ?? ?? ?? ?? 48 8D ?? ?? 41 B8 ?? ?? ?? ?? 48 8B 01 FF 90 ?? ?? ?? ??    cshell_x64.dll模块上：mov rcx,[cshell_x64.dll+0xXXXXXXX] '矩阵地址 = (cshell_x64.dll+0xXXXXXXX)的值 + 0x2D00 - 0x10
+//#define Mtrix 0x140540190										//矩阵						特征码：F3 0F 10 83 ?? ?? ?? ?? F3 0F 10 8B ?? ?? ?? ?? 48 8B 4B ?? 48 85 C9 0F 84 ?? ?? ?? ?? 44 8B 81 ?? ?? ?? ??  [rbx + 0x2D00] - 0x10  |  矩阵地址 = ((rbx的值 + 0x2D00(offset)) - 0x10)  |  注：0x2D00是个偏移，可能存在更新
 #define ArraySizeOffset 0x1048									//数组大小
 #define PlayerArrayBaseAddress 0x2E6AB60						//玩家数组
 #define ModelOffset 0x2E6AB90									//判断模式
@@ -76,7 +76,7 @@
 #define SilentTrackAddress 0x14023EE50 + 0x10					//静默追踪构造				特征码：48 83 EC 28 0F 28 C2 4C 8B CA F3 0F 10 54 24 ??
 #define RedNameTrackAddress 0x14024C508							//红名追踪地址				特征码：49 8B C0 4C 8B CA 4C 8D 41 ?? 48 8B D0 49 8B C9 E9 ?? ?? ?? ?? CC CC	jmp 跳转的函数既红名追踪地址
 #define BarrierOffset 0x140050620								//障碍判断基址				特征码：4C 8B C9 4C 8B C2 48 8B ?? ?? ?? ?? ?? 49 8B D1 48 8B 01 48 FF ?? 18
-#define SpaceContinuousJumpOffset 0x30CF7D8						//空格连跳					特征码：44 0F B6 3D ?? ?? ?? ?? 8B CB FF 90 ?? ?? ?? ?? 84 C0   movzx r15d,byte ptr [连跳地址]
+#define SpaceContinuousJumpOffset 0x30CF7C8						//空格连跳					特征码：44 0F B6 3D ?? ?? ?? ?? 8B CB FF 90 ?? ?? ?? ?? 84 C0   movzx r15d,byte ptr [连跳地址]
 #define KnifeDistanceBaseAddress 0x300E440						//刀距基址 | 武器基址
 #define WeaponNumberBaseAddressOne 0x2B3AAC0					//刀距武器序列一 | 武器序列 可以不用更新了
 #define WeaponNumberBaseAddressTwo 0x94							//刀距武器序列二
@@ -204,7 +204,7 @@
 #define PlayerZCoordinateOffset 0x198							//Z坐标偏移
 
 //追踪鼠标偏移
-#define MouseYOffset 0x858										//鼠标Y轴偏移
+#define MouseYOffset 0x85C										//鼠标Y轴偏移
 #define MouseXOffset MouseYOffset + 0x4							//鼠标X轴偏移
 
 //内存自瞄鼠标偏移

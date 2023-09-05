@@ -227,35 +227,45 @@ void CheatEngine::InitHook()
 	//this->CheatEngine::SendTo_hook = new inline_hook(sendto_address, (__int64)&CheatEngine::Self_SendTo, FALSE);
 	//this->CheatEngine::SendTo_hook->motify_address();
 	
-	////初始化MiniHook
-	//if (MH_Initialize() != MH_OK)
-	//{
-	//	::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MiniHook初始化失败，请重试！", "警告", MB_OK);
-	//	exit(-5);
-	//}
-	//else
-	//{
-	//	//if (MH_CreateHookApi(L"Ws2_32", "send", CheatEngine::Self_Send, (LPVOID*)&ce->CheatEngine::old_send) != MH_OK)
-	//	//{
-	//	//	::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_CreateHookApi Send error", "Notice", MB_OK);
-	//	//	exit(-5);
-	//	//}
-	//	//if (MH_EnableHook(GetProcAddress(GetModuleHandleA("Ws2_32.dll"), "send")) != MH_OK)
-	//	//{
-	//	//	::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_EnableHook error", "Notice", MB_OK);
-	//	//	exit(-5);
-	//	//}
-	//	if (MH_CreateHook((LPVOID)direct3ddevice9_table[82], Draw::Self_DrawIndexedPrimitive, (LPVOID*)&this->CheatEngine::Draw::old_drawindexprimitive) != MH_OK)
-	//	{
-	//		::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_CreateHook DrawIndexedPrimitive error", "Notice", MB_OK);
-	//		exit(-5);
-	//	}
-	//	if (MH_EnableHook((LPVOID)direct3ddevice9_table[82]) != MH_OK)
-	//	{
-	//		::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_EnableHook drawindexprimitive error", "Notice", MB_OK);
-	//		exit(-5);
-	//	}
-	//}
+	//初始化MiniHook
+	if (MH_Initialize() != MH_OK)
+	{
+		::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MiniHook初始化失败，请重试！", "警告", MB_OK);
+		exit(-5);
+	}
+	else
+	{
+		////if (MH_CreateHookApi(L"Ws2_32", "send", CheatEngine::Self_Send, (LPVOID*)&ce->CheatEngine::old_send) != MH_OK)
+		////{
+		////	::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_CreateHookApi Send error", "Notice", MB_OK);
+		////	exit(-5);
+		////}
+		////if (MH_EnableHook(GetProcAddress(GetModuleHandleA("Ws2_32.dll"), "send")) != MH_OK)
+		////{
+		////	::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_EnableHook error", "Notice", MB_OK);
+		////	exit(-5);
+		////}
+		//if (MH_CreateHook((LPVOID)direct3ddevice9_table[82], Draw::Self_DrawIndexedPrimitive, (LPVOID*)&this->CheatEngine::Draw::old_drawindexprimitive) != MH_OK)
+		//{
+		//	::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_CreateHook DrawIndexedPrimitive error", "Notice", MB_OK);
+		//	exit(-5);
+		//}
+		//if (MH_EnableHook((LPVOID)direct3ddevice9_table[82]) != MH_OK)
+		//{
+		//	::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_EnableHook drawindexprimitive error", "Notice", MB_OK);
+		//	exit(-5);
+		//}
+		if (MH_CreateHookApi(L"KERNEL32", "CreateThread", HookApi::Self_CreateThread, (LPVOID*)&ce->CheatEngine::old_createthread) != MH_OK)
+		{
+			::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_CreateHookApi CreateThread error", "Notice", MB_OK);
+			exit(-5);
+		}
+		if (MH_EnableHook(GetProcAddress(GetModuleHandleA("KERNEL32.dll"), "CreateThread")) != MH_OK)
+		{
+			::MessageBoxA(ce->CheatEngine::Draw::GetGameWindowHandle(), "MH_EnableHook error", "Notice", MB_OK);
+			exit(-5);
+		}
+	}
 
 }
 

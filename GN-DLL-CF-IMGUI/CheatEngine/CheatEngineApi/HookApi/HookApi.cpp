@@ -210,11 +210,38 @@ BOOL WINAPI HookApi::Self_Process32NextW(__in HANDLE hSnapshot, __out LPPROCESSE
 
 HANDLE WINAPI HookApi::Self_CreateThread(LPSECURITY_ATTRIBUTES lpThreadAttributes, SIZE_T dwStackSize, LPTHREAD_START_ROUTINE lpStartAddress, LPVOID lpParameter, DWORD dwCreationFlags, LPDWORD lpThreadId)
 {
-	OutputDebugStringA("[GN]:Base-> CreateThread死循环");
-	while (true)
+	DWORD64 return_address = (DWORD64)::_ReturnAddress();
+	ce->CheatEngine::Game::GameBase.ACE_IDS = (__int64)ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-IDS");
+	ce->CheatEngine::Game::GameBase.ACE_IDSEnd = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-IDS"));
+	ce->CheatEngine::Game::GameBase.ACE_IDS64 = (__int64)ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-IDS64");
+	ce->CheatEngine::Game::GameBase.ACE_IDS64End = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-IDS64"));
+
+	if ((return_address > ce->CheatEngine::Game::GameBase.ACE_CSI64) && (return_address < ce->CheatEngine::Game::GameBase.ACE_CSI64End))
 	{
-		Sleep(1);
+		OutputDebugStringA("[GN]:ACE_CSI64-> CreateThread死循环");
+		while (true)
+		{
+			Sleep(0xFFFFFFFFFFFFFFFF);
+		}
 	}
+	if ((return_address > ce->CheatEngine::Game::GameBase.ACE_IDS) && (return_address < ce->CheatEngine::Game::GameBase.ACE_IDSEnd))
+	{
+		OutputDebugStringA("[GN]:ACE_IDS-> CreateThread死循环");
+		while (true)
+		{
+			Sleep(0xFFFFFFFFFFFFFFFF);
+		}
+	}
+	if ((return_address > ce->CheatEngine::Game::GameBase.ACE_IDS64) && (return_address < ce->CheatEngine::Game::GameBase.ACE_IDS64End))
+	{
+		OutputDebugStringA("[GN]:ACE_IDS64-> CreateThread死循环");
+		while (true)
+		{
+			Sleep(0xFFFFFFFFFFFFFFFF);
+		}
+	}
+
+	OutputDebugStringA("[GN]:放过CreateThread");
 
 	return ::CreateThread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
 }

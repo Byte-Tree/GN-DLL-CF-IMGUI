@@ -83,7 +83,7 @@ public:
 	void ACE_ATS();
 	void ACE_PBC();
 	void ACE_CSI();
-	static void PassThread();
+	static void PassACEThread();
 	void PassErrorCode();
 	BOOL WorldToScreen2(m_D3DCoordinate view_, D3DXVECTOR2* RetCoordinates);
 	BOOL WorldToScreen(m_D3DCoordinate EnemyCoordinates, m_D3DCoordinate* RetCoordinates);

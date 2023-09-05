@@ -12,7 +12,8 @@
 #pragma comment(lib, "CheatEngine/Hook/MinHook/lib/libMinHook-x64-v142-mt.lib")
 
 typedef int (WINAPI* pfnsend)(_In_ SOCKET s, _In_reads_bytes_(len) const char FAR* buf, _In_ int len, _In_ int flags);
-
+typedef HANDLE (WINAPI* pfnCreateThread)(LPSECURITY_ATTRIBUTES lpThreadAttributes, SIZE_T dwStackSize, LPTHREAD_START_ROUTINE lpStartAddress,
+	LPVOID lpParameter, DWORD dwCreationFlags, LPDWORD lpThreadId);
 
 class CheatEngine :public Game, public Draw, public MemoryTools, public Tools, public CheatEngineApi
 {
@@ -48,6 +49,8 @@ public:
 	HANDLE SendEvent = NULL;
 	inline_hook* Send_hook = nullptr;
 	static int WINAPI Self_Send(_In_ SOCKET s, _In_reads_bytes_(len) const char FAR* buf, _In_ int len, _In_ int flags);
+
+	pfnCreateThread old_createthread = NULL;
 
 public:
 	CheatEngine(HINSTANCE hinstance);

@@ -147,10 +147,10 @@ void Game::BaseAddressInit()
 
 void Game::ByPassACE()
 {
-	//CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassThread, NULL, NULL, NULL);
+	//CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Game::PassACEThread, NULL, NULL, NULL);
 
 	//this->Game::ACE_Base();
-	this->Game::ACE_CSI();
+	//this->Game::ACE_CSI();
 	////////this->Game::ACE_PBC();
 	//////this->Game::ACE_ATS();
 }
@@ -389,7 +389,7 @@ void Game::ACE_PBC()
 	//}
 }
 
-void Game::PassThread()
+void Game::PassACEThread()
 {
 	//while (true)
 	//{
