@@ -638,8 +638,7 @@ void Draw::MainFuncDraw()
 										{
 											sprintf_s(NicknameText, "êÇ³Æ£º%s", ce->Game::GetEnemyName(i));
 											this->Draw::FillRectangle(DrawCoordinates[i].X, DrawCoordinates[i].Y - 20, 96, 17, 100, 100, 100, 100); //±³¾°¿ò
-											const ImVec2 text_pos = ImVec2(DrawCoordinates[i].X, DrawCoordinates[i].Y - 20);
-											ImGui::GetBackgroundDrawList()->AddText(text_pos, this->Draw::draw_color, ce->Tools::string_to_utf8(NicknameText).c_str());
+											ImGui::GetBackgroundDrawList()->AddText(ImVec2(DrawCoordinates[i].X, DrawCoordinates[i].Y - 20), this->Draw::draw_color, ce->Tools::string_to_utf8(NicknameText).c_str());
 										}
 										if (this->Draw::show_health)
 										{

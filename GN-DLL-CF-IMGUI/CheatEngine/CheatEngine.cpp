@@ -123,24 +123,31 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 		if (caller_address == this->CheatEngine::Game::GameBase.Cshell + 0x1502FD0)
 			return false;
 
-		//处理CrossFire模块上跳转到的动态地址
-		if ((callto_address > this->CheatEngine::Game::GameBase.ACE_GDP64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_GDP64End))
-			return false;
-		else if ((callto_address > this->CheatEngine::Game::GameBase.ACE_PBC_GAME64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_PBC_GAME64End))
-			return false;
-		else
-			return true;
+		////处理CrossFire模块上跳转到的动态地址
+		//if (this->CheatEngine::Game::silence_track)
+		//{
+		//	if ((callto_address > this->CheatEngine::Game::GameBase.ACE_GDP64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_GDP64End))
+		//		return false;
+		//	else if ((callto_address > this->CheatEngine::Game::GameBase.ACE_PBC_GAME64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_PBC_GAME64End))
+		//		return false;
+		//	else
+		//		return true;
+		//}
 	}
 	else if ((caller_address > this->CheatEngine::Game::GameBase.Cshell) && (caller_address < this->CheatEngine::Game::GameBase.CshellEndAddress))
 	{
-		//判断到属于Cshell模块
-		//处理Cshell模块上跳转到的动态地址
-		if ((callto_address > this->CheatEngine::Game::GameBase.ACE_GDP64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_GDP64End))
-			return false;
-		else if ((callto_address > this->CheatEngine::Game::GameBase.ACE_PBC_GAME64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_PBC_GAME64End))
-			return false;
-		else
-			return true;
+		////判断到属于Cshell模块
+
+		////处理Cshell模块上跳转到的动态地址
+		//if (this->CheatEngine::Game::silence_track)
+		//{
+		//	if ((callto_address > this->CheatEngine::Game::GameBase.ACE_GDP64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_GDP64End))
+		//		return false;
+		//	else if ((callto_address > this->CheatEngine::Game::GameBase.ACE_PBC_GAME64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_PBC_GAME64End))
+		//		return false;
+		//	else
+		//		return true;
+		//}
 	}
 	else
 		//其余模块的检测，全部处理

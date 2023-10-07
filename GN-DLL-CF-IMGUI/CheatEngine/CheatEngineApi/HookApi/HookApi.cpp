@@ -211,12 +211,12 @@ BOOL WINAPI HookApi::Self_Process32NextW(__in HANDLE hSnapshot, __out LPPROCESSE
 HANDLE WINAPI HookApi::Self_CreateThread(LPSECURITY_ATTRIBUTES lpThreadAttributes, SIZE_T dwStackSize, LPTHREAD_START_ROUTINE lpStartAddress, LPVOID lpParameter, DWORD dwCreationFlags, LPDWORD lpThreadId)
 {
 	DWORD64 return_address = (DWORD64)::_ReturnAddress();
-	ce->CheatEngine::Game::GameBase.ACE_CSI64 = (__int64)ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-CSI64");
-	ce->CheatEngine::Game::GameBase.ACE_CSI64End = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-CSI64"));
-	ce->CheatEngine::Game::GameBase.ACE_IDS = (__int64)ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-IDS");
-	ce->CheatEngine::Game::GameBase.ACE_IDSEnd = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-IDS"));
-	ce->CheatEngine::Game::GameBase.ACE_IDS64 = (__int64)ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-IDS64");
-	ce->CheatEngine::Game::GameBase.ACE_IDS64End = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-IDS64"));
+	ce->CheatEngine::Game::GameBase.ACE_CSI64 = (__int64)ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-CSI64.dll");
+	ce->CheatEngine::Game::GameBase.ACE_CSI64End = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-CSI64.dll"));
+	ce->CheatEngine::Game::GameBase.ACE_IDS = (__int64)ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-IDS.dll");
+	ce->CheatEngine::Game::GameBase.ACE_IDSEnd = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-IDS.dll"));
+	ce->CheatEngine::Game::GameBase.ACE_IDS64 = (__int64)ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-IDS64.dll");
+	ce->CheatEngine::Game::GameBase.ACE_IDS64End = (__int64)ce->CheatEngine::Tools::GetModuleEndAddress(ce->CheatEngine::CheatEngineApi::GetModuleHandleA("ACE-IDS64.dll"));
 
 	if ((return_address > ce->CheatEngine::Game::GameBase.ACE_CSI64) && (return_address < ce->CheatEngine::Game::GameBase.ACE_CSI64End))
 	{
@@ -269,7 +269,7 @@ HANDLE WINAPI HookApi::Self_CreateThread(LPSECURITY_ATTRIBUTES lpThreadAttribute
 		//}
 	}
 
-	//OutputDebugStringA("[GN]:放过CreateThread");
+	//OutputDebugStringA("[GN]:放过线程");
 
 	//return ::CreateThread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
 	return ce->CheatEngine::old_createthread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);

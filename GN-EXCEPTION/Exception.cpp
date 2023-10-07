@@ -163,10 +163,14 @@ bool GN_Exception::InstallException(const char* key, ExceptionHandlerApi excepti
 	//保存函数指针
 	this->pExceptionHandlerApi = exception_handler_api;
 
+	//判断模块地址是否存在
+	HMODULE ntdll = ::GetModuleHandleA("ntdll.dll");
+	if (ntdll == NULL)
+		ntdll = ::LoadLibraryA("ntdll.dll");
 	//获取hook的返回地址
-	sysret_address = (__int64)::GetProcAddress(::LoadLibraryA("ntdll.dll"), "KiUserExceptionDispatcher");
+	sysret_address = (__int64)::GetProcAddress(ntdll, "KiUserExceptionDispatcher");
 	if (sysret_address == NULL)
-		sysret_address = (__int64)::GetProcAddress(::LoadLibraryA("ntdll.dll"), "KiUserExceptionDispatcher");
+		sysret_address = (__int64)::GetProcAddress(ntdll, "KiUserExceptionDispatcher");
 	RtlRestoreContext_offset = this->GetOffset(sysret_address, 0x70, 0x10);
 
 	//if (!this->InitSymbol())

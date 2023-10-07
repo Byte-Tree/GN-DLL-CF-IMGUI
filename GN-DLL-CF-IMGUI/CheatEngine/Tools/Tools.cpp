@@ -660,7 +660,6 @@ bool Tools::UnloadDll(HMODULE module_handle, HMODULE module_handle_end_address)
 
 void Tools::EnumPEHeader(HMODULE module_handle)
 {
-	Sleep(3000);
 	//DOS头信息
 	PIMAGE_DOS_HEADER dos_header = (PIMAGE_DOS_HEADER)module_handle;
 	OutputDebugStringA("[GN]:---- Dos头信息: ----");
