@@ -44,23 +44,7 @@ pfnKiUserExceptionDispatcher old_KiUserExceptionDispatcher = NULL;
 
 GN_Exception::GN_Exception()
 {
-	pNtSetContextThread = (pfnNtSetContextThread)NtSetContextThreadProc;;
-	OutputDebugStringA_2Param("[GN]:%s-> ntsetcontextthreadproc_address:%p", __FUNCTION__, (DWORD64)pNtSetContextThread);
-	*(DWORD*)((DWORD64)&NtSetContextThreadProc + 0x04) = (DWORD)GetSSDTIndexByName("NtSetContextThread");
 
-	pNtSuspendThread = (pfnNtSuspendThread)NtSuspendThreadProc;
-	OutputDebugStringA_2Param("[GN]:%s-> ntsuspendthreadproc_address:%p", __FUNCTION__, (DWORD64)pNtSuspendThread);
-	*(DWORD*)((DWORD64)&NtSuspendThreadProc + 0x04) = (DWORD)GetSSDTIndexByName("NtSuspendThread");
-
-	pNtResumeThread = (pfnNtResumeThread)NtResumeThreadProc;
-	OutputDebugStringA_2Param("[GN]:%s-> ntresumethreadproc_address:%p", __FUNCTION__, (DWORD64)pNtResumeThread);
-	*(DWORD*)((DWORD64)&NtResumeThreadProc + 0x04) = (DWORD)GetSSDTIndexByName("NtResumeThread");
-
-	pNtContinue = (pfnNtContinue)NtContinueProc;
-	OutputDebugStringA_2Param("[GN]:%s-> ntcontinueproc_address:%p", __FUNCTION__, (DWORD64)pNtContinue);
-	*(DWORD*)((DWORD64)&NtContinueProc + 0x04) = (DWORD)GetSSDTIndexByName("NtContinue");
-
-	OutputDebugStringA("[GN]:exception over...");
 }
 
 GN_Exception::~GN_Exception()
@@ -147,11 +131,11 @@ int GN_Exception::SetHardWareBreakPoint(const wchar_t* main_modulename, DWORD64 
 								OutputDebugStringA("[GN]:veh->获得线程上下文失败!");
 								return 3;
 							}
-							//thread_context.Dr0 = br1;
-							//thread_context.Dr1 = br2;
-							//thread_context.Dr2 = br3;
-							//thread_context.Dr3 = br4;
-							//thread_context.Dr7 = dr7_statu;
+							thread_context.Dr0 = br1;
+							thread_context.Dr1 = br2;
+							thread_context.Dr2 = br3;
+							thread_context.Dr3 = br4;
+							thread_context.Dr7 = dr7_statu;
 							if (pNtSetContextThread(h_hook_thread, &thread_context) != NULL)
 							{
 								OutputDebugStringA("[GN]:veh->设置线程上下文失败!");
@@ -190,6 +174,16 @@ bool GN_Exception::InstallException(const char* key, ExceptionHandlerApi excepti
 		exit(-1);
 	}
 
+	//获取syscall函数地址
+	pNtSetContextThread = (pfnNtSetContextThread)NtSetContextThreadProc;
+	*(DWORD*)((DWORD64)&NtSetContextThreadProc + 0x04) = (DWORD)GetSSDTIndexByName("NtSetContextThread");
+	pNtSuspendThread = (pfnNtSuspendThread)NtSuspendThreadProc;
+	*(DWORD*)((DWORD64)&NtSuspendThreadProc + 0x04) = (DWORD)GetSSDTIndexByName("NtSuspendThread");
+	pNtResumeThread = (pfnNtResumeThread)NtResumeThreadProc;
+	*(DWORD*)((DWORD64)&NtResumeThreadProc + 0x04) = (DWORD)GetSSDTIndexByName("NtResumeThread");
+	pNtContinue = (pfnNtContinue)NtContinueProc;
+	*(DWORD*)((DWORD64)&NtContinueProc + 0x04) = (DWORD)GetSSDTIndexByName("NtContinue");
+
 	//保存函数指针
 	this->pExceptionHandlerApi = exception_handler_api;
 
@@ -202,7 +196,7 @@ bool GN_Exception::InstallException(const char* key, ExceptionHandlerApi excepti
 	if (sysret_address == NULL)
 		sysret_address = (__int64)::GetProcAddress(ntdll, "KiUserExceptionDispatcher");
 	RtlRestoreContext_offset = this->GetOffset(sysret_address, 0x70, 0x10);
-	OutputDebugStringA_1Param("[GN]:RtlRestoreContext_offset:%p", RtlRestoreContext_offset);
+	//OutputDebugStringA_1Param("[GN]:RtlRestoreContext_offset:%p", RtlRestoreContext_offset);
 
 	PROCESS_INSTRUMENTATION_CALLBACK_INFORMATION info;
 	info.Version = 0;
@@ -554,7 +548,6 @@ void MyCallbackRoutine(CONTEXT* context)
 		}
 	}
 
-	//NtContinue(context, 0);
 	pNtContinue(context, 0);
 }
 
