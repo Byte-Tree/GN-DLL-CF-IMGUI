@@ -43,5 +43,8 @@
     <CustomBuild Include="ShellCode.asm">
       <Filter>源文件</Filter>
     </CustomBuild>
+    <CustomBuild Include="syscall_asm.asm">
+      <Filter>源文件</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

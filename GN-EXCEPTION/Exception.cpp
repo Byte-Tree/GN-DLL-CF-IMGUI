@@ -16,14 +16,27 @@ typedef struct _PROCESS_INSTRUMENTATION_CALLBACK_INFORMATION
 	PVOID Callback;
 } PROCESS_INSTRUMENTATION_CALLBACK_INFORMATION, * PPROCESS_INSTRUMENTATION_CALLBACK_INFORMATION;
 
+typedef LONG(WINAPI* pfnNtSetContextThread)(IN HANDLE ThreadHandle, IN PCONTEXT Context);
+typedef LONG(WINAPI* pfnNtSuspendThread)(IN HANDLE ThreadHandle, OUT PULONG PreviousSuspendCount OPTIONAL);
+typedef LONG(WINAPI* pfnNtResumeThread)(IN HANDLE ThreadHandle, OUT PULONG PreviousSuspendCount OPTIONAL);
+typedef LONG(WINAPI* pfnNtContinue)(IN PCONTEXT Context, IN BOOLEAN TestAlert);
 typedef void (WINAPI* pfnKiUserExceptionDispatcher)(__in PEXCEPTION_RECORD ExceptionRecord, __in PCONTEXT ContextRecord);
 extern "C" LONG(__stdcall * ZwQueryInformationThread)(IN HANDLE ThreadHandle, IN THREADINFOCLASS ThreadInformationClass, OUT PVOID ThreadInformation, IN ULONG ThreadInformationLength, OUT PULONG ReturnLength OPTIONAL) = NULL;
 extern "C" NTSTATUS NTAPI NtSetInformationProcess(HANDLE ProcessHandle, ULONG ProcessInformationClass, PVOID ProcessInformation, ULONG ProcessInformationLength);
 extern "C" NTSTATUS NtContinue(PCONTEXT, unsigned long long);
 extern "C" void MyCallbackEntry();
 extern "C" void MyCallbackRoutine(CONTEXT * context);
+extern "C" void NtSetContextThreadProc();
+extern "C" void NtSuspendThreadProc();
+extern "C" void NtResumeThreadProc();
+extern "C" void NtContinueProc();
 void Self_KiUserExceptionDispatcher(__in PEXCEPTION_RECORD ExceptionRecord, __in PCONTEXT ContextRecord);
+ULONG GetSSDTIndexByName(const char* function_name);
 
+pfnNtSetContextThread pNtSetContextThread = NULL;
+pfnNtSuspendThread pNtSuspendThread = NULL;
+pfnNtResumeThread pNtResumeThread = NULL;
+pfnNtContinue pNtContinue = NULL;
 bool call_status = false;
 __int64 sysret_address = 0, RtlRestoreContext_offset = 0;
 pfnKiUserExceptionDispatcher old_KiUserExceptionDispatcher = NULL;
@@ -31,7 +44,23 @@ pfnKiUserExceptionDispatcher old_KiUserExceptionDispatcher = NULL;
 
 GN_Exception::GN_Exception()
 {
+	pNtSetContextThread = (pfnNtSetContextThread)NtSetContextThreadProc;;
+	OutputDebugStringA_2Param("[GN]:%s-> ntsetcontextthreadproc_address:%p", __FUNCTION__, (DWORD64)pNtSetContextThread);
+	*(DWORD*)((DWORD64)&NtSetContextThreadProc + 0x04) = (DWORD)GetSSDTIndexByName("NtSetContextThread");
 
+	pNtSuspendThread = (pfnNtSuspendThread)NtSuspendThreadProc;
+	OutputDebugStringA_2Param("[GN]:%s-> ntsuspendthreadproc_address:%p", __FUNCTION__, (DWORD64)pNtSuspendThread);
+	*(DWORD*)((DWORD64)&NtSuspendThreadProc + 0x04) = (DWORD)GetSSDTIndexByName("NtSuspendThread");
+
+	pNtResumeThread = (pfnNtResumeThread)NtResumeThreadProc;
+	OutputDebugStringA_2Param("[GN]:%s-> ntresumethreadproc_address:%p", __FUNCTION__, (DWORD64)pNtResumeThread);
+	*(DWORD*)((DWORD64)&NtResumeThreadProc + 0x04) = (DWORD)GetSSDTIndexByName("NtResumeThread");
+
+	pNtContinue = (pfnNtContinue)NtContinueProc;
+	OutputDebugStringA_2Param("[GN]:%s-> ntcontinueproc_address:%p", __FUNCTION__, (DWORD64)pNtContinue);
+	*(DWORD*)((DWORD64)&NtContinueProc + 0x04) = (DWORD)GetSSDTIndexByName("NtContinue");
+
+	OutputDebugStringA("[GN]:exception over...");
 }
 
 GN_Exception::~GN_Exception()
@@ -98,8 +127,7 @@ int GN_Exception::SetHardWareBreakPoint(const wchar_t* main_modulename, DWORD64 
 					//如果线程父进程ID为当前进程ID
 					if (thread_entry32.th32OwnerProcessID == GetCurrentProcessId())
 					{
-						//h_hook_thread = OpenThread(THREAD_SET_CONTEXT | THREAD_GET_CONTEXT | THREAD_QUERY_INFORMATION, FALSE, thread_entry32.th32ThreadID);
-						h_hook_thread = OpenThread(THREAD_SET_CONTEXT | THREAD_GET_CONTEXT | THREAD_QUERY_INFORMATION | THREAD_SUSPEND_RESUME, FALSE, thread_entry32.th32ThreadID);
+						h_hook_thread = OpenThread(THREAD_ALL_ACCESS, FALSE, thread_entry32.th32ThreadID);
 						// 获取线程入口地址
 						PVOID startaddr;//用来接收线程入口地址
 						ZwQueryInformationThread(h_hook_thread, (THREADINFOCLASS)ThreadQuerySetWin32StartAddress, &startaddr, sizeof(startaddr), NULL);
@@ -107,7 +135,9 @@ int GN_Exception::SetHardWareBreakPoint(const wchar_t* main_modulename, DWORD64 
 						{
 							//OutputDebugStringA_1Param("[GN]:veh->线程起始地址：%p", startaddr);
 							//暂停线程
-							SuspendThread(h_hook_thread);
+							ULONG previous_count = NULL;
+							pNtSuspendThread(h_hook_thread, &previous_count);
+
 							//设置硬件断点
 							CONTEXT thread_context = { CONTEXT_DEBUG_REGISTERS };
 							thread_context.ContextFlags = CONTEXT_ALL;
@@ -117,18 +147,18 @@ int GN_Exception::SetHardWareBreakPoint(const wchar_t* main_modulename, DWORD64 
 								OutputDebugStringA("[GN]:veh->获得线程上下文失败!");
 								return 3;
 							}
-							thread_context.Dr0 = br1;
-							thread_context.Dr1 = br2;
-							thread_context.Dr2 = br3;
-							thread_context.Dr3 = br4;
-							thread_context.Dr7 = dr7_statu;
-							if (!SetThreadContext(h_hook_thread, &thread_context))
+							//thread_context.Dr0 = br1;
+							//thread_context.Dr1 = br2;
+							//thread_context.Dr2 = br3;
+							//thread_context.Dr3 = br4;
+							//thread_context.Dr7 = dr7_statu;
+							if (pNtSetContextThread(h_hook_thread, &thread_context) != NULL)
 							{
 								OutputDebugStringA("[GN]:veh->设置线程上下文失败!");
 								return 4;
 							}
 							//恢复线程
-							ResumeThread(h_hook_thread);
+							pNtResumeThread(h_hook_thread, &previous_count);
 						}
 						CloseHandle(h_hook_thread);
 					}
@@ -159,7 +189,7 @@ bool GN_Exception::InstallException(const char* key, ExceptionHandlerApi excepti
 		//OutputDebugStringA("[GN]:验证_卡登录() error");
 		exit(-1);
 	}
-	
+
 	//保存函数指针
 	this->pExceptionHandlerApi = exception_handler_api;
 
@@ -172,14 +202,7 @@ bool GN_Exception::InstallException(const char* key, ExceptionHandlerApi excepti
 	if (sysret_address == NULL)
 		sysret_address = (__int64)::GetProcAddress(ntdll, "KiUserExceptionDispatcher");
 	RtlRestoreContext_offset = this->GetOffset(sysret_address, 0x70, 0x10);
-
-	//if (!this->InitSymbol())
-	//{
-	//	OutputDebugStringA("[GN]:InitSymbol() error!");
-	//	return false;
-	//}
-	//
-	//this->tls_index = TlsAlloc();
+	OutputDebugStringA_1Param("[GN]:RtlRestoreContext_offset:%p", RtlRestoreContext_offset);
 
 	PROCESS_INSTRUMENTATION_CALLBACK_INFORMATION info;
 	info.Version = 0;
@@ -309,70 +332,218 @@ PThreadData GN_Exception::GetThreadDataBuffer()
 	return (PThreadData)thread_data;
 }
 
+ULONG GetSSDTIndexByName(const char* function_name)
+{
+	DWORD dwBytesRead = NULL;
+
+	HANDLE hFile = CreateFileA("C:\\Windows\\System32\\ntdll.dll", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (hFile == INVALID_HANDLE_VALUE)
+	{
+		OutputDebugStringA_1Param("[GN]:%s-> CreateFileA:ntdll.dll is error!", __FUNCTION__);
+		return 0;
+	}
+	DWORD dwLength = GetFileSize(hFile, NULL);
+	if (dwLength == INVALID_FILE_SIZE || dwLength == 0)
+	{
+		OutputDebugStringA_1Param("[GN]:%s-> dwLength is null!", __FUNCTION__);
+		return 0;
+	}
+	PVOID lpBuffer = HeapAlloc(GetProcessHeap(), 0, dwLength);
+	if (!lpBuffer)
+	{
+		OutputDebugStringA_1Param("[GN]:%s-> lpBuffer is null!", __FUNCTION__);
+		return 0;
+	}
+	if (ReadFile(hFile, lpBuffer, dwLength, &dwBytesRead, NULL) == FALSE)
+	{
+		OutputDebugStringA_1Param("[GN]:%s-> ReadFile is error!", __FUNCTION__);
+		return 0;
+	}
+
+
+	//取出导出表
+	PIMAGE_DOS_HEADER  pDosHeader;
+	PIMAGE_NT_HEADERS  pNtHeaders;
+	PIMAGE_SECTION_HEADER pSectionHeader;
+	ULONGLONG     FileOffset;//这里是64位数的，所以这里不是32个字节
+	PIMAGE_EXPORT_DIRECTORY pExportDirectory;
+	//DLL内存数据转成DOS头结构
+	pDosHeader = (PIMAGE_DOS_HEADER)lpBuffer;
+	//取出PE头结构
+	pNtHeaders = (PIMAGE_NT_HEADERS)((ULONGLONG)lpBuffer + pDosHeader->e_lfanew);
+	//判断PE头导出表表是否为空
+
+	if (pNtHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress == 0)
+		return 0;
+
+	//取出导出表偏移
+	FileOffset = pNtHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress;
+
+	//取出节头结构
+	pSectionHeader = (PIMAGE_SECTION_HEADER)((ULONGLONG)pNtHeaders + sizeof(IMAGE_NT_HEADERS));
+	PIMAGE_SECTION_HEADER pOldSectionHeader = pSectionHeader;
+	//遍历节结构进行地址运算
+	for (UINT16 Index = 0; Index < pNtHeaders->FileHeader.NumberOfSections; Index++, pSectionHeader++)
+	{
+		if (pSectionHeader->VirtualAddress <= FileOffset && FileOffset <= pSectionHeader->VirtualAddress + pSectionHeader->SizeOfRawData)
+			FileOffset = FileOffset - pSectionHeader->VirtualAddress + pSectionHeader->PointerToRawData;
+	}
+
+	//导出表地址
+	pExportDirectory = (PIMAGE_EXPORT_DIRECTORY)((ULONGLONG)lpBuffer + FileOffset);
+	//取出导出表函数地址
+	PLONG AddressOfFunctions;
+	FileOffset = pExportDirectory->AddressOfFunctions;
+	//遍历节结构进行地址运算
+	pSectionHeader = pOldSectionHeader;
+	for (UINT16 Index = 0; Index < pNtHeaders->FileHeader.NumberOfSections; Index++, pSectionHeader++)
+	{
+		if (pSectionHeader->VirtualAddress <= FileOffset && FileOffset <= pSectionHeader->VirtualAddress + pSectionHeader->SizeOfRawData)
+			FileOffset = FileOffset - pSectionHeader->VirtualAddress + pSectionHeader->PointerToRawData;
+	}
+	AddressOfFunctions = (PLONG)((ULONGLONG)lpBuffer + FileOffset);//这里注意一下foa和rva
+
+	//取出导出表函数名字
+	PUSHORT AddressOfNameOrdinals;
+	FileOffset = pExportDirectory->AddressOfNameOrdinals;
+
+	//遍历节结构进行地址运算
+	pSectionHeader = pOldSectionHeader;
+	for (UINT16 Index = 0; Index < pNtHeaders->FileHeader.NumberOfSections; Index++, pSectionHeader++)
+	{
+		if (pSectionHeader->VirtualAddress <= FileOffset && FileOffset <= pSectionHeader->VirtualAddress + pSectionHeader->SizeOfRawData)
+			FileOffset = FileOffset - pSectionHeader->VirtualAddress + pSectionHeader->PointerToRawData;
+	}
+	AddressOfNameOrdinals = (PUSHORT)((ULONGLONG)lpBuffer + FileOffset);//注意一下foa和rva
+
+	//取出导出表函数序号
+	PULONG AddressOfNames;
+	FileOffset = pExportDirectory->AddressOfNames;
+
+	//遍历节结构进行地址运算
+	pSectionHeader = pOldSectionHeader;
+	for (UINT16 Index = 0; Index < pNtHeaders->FileHeader.NumberOfSections; Index++, pSectionHeader++)
+	{
+		if (pSectionHeader->VirtualAddress <= FileOffset && FileOffset <= pSectionHeader->VirtualAddress + pSectionHeader->SizeOfRawData)
+			FileOffset = FileOffset - pSectionHeader->VirtualAddress + pSectionHeader->PointerToRawData;
+	}
+	AddressOfNames = (PULONG)((ULONGLONG)lpBuffer + FileOffset);//注意一下foa和rva
+	//DbgPrint("\n AddressOfFunctions %llX AddressOfNameOrdinals %llX AddressOfNames %llX  \n", (ULONGLONG)AddressOfFunctions- (ULONGLONG)pBuffer, (ULONGLONG)AddressOfNameOrdinals- (ULONGLONG)pBuffer, (ULONGLONG)AddressOfNames- (ULONGLONG)pBuffer);
+	//DbgPrint("\n AddressOfFunctions %llX AddressOfNameOrdinals %llX AddressOfNames %llX  \n", pExportDirectory->AddressOfFunctions, pExportDirectory->AddressOfNameOrdinals, pExportDirectory->AddressOfNames);
+
+	//分析导出表
+	ULONG uNameOffset;
+	ULONG uOffset;
+	LPSTR FunName;
+	PVOID pFuncAddr;
+	ULONG uServerIndex;
+	ULONG uAddressOfNames;
+	for (ULONG uIndex = 0; uIndex < pExportDirectory->NumberOfNames; uIndex++, AddressOfNames++, AddressOfNameOrdinals++)
+	{
+		uAddressOfNames = *AddressOfNames;
+		pSectionHeader = pOldSectionHeader;
+		for (UINT32 Index = 0; Index < pNtHeaders->FileHeader.NumberOfSections; Index++, pSectionHeader++)
+		{
+			if (pSectionHeader->VirtualAddress <= uAddressOfNames && uAddressOfNames <= pSectionHeader->VirtualAddress + pSectionHeader->SizeOfRawData)
+				uOffset = uAddressOfNames - pSectionHeader->VirtualAddress + pSectionHeader->PointerToRawData;
+		}
+		FunName = (LPSTR)((ULONGLONG)lpBuffer + uOffset);
+		if (FunName[0] == 'Z' && FunName[1] == 'w')
+		{
+			pSectionHeader = pOldSectionHeader;
+			uOffset = (ULONG)AddressOfFunctions[*AddressOfNameOrdinals];
+			for (UINT32 Index = 0; Index < pNtHeaders->FileHeader.NumberOfSections; Index++, pSectionHeader++)
+			{
+				if (pSectionHeader->VirtualAddress <= uOffset && uOffset <= pSectionHeader->VirtualAddress + pSectionHeader->SizeOfRawData)
+					uNameOffset = uOffset - pSectionHeader->VirtualAddress + pSectionHeader->PointerToRawData;
+			}
+			pFuncAddr = (PVOID)((ULONGLONG)lpBuffer + uNameOffset);
+			uServerIndex = *(PULONG)((ULONGLONG)pFuncAddr + 4);
+			FunName[0] = 'N';
+			FunName[1] = 't';
+			//获得指定的编号
+			if (!_stricmp(FunName, (const char*)function_name))
+			{
+				if (lpBuffer)
+					HeapFree(GetProcessHeap(), 0, lpBuffer);
+				CloseHandle(hFile);
+				return uServerIndex;
+			}
+			//DbgPrint("Name: %s index:%d\n ", FunName, uServerIndex);//index：%d\n, uServerIndex
+		}
+	}
+
+
+	if (lpBuffer)
+		HeapFree(GetProcessHeap(), 0, lpBuffer);
+	CloseHandle(hFile);
+}
+
 void MyCallbackRoutine(CONTEXT* context)
 {
 	context->Rip = __readgsqword(0x02D8);//syscall 的返回地址
 	context->Rsp = __readgsqword(0x02E0);//context = rsp, ExceptionRecord = rsp + 0x4F0
 	context->Rcx = context->R10;
 
-	//PThreadData current_thread_data = gn_exception->GetThreadDataBuffer();
-	//if (current_thread_data->IsThreadHandlingSyscall)
-	//	NtContinue(context, 0);
-	//current_thread_data->IsThreadHandlingSyscall = true;
-	//
-	//////解析调用的函数名
-	////CHAR buffer[sizeof(SYMBOL_INFO) + MAX_SYM_NAME] = { 0 };
-	////PSYMBOL_INFO pSymbol = (PSYMBOL_INFO)buffer;
-	////pSymbol->SizeOfStruct = sizeof(SYMBOL_INFO);
-	////pSymbol->MaxNameLen = MAX_SYM_NAME;
-	////DWORD64 Displacement;
-	////BOOLEAN result = SymFromAddr(GetCurrentProcess(), context->Rip, &Displacement, pSymbol);
-	////if (result)
+	////PThreadData current_thread_data = gn_exception->GetThreadDataBuffer();
+	////if (current_thread_data->IsThreadHandlingSyscall)
+	////	NtContinue(context, 0);
+	////current_thread_data->IsThreadHandlingSyscall = true;
+	////
+	////////解析调用的函数名
+	//////CHAR buffer[sizeof(SYMBOL_INFO) + MAX_SYM_NAME] = { 0 };
+	//////PSYMBOL_INFO pSymbol = (PSYMBOL_INFO)buffer;
+	//////pSymbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+	//////pSymbol->MaxNameLen = MAX_SYM_NAME;
+	//////DWORD64 Displacement;
+	//////BOOLEAN result = SymFromAddr(GetCurrentProcess(), context->Rip, &Displacement, pSymbol);
+	//////if (result)
+	//////{
+	//////	//if (_stricmp(pSymbol->Name, "ZwRaiseException") == 0)
+	//////	if (_stricmp(pSymbol->Name, "KiUserExceptionDispatcher") == 0)
+	//////	{
+	//////		OutputDebugStringA_2Param("[GN]:Function: %s Address: %p", pSymbol->Name, context->Rip);
+	//////		//LONG status = gn_exception->pExceptionHandlerApi((PEXCEPTION_RECORD)(context->Rsp + 0x4F0), (PCONTEXT)context->Rsp);
+	//////		//if (status == EXCEPTION_CONTINUE_EXECUTION)
+	//////		//{
+	//////		//	//OutputDebugStringA("[GN]:Rax为0");
+	//////		//	//context->Rax = 0;
+	//////		//	RtlRestoreContext((PCONTEXT)context->Rsp, 0);
+	//////		//}
+	//////	}
+	//////}
+	////
+	////if (context->Rip == sysret_address)
 	////{
-	////	//if (_stricmp(pSymbol->Name, "ZwRaiseException") == 0)
-	////	if (_stricmp(pSymbol->Name, "KiUserExceptionDispatcher") == 0)
+	////	LONG status = gn_exception->pExceptionHandlerApi((PEXCEPTION_RECORD)(context->Rsp + 0x4F0), (PCONTEXT)context->Rsp);
+	////	if (status == EXCEPTION_CONTINUE_EXECUTION)
 	////	{
-	////		OutputDebugStringA_2Param("[GN]:Function: %s Address: %p", pSymbol->Name, context->Rip);
-	////		//LONG status = gn_exception->pExceptionHandlerApi((PEXCEPTION_RECORD)(context->Rsp + 0x4F0), (PCONTEXT)context->Rsp);
-	////		//if (status == EXCEPTION_CONTINUE_EXECUTION)
-	////		//{
-	////		//	//OutputDebugStringA("[GN]:Rax为0");
-	////		//	//context->Rax = 0;
-	////		//	RtlRestoreContext((PCONTEXT)context->Rsp, 0);
-	////		//}
+	////		context->Rip = RtlRestoreContext_offset;
+	////		//OutputDebugStringA("[GN]:修复context");
 	////	}
 	////}
-	//
-	//if (context->Rip == sysret_address)
-	//{
-	//	LONG status = gn_exception->pExceptionHandlerApi((PEXCEPTION_RECORD)(context->Rsp + 0x4F0), (PCONTEXT)context->Rsp);
-	//	if (status == EXCEPTION_CONTINUE_EXECUTION)
-	//	{
-	//		context->Rip = RtlRestoreContext_offset;
-	//		//OutputDebugStringA("[GN]:修复context");
-	//	}
-	//}
-	//current_thread_data->IsThreadHandlingSyscall = false;
-	//NtContinue(context, 0);
+	////current_thread_data->IsThreadHandlingSyscall = false;
+	////NtContinue(context, 0);
+	////
+	////if (!call_status)
+	////{
+	////	call_status = true;
+	////
+	////	if (context->Rip == sysret_address)
+	////	{
+	////		LONG status = gn_exception->pExceptionHandlerApi((PEXCEPTION_RECORD)(context->Rsp + 0x4F0), (PCONTEXT)context->Rsp);
+	////		if (status == EXCEPTION_CONTINUE_EXECUTION)
+	////		{
+	////			context->Rip = RtlRestoreContext_offset;
+	////			//OutputDebugStringA("[GN]:修复context");
+	////		}
+	////	}
+	////
+	////	call_status = false;
+	////}
+	////NtContinue(context, 0);
 
-	//if (!call_status)
-	//{
-	//	call_status = true;
-	//
-	//	if (context->Rip == sysret_address)
-	//	{
-	//		LONG status = gn_exception->pExceptionHandlerApi((PEXCEPTION_RECORD)(context->Rsp + 0x4F0), (PCONTEXT)context->Rsp);
-	//		if (status == EXCEPTION_CONTINUE_EXECUTION)
-	//		{
-	//			context->Rip = RtlRestoreContext_offset;
-	//			//OutputDebugStringA("[GN]:修复context");
-	//		}
-	//	}
-	//
-	//	call_status = false;
-	//}
-	//NtContinue(context, 0);
-
+	//稳定方案
 	if (context->Rip == sysret_address)
 	{
 		LONG status = gn_exception->pExceptionHandlerApi((PEXCEPTION_RECORD)(context->Rsp + 0x4F0), (PCONTEXT)context->Rsp);
@@ -382,7 +553,9 @@ void MyCallbackRoutine(CONTEXT* context)
 			//OutputDebugStringA("[GN]:修复context");
 		}
 	}
-	NtContinue(context, 0);
+
+	//NtContinue(context, 0);
+	pNtContinue(context, 0);
 }
 
 //MiniHook用此函数
