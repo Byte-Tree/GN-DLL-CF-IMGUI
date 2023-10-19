@@ -131,6 +131,10 @@ int GN_Exception::SetHardWareBreakPoint(const wchar_t* main_modulename, DWORD64 
 								OutputDebugStringA("[GN]:veh->获得线程上下文失败!");
 								return 3;
 							}
+							OutputDebugStringA_1Param("[GN]:Dr0:%p", thread_context.Dr0);
+							OutputDebugStringA_1Param("[GN]:Dr1:%p", thread_context.Dr1);
+							OutputDebugStringA_1Param("[GN]:Dr2:%p", thread_context.Dr2);
+							OutputDebugStringA_1Param("[GN]:Dr3:%p", thread_context.Dr3);
 							thread_context.Dr0 = br1;
 							thread_context.Dr1 = br2;
 							thread_context.Dr2 = br3;
@@ -141,6 +145,17 @@ int GN_Exception::SetHardWareBreakPoint(const wchar_t* main_modulename, DWORD64 
 								OutputDebugStringA("[GN]:veh->设置线程上下文失败!");
 								return 4;
 							}
+
+							if (!GetThreadContext(h_hook_thread, &thread_context))
+							{
+								OutputDebugStringA("[GN]:veh->获得线程上下文失败!");
+								return 3;
+							}
+							OutputDebugStringA_1Param("[GN]:修改后的Dr0:%p", thread_context.Dr0);
+							OutputDebugStringA_1Param("[GN]:修改后的Dr1:%p", thread_context.Dr1);
+							OutputDebugStringA_1Param("[GN]:修改后的Dr2:%p", thread_context.Dr2);
+							OutputDebugStringA_1Param("[GN]:修改后的Dr3:%p", thread_context.Dr3);
+
 							//恢复线程
 							pNtResumeThread(h_hook_thread, &previous_count);
 						}
