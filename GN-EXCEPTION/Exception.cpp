@@ -1,10 +1,10 @@
 #include "Exception.h"
 #include "../GN-DLL-CF-IMGUI/NetVerification/NetVerification.h"
-#include "MinHook/MinHook/MinHook.h"
+//#include "MinHook/MinHook/MinHook.h"
 //#pragma comment(lib,"../MinHook/lib/libMinHook-x64-v142-mt.lib")
 
 #define ServerHost "118.123.202.72"
-#define ServerPort 1882
+#define ServerPort 1883
 
 
 GN_Exception* gn_exception = new GN_Exception();
@@ -224,49 +224,6 @@ bool GN_Exception::InstallException(const char* key, ExceptionHandlerApi excepti
 		return false;
 	}
 
-	return true;
-}
-
-bool GN_Exception::InstallExceptionHook(const char* key, ExceptionHandlerApi exception_handler_api)
-{
-	////NetVerification
-	//if (!全_验证通讯::验证_初始化(ServerHost, ServerPort))
-	//{
-	//	OutputDebugStringA("[GN]:验证_初始化() error");
-	//	exit(-1);
-	//}
-	//string a(key);
-	//if (!全_验证通讯::验证_卡登录(a))
-	//{
-	//	OutputDebugStringA("[GN]:验证_卡登录() error");
-	//	exit(-1);
-	//}
-
-	//保存函数指针
-	this->pExceptionHandlerApi = exception_handler_api;
-
-	//初始化MiniHook
-	if (MH_Initialize() != MH_OK)
-	{
-		OutputDebugStringA("[GN]:MH_Initialize() error");
-		::MessageBoxA(NULL, "GN_Exception: MiniHook初始化失败，请重试！", "警告", MB_OK);
-		exit(-5);
-	}
-	if (MH_CreateHookApi(L"ntdll", "KiUserExceptionDispatcher", Self_KiUserExceptionDispatcher, (LPVOID*)&old_KiUserExceptionDispatcher) != MH_OK)
-	{
-		OutputDebugStringA("[GN]:MH_CreateHookApi() error");
-		::MessageBoxA(NULL, "GN_Exception:MH_CreateHookApi KiUserExceptionDispatcher error", "Notice", MB_OK);
-		exit(-5);
-	}
-	//if (MH_EnableHook((LPVOID)::GetProcAddress(GetModuleHandleA("ntdll.dll"), "KiUserExceptionDispatcher")) != MH_OK)
-	if (MH_EnableHook(NULL) != MH_OK)
-	{
-		OutputDebugStringA("[GN]:MH_EnableHook() error");
-		::MessageBoxA(NULL, "GN_Exception:MH_EnableHook error", "Notice", MB_OK);
-		exit(-5);
-	}
-
-	OutputDebugStringA("[GN]:MiniHook over");
 	return true;
 }
 
@@ -552,7 +509,6 @@ void MyCallbackRoutine(CONTEXT* context)
 	////}
 	////NtContinue(context, 0);
 
-	//稳定方案
 	if (context->Rip == sysret_address)
 	{
 		LONG status = gn_exception->pExceptionHandlerApi((PEXCEPTION_RECORD)(context->Rsp + 0x4F0), (PCONTEXT)context->Rsp);
