@@ -337,21 +337,21 @@ void Draw::MenuDraw()
 		ImGui::Begin(ce->Tools::string_to_utf8("蓝鲸 | （Home隐藏显示）").c_str());
 		if (ImGui::CollapsingHeader(ce->Tools::string_to_utf8("显示专区").c_str()))
 		{
-			//ImGui::Checkbox(u8"显示方框", &this->show_rectbox);													ImGui::SameLine();
-			//ImGui::Checkbox(u8"显示骨骼", &this->show_bone);													ImGui::SameLine();
-			ImGui::Checkbox(ce->Tools::string_to_utf8("显示昵称").c_str(), &this->show_name);					ImGui::SameLine();
-			ImGui::Checkbox(ce->Tools::string_to_utf8("显示雷包").c_str(), &this->show_c4);						ImGui::SameLine();
-			ImGui::Checkbox(ce->Tools::string_to_utf8("显示血量").c_str(), &this->show_health);					ImGui::Separator();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("显示方框").c_str(), &this->show_rectbox);					ImGui::SameLine();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("显示骨骼").c_str(), &this->show_bone);					ImGui::SameLine();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("显示昵称").c_str(), &this->show_name);					ImGui::Separator();
 
-			ImGui::Checkbox(ce->Tools::string_to_utf8("显示准心").c_str(), &this->show_crosshair);				ImGui::SameLine();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("显示雷包").c_str(), &this->show_c4);						ImGui::SameLine();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("显示血量").c_str(), &this->show_health);					ImGui::SameLine();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("显示准心").c_str(), &this->show_crosshair);				ImGui::Separator();
+
 			ImGui::Checkbox(ce->Tools::string_to_utf8("预瞄射线").c_str(), &this->show_previewray);				ImGui::SameLine();
-			ImGui::Checkbox(ce->Tools::string_to_utf8("追踪范围").c_str(), &this->show_trackrange);				ImGui::Separator();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("追踪范围").c_str(), &this->show_trackrange);				ImGui::SameLine();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("显示队友").c_str(), &this->show_teamate);					ImGui::Separator();
 
 			//ImGui::Checkbox(ce->Tools::string_to_utf8("人物渲染").c_str(), &this->show_characterindex);			ImGui::Separator();
-
-			////ImGui::Checkbox(u8"显示天线", &this->show_antenna);													ImGui::SameLine();
-			//ImGui::Checkbox(u8"显示扣扣", &this->show_userQQnumber);											ImGui::SameLine();
-			//ImGui::Checkbox(u8"显示队友", &this->show_teamate);													ImGui::SameLine();
+			//ImGui::Checkbox(u8"显示天线", &this->show_antenna);													ImGui::SameLine();
+			//ImGui::Checkbox(u8"显示扣扣", &this->show_userQQnumber);											ImGui::Separator();
 		}
 		if (ImGui::CollapsingHeader(ce->Tools::string_to_utf8("打击专区").c_str()))
 		{
@@ -375,7 +375,7 @@ void Draw::MenuDraw()
 				ce->Game::memory_aimbot = false; ce->Game::aimbot = false; ce->Game::track = false; ce->Game::redname_track = false;/*this->Game::range_track = false;*/
 			}
 			ImGui::SameLine();
-			ImGui::Checkbox(ce->Tools::string_to_utf8("判断障碍").c_str(), &ce->Game::judgementbarrier);							ImGui::Separator();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("判断障碍").c_str(), &ce->Game::judgementbarrier);								ImGui::Separator();
 			//char text_buffer[30] = { NULL };
 			//sprintf_s(text_buffer, u8"子弹无后：%s", ce->Game::no_backseat ? u8"开启" : u8"关闭");
 			//if (ImGui::Button(text_buffer))
@@ -387,10 +387,10 @@ void Draw::MenuDraw()
 			//		ce->CheatEngine::driver->WriteBytesByMDL((PVOID)gn_exception->software_breakpoint1, new BYTE{ 0xF3 }, 1);
 			//}																									ImGui::Separator();
 			ImGui::SetNextItemWidth(60);
-			ImGui::Combo(ce->Tools::string_to_utf8("瞄准热键").c_str(), &ce->Game::aim_hotkey, u8"左键\0右键\0Alt键\0");			ImGui::SameLine();
+			ImGui::Combo(ce->Tools::string_to_utf8("瞄准热键").c_str(), &ce->Game::aim_hotkey, u8"左键\0右键\0Alt键\0");				ImGui::SameLine();
 			ImGui::SetNextItemWidth(60);
 			ImGui::Combo(ce->Tools::string_to_utf8("打击部位").c_str(), &ce->Game::aim_position, u8"身体\0头部\0");					ImGui::Separator();
-			ImGui::DragInt(ce->Tools::string_to_utf8("自瞄速度(越小越好)").c_str(), &ce->Game::aim_speed, 0.3f, 1, 80, "%d");		ImGui::Separator();
+			ImGui::DragInt(ce->Tools::string_to_utf8("自瞄速度(越小越好)").c_str(), &ce->Game::aim_speed, 0.3f, 1, 80, "%d");			ImGui::Separator();
 			ImGui::DragInt(ce->Tools::string_to_utf8("打击范围(越大越好)").c_str(), &ce->Game::track_range, 0.6f, 30, 1200, "%d");	ImGui::Separator();
 		}
 		////if (ImGui::CollapsingHeader(u8"范围专区"))
@@ -448,7 +448,7 @@ void Draw::MenuDraw()
 			////	this->CheatEngine::CheckSoftWareBreakPoint(this->CheatEngine::GameBase.Cross + SquatAccelerationHookOffset);
 			////ImGui::Separator();
 
-			ImGui::Checkbox(ce->Tools::string_to_utf8("空格连跳").c_str(), &ce->CheatEngine::Game::spacecontinuousjump);		ImGui::Separator();
+			ImGui::Checkbox(ce->Tools::string_to_utf8("空格连跳").c_str(), &ce->CheatEngine::Game::spacecontinuousjump);				ImGui::Separator();
 		}
 		if (ImGui::CollapsingHeader(ce->Tools::string_to_utf8("刀距专区").c_str()))
 		{

@@ -5,7 +5,7 @@
 
 CheatEngine::CheatEngine(HINSTANCE hinstance)
 {
-	OutputDebugStringA_2Param("[GN]:%s-> 模块地址：%p", __FUNCTION__, hinstance);
+	OutputDebugStringA_1Param("[GN]:CheatEngine::CheatEngine-> 模块地址：%p", hinstance);
 	ce = this;
 
 	////打开控制台
@@ -14,8 +14,8 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 	
 	//Save Modulehandle
 	this->CheatEngine::self_module_handle = hinstance;
-
-	this->CheatEngine::InitHook();
+	
+	//this->CheatEngine::InitHook();
 	
 	//Find game windowhandle and set game windowhandle
 	while (this->CheatEngine::Draw::GetGameWindowHandle() == NULL)
@@ -34,10 +34,8 @@ CheatEngine::CheatEngine(HINSTANCE hinstance)
 	//Get game baseaddress
 	this->CheatEngine::Game::BaseAddressInit();
 	
-	////Set Exception Handler
-	//if (!gn_exception->InstallExceptionHook("TKD604E537253H51289E138A1BE4588D", CheatEngine::NewExceptionHandler))
-	//	exit(-1);
-	if (!gn_exception->InstallException("TK10B3ED5998H72EB0A8AD58107E7C10", CheatEngine::NewExceptionHandler))
+	//Set Exception Handler
+	if (!gn_exception->InstallException("YKE7404D3HD323701D5B3AD2A3570167", CheatEngine::NewExceptionHandler))
 		exit(-1);
 	int ret = gn_exception->GN_Exception::SetHardWareBreakPoint(L"crossfire.exe", 0x455,
 		/*0*/this->Game::GameBase.ACE_BASE64 + GlobalBaseFuncOffset,
@@ -115,29 +113,31 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 	
 	if ((caller_address > this->CheatEngine::Game::GameBase.Cross) && (caller_address < this->CheatEngine::Game::GameBase.CrossEndAddress))
 	{
-		//判断到属于CrossFire模块
-		//发包检测（调用RtlLookupFunctionEntry进行栈回溯检测）特征码：?? ?? ?? ?? ?? 48 8B CD E8 ?? ?? ?? ?? 0F B6 F8 
-		if (caller_address == this->CheatEngine::Game::GameBase.Cross + 0x1A718B)
-			return true;
-		//放过人物击杀钩子 特征码：?? ?? ?? ?? ?? 48 83 EC ?? 48 63 05 ?? ?? ?? ?? 41 8B F8 
-		if (caller_address == this->CheatEngine::Game::GameBase.Cshell + 0x1502FD0)
-			return false;
+		////判断到属于CrossFire模块
+		////发包检测（调用RtlLookupFunctionEntry进行栈回溯检测）特征码：?? ?? ?? ?? ?? 48 8B CD E8 ?? ?? ?? ?? 0F B6 F8 
+		//if (caller_address == this->CheatEngine::Game::GameBase.Cross + 0x1A718B)
+		//	return true;
+		////放过人物击杀钩子 特征码：?? ?? ?? ?? ?? 48 83 EC ?? 48 63 05 ?? ?? ?? ?? 41 8B F8 
+		//if (caller_address == this->CheatEngine::Game::GameBase.Cshell + 0x1502FD0)
+		//	return false;
+		//
+		//////处理CrossFire模块上跳转到的动态地址
+		////if (this->CheatEngine::Game::silence_track)
+		////{
+		////	if ((callto_address > this->CheatEngine::Game::GameBase.ACE_GDP64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_GDP64End))
+		////		return false;
+		////	else if ((callto_address > this->CheatEngine::Game::GameBase.ACE_PBC_GAME64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_PBC_GAME64End))
+		////		return false;
+		////	else
+		////		return true;
+		////}
 
-		////处理CrossFire模块上跳转到的动态地址
-		//if (this->CheatEngine::Game::silence_track)
-		//{
-		//	if ((callto_address > this->CheatEngine::Game::GameBase.ACE_GDP64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_GDP64End))
-		//		return false;
-		//	else if ((callto_address > this->CheatEngine::Game::GameBase.ACE_PBC_GAME64) && (callto_address < this->CheatEngine::Game::GameBase.ACE_PBC_GAME64End))
-		//		return false;
-		//	else
-		//		return true;
-		//}
+		return false;
 	}
 	else if ((caller_address > this->CheatEngine::Game::GameBase.Cshell) && (caller_address < this->CheatEngine::Game::GameBase.CshellEndAddress))
 	{
 		////判断到属于Cshell模块
-
+		//
 		////处理Cshell模块上跳转到的动态地址
 		//if (this->CheatEngine::Game::silence_track)
 		//{
@@ -148,10 +148,11 @@ bool CheatEngine::ByPassCheck(PCONTEXT context)
 		//	else
 		//		return true;
 		//}
+
+		return false;
 	}
 	else
-		//其余模块的检测，全部处理
-		return true;
+		return true;		//其余模块的检测，全部处理
 	
 	////鼠标x y的访问 
 	//if (caller_address == this->CheatEngine::Game::GameBase.Cshell + 0x16FF3F4)

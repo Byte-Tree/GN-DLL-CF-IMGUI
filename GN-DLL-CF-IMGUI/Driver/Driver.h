@@ -1,3 +1,8 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  *********************************注意：目标项目需要进行以下配置：****************************************
+//                              配置属性->高级->全程序优化 改成：无全程序优化
+//                  配置属性->C/C++->代码生成->运行库 改成目标项目的对应版本（Release\Debug)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include <Windows.h>
 #include <stdio.h>
@@ -6,6 +11,7 @@
 #include <fstream>
 #include <TlHelp32.h>
 #include <winhttp.h>
+#include <winternl.h>
 
 #include "GN-ManualMap.h"
 #include "GN-ReflectiveLoader.h"
@@ -18,26 +24,15 @@
 #pragma comment(lib,"Crypt32.lib")
 #pragma comment(lib,"Normaliz.lib")
 
-#define STATUS_SUCCESS ((NTSTATUS)0x00000000L)					//ntsubauth
-#define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
-
-#define OutputDebugStringA_1Param(fmt,var) {CHAR sOut[256];CHAR sfmt[50];sprintf_s(sfmt,"%s%s","",fmt);sprintf_s(sOut,(sfmt),var);OutputDebugStringA(sOut);}
-#define OutputDebugStringA_2Param(fmt,var1,var2) {CHAR sOut[256];CHAR sfmt[50];sprintf_s(sfmt,"%s%s","",fmt);sprintf_s(sOut,(sfmt),var1,var2);OutputDebugStringA(sOut);}
-#define OutputDebugStringA_3Param(fmt,var1,var2,var3) {CHAR sOut[256];CHAR sfmt[50];sprintf_s(sfmt,"%s%s","",fmt);sprintf_s(sOut,(sfmt),var1,var2,var3);OutputDebugStringA(sOut);}
-
-struct PARAMX
+enum _ReadWriteModle
 {
-	PVOID lpFileData;
-	DWORD DataLength;
-	PVOID LdrGetProcedureAddress;
-	PVOID dwNtAllocateVirtualMemory;
-	PVOID pLdrLoadDll;
-	PVOID RtlInitAnsiString;
-	PVOID RtlAnsiStringToUnicodeString;
-	PVOID RtlFreeUnicodeString;
+	MDL,
+	CR3,
+	CR3NOATTACH,
 };
 
 using namespace std;
+
 
 extern "C" __declspec(dllexport) class Driver
 {
@@ -45,7 +40,11 @@ private:
 	ULONG m_pid = 0;
 	BYTE* ToBytes(DWORD64 num);
 
-private:
+public:
+	bool KdmapperInstallDriver();
+
+public:
+//private:
 	void MyDeleteFile();
 	int InstallSYS(IN const char* lpszDriverName, IN const char* lpszDriverPath);
 	bool UninstallSYS(IN const char* lpszDriverName);
@@ -62,7 +61,6 @@ public:
 	~Driver();
 	bool charTowchar(IN const char* MyChar, OUT wchar_t* MyWchar);
 	void SetProcessID(ULONG pid) { this->m_pid = pid; }
-	bool GetProcessNameByID(IN ULONG pid, OUT char* process_name);
 	ULONG GetProcessPIDW(IN CONST WCHAR* ProcessName);
 	PVOID GetKernelModuleHandle(IN CONST WCHAR* module_name);
 	HANDLE GetUserModuleHandle(IN CONST WCHAR* module_name);
@@ -115,7 +113,6 @@ public:
 	int DownLoadFileByWinHttp(IN const char* host, IN const wchar_t* file_path, OUT char* buffer);
 	int DownLoadFileByWinHttpEx(IN const char* host, IN const wchar_t* file_path, IN const char* save_path);
 
-
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Read/Write Process Memory By MDL:
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,27 +145,27 @@ public:
 	// Read/Write Process Memory By CR3 No Attach:
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
-	BOOL ReadFromKernelByCR3(IN ULONG pid, IN PVOID target_address, OUT PVOID read_buffer);
-	BOOL WriteToKernelByCR3(IN ULONG pid, IN PVOID target_address, IN PVOID write_data, IN SIZE_T write_data_size);
+	BOOL ReadFromKernelByCR3NoAttach(IN ULONG pid, IN PVOID target_address, OUT PVOID read_buffer);
+	BOOL WriteToKernelByCR3NoAttach(IN ULONG pid, IN PVOID target_address, IN PVOID write_data, IN SIZE_T write_data_size);
 
 public:
 	//Read
-	DWORD ReadIntByCR3(IN PVOID target_address);
-	DWORD ReadIntByCR3Ex(IN ULONG pid, IN PVOID target_address);
-	DWORD64 ReadLongByCR3(IN PVOID target_address);
-	DWORD64 ReadLongByCR3Ex(IN ULONG pid, IN PVOID target_address);
-	float ReadFloatByCR3(IN PVOID target_address);
-	float ReadFloatByCR3Ex(IN ULONG pid, IN PVOID target_address);
+	DWORD ReadIntByCR3NoAttach(IN PVOID target_address);
+	DWORD ReadIntByCR3NoAttachEx(IN ULONG pid, IN PVOID target_address);
+	DWORD64 ReadLongByCR3NoAttach(IN PVOID target_address);
+	DWORD64 ReadLongByCR3NoAttachEx(IN ULONG pid, IN PVOID target_address);
+	float ReadFloatByCR3NoAttach(IN PVOID target_address);
+	float ReadFloatByCR3NoAttachEx(IN ULONG pid, IN PVOID target_address);
 
 	//Write
-	BOOL WriteIntByCR3(IN PVOID target_address, IN int write_data);
-	BOOL WriteIntByCR3Ex(IN ULONG pid, IN PVOID target_address, IN int write_data);
-	BOOL WriteLongByCR3(IN PVOID target_address, IN DWORD64 write_data);
-	BOOL WriteLongByCR3Ex(IN ULONG pid, IN PVOID target_address, IN DWORD64 write_data);
-	BOOL WriteFloatByCR3(IN PVOID target_address, IN float write_data);
-	BOOL WriteFloatByCR3Ex(IN ULONG pid, IN PVOID target_address, IN float write_data);
-	BOOL WriteBytesByCR3(IN PVOID target_address, IN PVOID write_data, IN SIZE_T write_size);
-	BOOL WriteBytesByCR3Ex(IN ULONG pid, IN PVOID target_address, IN PVOID write_data, IN SIZE_T write_size);
+	BOOL WriteIntByCR3NoAttach(IN PVOID target_address, IN int write_data);
+	BOOL WriteIntByCR3NoAttachEx(IN ULONG pid, IN PVOID target_address, IN int write_data);
+	BOOL WriteLongByCR3NoAttach(IN PVOID target_address, IN DWORD64 write_data);
+	BOOL WriteLongByCR3NoAttachEx(IN ULONG pid, IN PVOID target_address, IN DWORD64 write_data);
+	BOOL WriteFloatByCR3NoAttach(IN PVOID target_address, IN float write_data);
+	BOOL WriteFloatByCR3NoAttachEx(IN ULONG pid, IN PVOID target_address, IN float write_data);
+	BOOL WriteBytesByCR3NoAttach(IN PVOID target_address, IN PVOID write_data, IN SIZE_T write_size);
+	BOOL WriteBytesByCR3NoAttachEx(IN ULONG pid, IN PVOID target_address, IN PVOID write_data, IN SIZE_T write_size);
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// DLL Injecter:
@@ -189,8 +186,12 @@ private:
 	HANDLE WINAPI Original_SeLoadRemoteLibrary(HANDLE ProcessHandle, LPVOID FileData, DWORD FileLength, LPVOID ParameterData, DWORD FunctionHash, LPVOID UserData, DWORD UserDataLength);
 	DWORD Wow64CreateRemoteThread(HANDLE ProcessHandle, LPVOID ThreadProcedure, LPVOID ParameterData, HANDLE* ThreadHandle);
 
-	bool KernelHackThread(IN ULONG pid, IN ULONG64 param_buffer_address, IN ULONG64 loader_shellcode_address, IN LONG kernel_wait_millisecond);
+	//内核劫持注入
+	bool KernelHackThread(IN ULONG pid, IN ULONG64 param_buffer_address, IN ULONG64 loader_shellcode_address, IN LONG kernel_wait_millisecond, IN int readwrite_modle);
 	DWORD mInjectByKernelHackThread(IN ULONG pid, IN PVOID dll_file_buffer, IN DWORD dll_file_buffer_size, IN LONG kernel_wait_millisecond, IN PVOID transfer_data, IN DWORD transfer_data_size);
+	DWORD mInjectByKernelHackThreadMemoryLoad(IN ULONG pid, IN PVOID dll_file_buffer, IN DWORD dll_file_buffer_size, IN LONG kernel_wait_millisecond, IN int readwrite_modle);
+
+	bool InitPELoader(IN ULONG pid, IN PVOID dll_file_buffer, IN PVOID* target_dll_file_buffer_address, OUT DWORD64* shellcode_address, OUT DWORD64* shellcode_param_address, IN int readwrite_modle);
 
 	bool NtCreateThreadByKernel(IN ULONG pid, IN ULONG64 param_buffer_address, IN ULONG64 loader_shellcode_address, IN LONG kernel_wait_millisecond);
 	DWORD mInjectByKernelCreateThread(IN ULONG pid, IN PVOID dll_file_buffer, IN DWORD dll_file_buffer_size, IN LONG kernel_wait_millisecond);
@@ -216,6 +217,8 @@ public:
 	//内核劫持线程注入
 	bool InjectByKernelHackThread(IN PVOID file_buffer, IN DWORD file_buffer_size, IN LONG kernel_wait_millisecond, IN PVOID transfer_data, IN DWORD transfer_data_size);
 	bool InjectByKernelHackThreadEx(IN ULONG pid, IN PVOID file_buffer, IN DWORD file_buffer_size, IN LONG kernel_wait_millisecond, IN PVOID transfer_data, IN DWORD transfer_data_size);
+	bool InjectByKernelHackThreadMemoryLoad(IN PVOID dll_file_buffer, IN DWORD dll_file_buffer_size, IN LONG kernel_wait_millisecond, IN _ReadWriteModle readwrite_modle);
+	bool InjectByKernelHackThreadMemoryLoadEx(IN ULONG pid, IN PVOID dll_file_buffer, IN DWORD dll_file_buffer_size, IN LONG kernel_wait_millisecond, IN _ReadWriteModle readwrite_modle);
 
 	//内核远程线程注入
 	bool InjectByKernelCreateThread(IN PVOID file_buffer, IN DWORD file_buffer_size, IN LONG kernel_wait_millisecond);
